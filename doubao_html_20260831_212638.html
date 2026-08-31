@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7ff">
+<title>QQ 快捷工具</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  --primary:#6366f1;
+  --primary-light:#818cf8;
+  --primary-bg:rgba(99, 102, 241, 0.12);
+  --text-main:#1e293b;
+  --text-secondary:#64748b;
+  --text-placeholder:#94a3b8;
+  --bg-card:rgba(255,255,255,0.85);
+  --bg-input:#f8fafc;
+  --border-color:#e2e8f0;
+  --shadow-card:0 18px 50px rgba(30,41,59,0.12);
+  --shadow-btn:0 8px 20px rgba(99, 102, 241, 0.22);
+}
+body.dark{
+  --text-main:#f1f5f9;
+  --text-secondary:#94a3b8;
+  --text-placeholder:#64748b;
+  --bg-card:rgba(30,41,59,0.75);
+  --bg-input:rgba(15,23,42,0.4);
+  --border-color:rgba(148,163,184,0.18);
+  --shadow-card:0 18px 50px rgba(0,0,0,0.35);
+  --shadow-btn:0 8px 20px rgba(99, 102, 241, 0.3);
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.18),transparent 32%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 32%),
+  linear-gradient(135deg,#0f172a,#1e293b) !important;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.14),transparent 30%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.10),transparent 30%),
+  linear-gradient(135deg,#f8faff,#eff2ff);
+  color:var(--text-main);
+  transition:background .3s ease,color .3s ease;
+}
+.wrap{width:min(100%,540px)}
+.card{
+  background:var(--bg-card);
+  backdrop-filter:blur(22px);
+  border:1px solid var(--border-color);
+  border-radius:30px;
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  transition:transform .24s ease,box-shadow .24s ease;
+}
+.card:hover{transform:translateY(-3px);}
+.top{padding:36px 28px 20px;text-align:center}
+.logo{
+  width:70px;height:70px;
+  margin:0 auto 18px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  font-size:32px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:white;
+  box-shadow:0 10px 28px rgba(99,102,241,.25);
+}
+h1{font-size:26px;margin:0 0 8px;letter-spacing:.2px;font-weight:600}
+.sub{margin:0;color:var(--text-secondary);font-size:14px}
+
+.theme-bar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  padding:0 28px 16px;
+}
+.color-btn{
+  width:28px;height:28px;
+  border-radius:50%;
+  border:2px solid transparent;
+  cursor:pointer;
+}
+.color-btn.active{border-color:#fff;box-shadow:0 0 0 2px var(--text-main);}
+.mode-toggle{
+  padding:4px 10px;
+  border-radius:12px;
+  border:1px solid var(--border-color);
+  background:var(--bg-input);
+  color:var(--text-main);
+  cursor:pointer;
+  font-size:13px;
+}
+
+.panel{padding:0 28px 32px}
+label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin:4px 0 10px}
+.inputbox{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:4px 8px 4px 16px;
+  background:var(--bg-input);
+  border:1px solid var(--border-color);
+  border-radius:18px;
+  transition:.22s;
+}
+.inputbox:focus-within{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px var(--primary-bg);
+}
+.icon{font-size:20px;color:var(--text-secondary)}
+input{
+  flex:1;
+  border:0;outline:0;
+  background:transparent;
+  padding:14px 4px;
+  font-size:17px;
+  color:var(--text-main);
+  min-width:0;
+}
+input::placeholder{color:var(--text-placeholder)}
+.clear-btn{
+  border:none;background:none;font-size:18px;color:var(--text-placeholder);cursor:pointer;padding:4px;
+}
+.btn{
+  width:100%;
+  border:0;border-radius:16px;
+  padding:15px 18px;margin-top:12px;
+  font-size:16px;font-weight:600;
+  cursor:pointer;color:white;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  box-shadow:var(--shadow-btn);
+  transition:transform .18s,box-shadow .18s,opacity .2s;
+}
+.btn:active{transform:translateY(2px);box-shadow:0 5px 14px rgba(99,102,241,.18)}
+.btn:disabled{opacity:0.65;pointer-events:none}
+.row-buttons{display:flex;gap:10px;margin-top:12px}
+.btn-outline{
+  flex:1;
+  background:transparent;color:var(--primary);
+  border:1px solid var(--primary);
+  box-shadow:none;
+}
+.hint{
+  min-height:24px;margin:14px 2px 0;text-align:center;font-size:13px;color:var(--text-secondary);
+}
+.tip{
+  margin-top:22px;padding:16px;border-radius:16px;background:rgba(148,163,184,0.08);
+  color:var(--text-secondary);font-size:12.5px;line-height:1.75;border:1px solid var(--border-color);
+}
+.footer{text-align:center;color:var(--text-secondary);font-size:11px;margin-top:18px;opacity:0.75}
+
+@media(max-width:420px){
+  body{padding:16px}
+  .top{padding:30px 20px 16px}
+  .theme-bar{padding:0 20px 14px}
+  .panel{padding:0 20px 26px}
+  .card{border-radius:24px}
+  h1{font-size:23px}
+  .row-buttons{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="card">
+<header class="top">
+  <div class="logo">Q</div>
+  <h1>QQ 快捷工具</h1>
+  <p class="sub">输入QQ号，快速打开资料卡 / 发起聊天</p>
+</header>
+<div class="theme-bar">
+  <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+  <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+  <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+  <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+  <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+  <button class="mode-toggle" id="modeBtn">🌓切换模式</button>
+</div>
+<div class="panel">
+  <label for="uin">QQ 号码</label>
+  <div class="inputbox">
+    <span class="icon">👤</span>
+    <input id="uin" value="10001" inputmode="numeric" autocomplete="off" placeholder="请输入QQ号">
+    <button class="clear-btn" id="clearBtn" title="清空输入">✕</button>
+  </div>
+  <button class="btn" id="openCardBtn" onclick="openQQCard()">打开 QQ 资料卡</button>
+  <button class="btn" id="chatBtn" onclick="openQQChat()">💬发起QQ聊天</button>
+  <div class="row-buttons">
+    <button class="btn btn-outline" id="copyCardBtn" onclick="copyCardProtocol()">复制资料卡链接</button>
+    <button class="btn btn-outline" id="copyChatBtn" onclick="copyChatProtocol()">复制聊天链接</button>
+  </div>
+  <p class="hint" id="msg">点击按钮尝试唤起QQ客户端</p>
+  <div class="tip">
+💡 如果点击无响应：普通浏览器会拦截自定义协议跳转。<br>
+建议复制链接手动使用；QQ内置浏览器打开效果最佳。
+  </div>
+</div>
+</section>
+<div class="footer">QQ 快捷工具 · Mobile</div>
+</main>
+
+<script>
+const uinInput = document.getElementById('uin');
+const msg = document.getElementById('msg');
+const clearBtn = document.getElementById('clearBtn');
+const modeBtn = document.getElementById('modeBtn');
+const bodyEl = document.body;
+
+// 多套主题配色
+const colorBtns = document.querySelectorAll('.color-btn');
+// 读取本地存储
+let savedTheme = localStorage.getItem("qqtool_theme");
+let savedDark = localStorage.getItem("qqtool_dark");
+
+// 应用主题色
+function setPrimary(c1,c2){
+  document.documentElement.style.setProperty('--primary', c1);
+  document.documentElement.style.setProperty('--primary-light', c2);
+  document.documentElement.style.setProperty('--primary-bg', c1.replace(')',',0.12)').replace('rgb','rgba'));
+  localStorage.setItem("qqtool_theme",JSON.stringify({p1:c1,p2:c2}));
+}
+// 初始化配色
+if(savedTheme){
+  const t = JSON.parse(savedTheme);
+  setPrimary(t.p1,t.p2);
+  colorBtns.forEach(b=>{
+    if(b.dataset.p1===t.p1) b.classList.add('active');
+    else b.classList.remove('active');
+  })
+}
+colorBtns.forEach(btn=>{
+  btn.onclick=()=>{
+    colorBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    setPrimary(btn.dataset.p1,btn.dataset.p2);
+  }
+})
+
+// 明暗模式切换
+function applyDarkMode(isDark){
+  if(isDark){
+    bodyEl.classList.add('dark');
+    localStorage.setItem("qqtool_dark","1");
+  }else{
+    bodyEl.classList.remove('dark');
+    localStorage.setItem("qqtool_dark","0");
+  }
+}
+if(savedDark===null){
+  // 默认跟随系统
+  const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyDarkMode(sysDark);
+}else{
+  applyDarkMode(savedDark==="1");
+}
+modeBtn.onclick=()=>{
+  applyDarkMode(!bodyEl.classList.contains('dark'));
+}
+
+clearBtn.onclick = ()=>{
+  uinInput.value = '';
+  msg.textContent = '点击按钮尝试唤起QQ客户端';
+};
+
+// 构建资料卡url
+function buildCardUrl(){
+  const uin = uinInput.value.trim();
+  return 'mqq://card/show_pslcard?src_type=internal&version=1'
+    +'&uin='+encodeURIComponent(uin)
+    +'&card_type=person&source=sharecard';
+}
+// 构建聊天url
+function buildChatUrl(){
+  const uin = uinInput.value.trim();
+  return 'mqq://im/chat?chat_type=wpa&version=1&src_type=web&uin='+encodeURIComponent(uin);
+}
+
+function openQQCard(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildCardUrl();
+  msg.textContent = '正在尝试打开资料卡…';
+  window.location.href = url;
+  setTimeout(()=>msg.textContent='未跳转？复制链接使用',1200);
+}
+
+function openQQChat(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildChatUrl();
+  msg.textContent = '正在尝试发起聊天…';
+  window.location.href = url;
+  setTimeout(()=>msg.textContent='未跳转？复制链接使用',1200);
+}
+
+async function copyCardProtocol(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildCardUrl();
+  try{
+    await navigator.clipboard.writeText(url);
+    msg.textContent = '✅资料卡协议已复制';
+  }catch(e){msg.textContent='❌复制失败：'+url;}
+}
+async function copyChatProtocol(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildChatUrl();
+  try{
+    await navigator.clipboard.writeText(url);
+    msg.textContent = '✅聊天协议已复制';
+  }catch(e){msg.textContent='❌复制失败：'+url;}
+}
+</script>
+</body>
+</html>
