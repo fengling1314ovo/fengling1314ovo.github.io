@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7ff">
+<title>枫铃2026 - 工具箱</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}
+:root{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  --primary:#6366f1;
+  --primary-light:#818cf8;
+  --primary-bg:rgba(99, 102, 241, 0.12);
+  --text-main:#1e293b;
+  --text-secondary:#64748b;
+  --text-placeholder:#94a3b8;
+  --bg-card:rgba(255,255,255,0.85);
+  --bg-input:#f8fafc;
+  --border-color:#e2e8f0;
+  --shadow-card:0 18px 50px rgba(30,41,59,0.12);
+  --shadow-btn:0 8px 20px rgba(99, 102, 241, 0.22);
+}
+body.dark{
+  --text-main:#f1f5f9;
+  --text-secondary:#94a3b8;
+  --text-placeholder:#64748b;
+  --bg-card:rgba(30,41,59,0.75);
+  --bg-input:rgba(15,23,42,0.4);
+  --border-color:rgba(148,163,184,0.18);
+  --shadow-card:0 18px 50px rgba(0,0,0,0.35);
+  --shadow-btn:0 8px 20px rgba(99, 102, 241, 0.3);
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.18),transparent 32%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 32%),
+  linear-gradient(135deg,#0f172a,#1e293b) !important;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:24px;
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.14),transparent 30%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.10),transparent 30%),
+  linear-gradient(135deg,#f8faff,#eff2ff);
+  color:var(--text-main);
+  transition:background .3s ease,color .3s ease;
+}
+.wrap{width:min(100%,860px)}
+.card{
+  background:var(--bg-card);
+  backdrop-filter:blur(22px);
+  border:1px solid var(--border-color);
+  border-radius:30px;
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  transition:transform .24s ease,box-shadow .24s ease;
+}
+.card:hover{transform:translateY(-3px);}
+/* 首页 */
+.page-home{padding:40px 28px;text-align:center;}
+.page-home h1{font-size:28px;margin:0 0 10px;letter-spacing:.2px;font-weight:600}
+.page-home .sub{margin:0 0 36px;color:var(--text-secondary);font-size:15px}
+.home-buttons{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:620px;margin:0 auto}
+.home-btn{
+  padding:28px 16px;border-radius:20px;border:1px solid var(--border-color);
+  background:var(--bg-input);cursor:pointer;transition:.22s;
+}
+.home-btn:hover{background:var(--primary-bg);transform:translateY(-4px)}
+.home-btn .icon{font-size:38px;margin-bottom:10px}
+.home-btn .title{font-size:17px;font-weight:600;margin-bottom:4px}
+.home-btn .desc{font-size:12px;color:var(--text-secondary)}
+.home-footer{margin-top:40px;font-size:12px;color:var(--text-secondary);opacity:0.75}
+/* 公共头部 返回按钮 */
+.tool-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 28px 10px;gap:12px;flex-wrap:wrap;
+}
+.back-btn{
+  border:none;background:var(--primary-bg);color:var(--primary);
+  padding:7px 14px;border-radius:12px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;gap:6px;
+}
+.theme-bar{
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.color-btn{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid transparent;cursor:pointer;
+}
+.color-btn.active{border-color:#fff;box-shadow:0 0 0 2px var(--text-main);}
+.mode-toggle{
+  padding:4px 10px;border-radius:12px;
+  border:1px solid var(--border-color);background:var(--bg-input);
+  color:var(--text-main);cursor:pointer;font-size:13px;
+}
+/* QQ工具页面样式 */
+.page-qq{display:none}
+.page-qq .panel{padding:10px 28px 32px}
+.page-qq label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin:4px 0 10px}
+.page-qq .inputbox{
+  display:flex;align-items:center;gap:10px;
+  padding:4px 8px 4px 16px;background:var(--bg-input);
+  border:1px solid var(--border-color);border-radius:18px;transition:.22s;
+}
+.page-qq .inputbox:focus-within{
+  border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-bg);
+}
+.page-qq .icon{font-size:20px;color:var(--text-secondary)}
+.page-qq input{
+  flex:1;border:0;outline:0;background:transparent;
+  padding:14px 4px;font-size:17px;color:var(--text-main);min-width:0;
+}
+.page-qq input::placeholder{color:var(--text-placeholder)}
+.page-qq .clear-btn{
+  border:none;background:none;font-size:18px;color:var(--text-placeholder);cursor:pointer;padding:4px;
+}
+.page-qq .btn{
+  width:100%;border:0;border-radius:16px;
+  padding:15px 18px;margin-top:12px;font-size:16px;font-weight:600;
+  cursor:pointer;color:white;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  box-shadow:var(--shadow-btn);transition:transform .18s,box-shadow .18s,opacity .2s;
+}
+.page-qq .btn:active{transform:translateY(2px);box-shadow:0 5px 14px rgba(99,102,241,.18)}
+.page-qq .row-buttons{display:flex;gap:10px;margin-top:12px}
+.page-qq .btn-outline{
+  flex:1;background:transparent;color:var(--primary);
+  border:1px solid var(--primary);box-shadow:none;
+}
+.page-qq .hint{
+  min-height:24px;margin:14px 2px 0;text-align:center;font-size:13px;color:var(--text-secondary);
+}
+.page-qq .tip{
+  margin-top:22px;padding:16px;border-radius:16px;background:rgba(148,163,184,0.08);
+  color:var(--text-secondary);font-size:12.5px;line-height:1.75;border:1px solid var(--border-color);
+}
+/* QQ群工具页面 */
+.page-qqgroup{display:none}
+.page-qqgroup .panel{padding:10px 28px 32px}
+.page-qqgroup label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin:4px 0 10px}
+.page-qqgroup .inputbox{
+  display:flex;align-items:center;gap:10px;
+  padding:4px 8px 4px 16px;background:var(--bg-input);
+  border:1px solid var(--border-color);border-radius:18px;transition:.22s;
+}
+.page-qqgroup .inputbox:focus-within{
+  border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-bg);
+}
+.page-qqgroup .icon{font-size:20px;color:var(--text-secondary)}
+.page-qqgroup input{
+  flex:1;border:0;outline:0;background:transparent;
+  padding:14px 4px;font-size:17px;color:var(--text-main);min-width:0;
+}
+.page-qqgroup input::placeholder{color:var(--text-placeholder)}
+.page-qqgroup .clear-btn{
+  border:none;background:none;font-size:18px;color:var(--text-placeholder);cursor:pointer;padding:4px;
+}
+.page-qqgroup .btn{
+  width:100%;border:0;border-radius:16px;
+  padding:15px 18px;margin-top:12px;font-size:16px;font-weight:600;
+  cursor:pointer;color:white;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  box-shadow:var(--shadow-btn);transition:transform .18s,box-shadow .18s,opacity .2s;
+}
+.page-qqgroup .btn:active{transform:translateY(2px);box-shadow:0 5px 14px rgba(99,102,241,.18)}
+.page-qqgroup .row-buttons{display:flex;gap:10px;margin-top:12px}
+.page-qqgroup .btn-outline{
+  flex:1;background:transparent;color:var(--primary);
+  border:1px solid var(--primary);box-shadow:none;
+}
+.page-qqgroup .hint{
+  min-height:24px;margin:14px 2px 0;text-align:center;font-size:13px;color:var(--text-secondary);
+}
+.page-qqgroup .tip{
+  margin-top:22px;padding:16px;border-radius:16px;background:rgba(148,163,184,0.08);
+  color:var(--text-secondary);font-size:12.5px;line-height:1.75;border:1px solid var(--border-color);
+}
+/* 二维码页面样式 */
+.page-qrcode{display:none;padding:10px 28px 32px}
+.qr-grid{display:grid;grid-template-columns:1fr 320px;gap:30px}
+.qr-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0}
+.page-qrcode label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin:6px 0}
+.page-qrcode textarea{
+  width:100%;height:120px;padding:12px;border:1px solid var(--border-color);
+  border-radius:14px;background:var(--bg-input);color:var(--text-main);
+  resize:vertical;outline:none;font-size:15px;
+}
+.page-qrcode input,.page-qrcode select{
+  width:100%;padding:10px 12px;border:1px solid var(--border-color);
+  border-radius:12px;background:var(--bg-input);color:var(--text-main);outline:none;
+}
+.qr-actions{display:flex;gap:12px;margin-top:18px}
+.qr-btn{
+  flex:1;padding:11px;border-radius:12px;border:none;cursor:pointer;font-weight:600;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;
+}
+.qr-preview{display:flex;flex-direction:column;align-items:center;gap:14px}
+#qrcode-box{
+  width:280px;height:280px;background:#fff;padding:14px;border-radius:12px;
+  display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,0.08);position:relative;
+}
+#qrcode-box canvas,#qrcode-box img{max-width:245px;max-height:245px}
+#logo-preview{position:absolute;width:72px;height:72px;border-radius:8px;object-fit:contain;display:none}
+.download-wrap{display:flex;gap:8px;width:100%}
+.download-qr{flex:1;padding:9px 10px;border-radius:12px;border:1px solid var(--border-color);background:var(--bg-input);cursor:pointer;color:var(--text-main)}
+.logo-row{display:flex;gap:8px;margin:12px 0;align-items:center}
+.history-block{margin-top:16px}
+.history-item{display:inline-block;padding:4px 10px;margin:3px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border-color);cursor:font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/*独立工具页面通用样式 */
+.tool-page{display:none;padding:10px 28px 32px}
+.common-block{margin-bottom:24px;padding-bottom:18px}
+.common-block textarea,.common-block input{width:100%;padding:10px;border-radius:12px;background:var(--bg-input);border:1px solid var(--border-color);color:var(--text-main);outline:none}
+.common-btn{padding:9px 14px;border-radius:10px;background:var(--primary-bg);color:var(--primary);border:none;margin:6px 4px;cursor:pointer}
+@media(max-width:680px){
+  .home-buttons{grid-template-columns:1fr}
+  .qr-grid{grid-template-columns:1fr}
+  .qr-preview{order:-1;margin-bottom:20px}
+  .qr-fields{grid-template-columns:1fr 1fr}
+}
+@media(max-width:420px){
+  body{padding:16px}
+  .wrap{width:100%}
+  .card{border-radius:24px}
+  .qr-fields{grid-template-columns:1fr}
+  .page-qq .row-buttons{flex-direction:column}
+  .page-qqgroup .row-buttons{flex-direction:column}
+  .download-wrap{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="card">
+  <!-- 首页 -->
+  <div class="page-home">
+    <h1>枫铃2026 工具箱</h1>
+    <p class="sub">选择需要打开的工具</p>
+    <div class="home-buttons">
+      <div class="home-btn" onclick="openPage('qrcode')">
+        <div class="icon">📷</div>
+        <div class="title">二维码生成</div>
+        <div class="desc">支持Logo、PNG/SVG下载、本地历史</div>
+      </div>
+      <div class="home-btn" onclick="openPage('qq')">
+        <div class="icon">👤</div>
+        <div class="title">QQ快捷工具</div>
+        <div class="desc">打开QQ资料卡、发起聊天</div>
+      </div>
+      <div class="home-btn" onclick="openPage('qqgroup')">
+        <div class="icon">👥</div>
+        <div class="title">QQ群快捷工具</div>
+        <div class="desc">唤起QQ群卡片、复制群协议</div>
+      </div>
+      <div class="home-btn" onclick="openPage('timestamp')">
+        <div class="icon">⏱️</div>
+        <div class="title">时间戳转换</div>
+        <div class="desc">时间 ↔ 时间戳互转</div>
+      </div>
+      <div class="home-btn" onclick="openPage('textutil')">
+        <div class="icon">📝</div>
+        <div class="title">文本处理</div>
+        <div class="desc">大小写、去空格、编码解码</div>
+      </div>
+      <div class="home-btn" onclick="openPage('random')">
+        <div class="icon">🎲</div>
+        <div class="title">随机数生成</div>
+        <div class="desc">生成指定范围随机整数</div>
+      </div>
+    </div>
+    <div class="home-footer">枫铃2026 Toolbox © 2026 本地静态工具箱</div>
+  </div>
+  <!-- QQ工具页面 -->
+  <div class="page-qq">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+      <div class="theme-bar">
+        <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+        <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+        <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+        <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+        <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+        <button class="mode-toggle" id="modeBtn">🌓切换模式</button>
+      </div>
+    </div>
+    <div class="panel">
+      <label for="uin">QQ 号码</label>
+      <div class="inputbox">
+        <span class="icon">👤</span>
+        <input id="uin" value="" inputmode="numeric" autocomplete="off" placeholder="请输入QQ号">
+        <button class="clear-btn" id="clearBtn" title="清空输入">✕</button>
+      </div>
+      <button class="btn" id="openCardBtn" onclick="openQQCard()">打开 QQ 资料卡</button>
+      <button class="btn" id="chatBtn" onclick="openQQChat()">💬发起QQ聊天</button>
+      <div class="row-buttons">
+        <button class="btn btn-outline" id="copyCardBtn" onclick="copyCardProtocol()">复制资料卡链接</button>
+        <button class="btn btn-outline" id="copyChatBtn" onclick="copyChatProtocol()">复制聊天链接</button>
+      </div>
+      <p class="hint" id="msg">点击按钮尝试唤起QQ客户端</p>
+      <div class="tip">
+💡 如果点击无响应：普通浏览器会拦截自定义协议跳转。<br>
+建议复制链接手动使用；QQ内置浏览器打开效果最佳。
+      </div>
+    </div>
+  </div>
+  <!-- =========新增QQ群工具页面========= -->
+  <div class="page-qqgroup">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+      <div class="theme-bar">
+        <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+        <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+        <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+        <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+        <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+        <button class="mode-toggle" id="modeBtnGroup">🌓切换模式</button>
+      </div>
+    </div>
+    <div class="panel">
+      <label for="groupUin">QQ 群号</label>
+      <div class="inputbox">
+        <span class="icon">👥</span>
+        <input id="groupUin" value="" inputmode="numeric" autocomplete="off" placeholder="请输入QQ群号">
+        <button class="clear-btn" id="clearGroupBtn" title="清空输入">✕</button>
+      </div>
+      <button class="btn" id="openGroupBtn" onclick="openQQGroup()">打开 QQ群卡片</button>
+      <div class="row-buttons">
+        <button class="btn btn-outline" id="copyGroupBtn" onclick="copyGroupProtocol()">复制群协议链接</button>
+      </div>
+      <p class="hint" id="msgGroup">点击按钮尝试唤起QQ群</p>
+      <div class="tip">
+💡 如果点击无响应：浏览器拦截自定义协议。<br>
+mqqapi协议仅手机端生效；电脑浏览器复制链接无效。
+      </div>
+    </div>
+  </div>
+  <!-- 二维码生成页面 -->
+  <div class="page-qrcode">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+      <div class="theme-bar">
+        <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+        <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+        <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+        <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+        <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+        <button class="mode-toggle" id="modeBtnQr">🌓切换模式</button>
+      </div>
+    </div>
+    <div class="qr-grid">
+      <div class="qr-form">
+        <label>输入内容</label>
+        <textarea id="qrContent" placeholder="输入网址、文字生成二维码"></textarea>
+        <div class="logo-row">
+          <input type="file" id="logoFile" accept="image/*">
+          <button class="common-btn" id="clearLogo">清除Logo</button>
+        </div>
+        <div class="qr-fields">
+          <div>
+            <label>大小(px)</label>
+            <input id="qrSize" type="number" value="512">
+          </div>
+          <div>
+            <label>边距</label>
+            <input id="qrMargin" type="number" value="1">
+          </div>
+          <div>
+            <label>容错级别</label>
+            <select id="qrLevel">
+              <option value="L">L low</option>
+              <option value="M">M medium</option>
+              <option value="Q">Q quartile</option>
+              <option value="H">H high</option>
+            </select>
+          </div>
+          <div>
+            <label>前景色</label>
+            <input id="qrFg" type="color" value="#000000">
+          </div>
+          <div>
+            <label>背景色</label>
+            <input id="qrBg" type="color" value="#ffffff">
+          </div>
+        </div>
+        <div class="qr-actions">
+          <button class="qr-btn" id="btnGenQr">生成二维码</button>
+          <button class="qr-btn" id="btnClearQr" style="opacity:0.85">清空</button>
+        </div>
+        <div class="history-block">
+          <label>历史记录(点击回填)</label>
+          <div id="historyWrap"></div>
+        </div>
+      </div>
+      <div class="qr-preview">
+        <div id="qrcode-box">
+          <img id="logo-preview" alt="logo">
+        </div>
+        <div class="download-wrap">
+          <button class="download-qr" id="btnDownloadPng">下载PNG</button>
+          <button class="download-qr" id="btnDownloadSvg">下载SVG</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 时间戳转换【独立页面】 -->
+  <div class="tool-page" id="pageTimestamp">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+      <div class="theme-bar">
+        <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+        <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+        <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+        <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+        <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+        <button class="mode-toggle" id="modeBtnTs">🌓切换模式</button>
+      </div>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>⏱️时间戳转换</h3>
+      <label>Unix时间戳(秒)</label>
+      <input id="tsSec" placeholder="输入时间戳">
+      <label>日期时间</label>
+      <input id="tsDatetime" placeholder="2026‑09‑02 12:00:00">
+      <br>
+      <button class="common-btn" onclick="tsFromSec()">时间戳转时间</button>
+      <button class="common-btn" onclick="tsToSec()">时间转时间戳</button>
+      <button class="common-btn" onclick="tsNow()">获取当前时间戳</button>
+    </div>
+  </div>
+  <!-- 文本处理【独立页面】 -->
+  <div class="tool-page" id="pageTextutil">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+      <div class="theme-bar">
+        <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+        <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+        <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+        <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+        <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+        <button class="mode-toggle" id="modeBtnText">🌓切换模式</button>
+      </div>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>📝文本处理</h3>
+      <textarea id="textInputUtil" placeholder="粘贴文本"></textarea>
+      <br>
+      <button class="common-btn" onclick="textUpper()">全部大写</button>
+      <button class="common-btn" onclick="textLower()">全部小写</button>
+      <button class="common-btn" onclick="textTrimAll()">去除全部空格</button>
+      <button class="common-btn" onclick="textUrlEncode()">URL编码</button>
+      <button class="common-btn" onclick="textUrlDecode()">URL解码</button>
+    </div>
+  </div>
+  <!-- 随机数生成【独立页面】 -->
+  <div class="tool-page" id="pageRandom">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+      <div class="theme-bar">
+        <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+        <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+        <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+        <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+        <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+        <button class="mode-toggle" id="modeBtnRand">🌓切换模式</button>
+      </div>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🎲随机数生成</h3>
+      <label>最小值</label>
+      <input id="randMin" value="1">
+      <label>最大值</label>
+      <input id="randMax" value="100">
+      <br>
+      <button class="common-btn" onclick="genRandom()">生成随机整数</button>
+      <div id="randResult" style="margin-top:10px;font-size:18px;font-weight:bold"></div>
+    </div>
+  </div>
+</section>
+</main>
+<script>
+//页面切换
+const pageHome = document.querySelector('.page-home');
+const pageQq = document.querySelector('.page-qq');
+const pageQqGroup = document.querySelector('.page-qqgroup');
+const pageQrcode = document.querySelector('.page-qrcode');
+const pageTimestamp = document.getElementById('pageTimestamp');
+const pageTextutil = document.getElementById('pageTextutil');
+const pageRandom = document.getElementById('pageRandom');
+//全部工具页面数组
+const allToolPages = [pageQq, pageQqGroup, pageQrcode, pageTimestamp, pageTextutil, pageRandom];
+//打开对应页面，其他全部隐藏
+function openPage(name){
+  pageHome.style.display='none';
+  //全部工具页先隐藏
+  allToolPages.forEach(p=>p.style.display='none');
+  if(name==='qq') pageQq.style.display='block';
+  if(name==='qqgroup') pageQqGroup.style.display='block';
+  if(name==='qrcode') pageQrcode.style.display='block';
+  if(name==='timestamp') pageTimestamp.style.display='block';
+  if(name==='textutil') pageTextutil.style.display='block';
+  if(name==='random') pageRandom.style.display='block';
+}
+function goHome(){
+  pageHome.style.display='block';
+  allToolPages.forEach(p=>p.style.display='none');
+}
+// ============ 公共主题、深色模式逻辑 ============
+const bodyEl = document.body;
+const colorBtnsAll = document.querySelectorAll('.color-btn');
+let savedTheme = localStorage.getItem("qqtool_theme");
+let savedDark = localStorage.getItem("qqtool_dark");
+function hexToRgba(hex, alpha) {
+  var r = parseInt(hex.slice(1, 3), 16);
+  var g = parseInt(hex.slice(3, 5), 16);
+  var b = parseInt(hex.slice(5, 7), 16);
+  return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+}
+function setPrimary(c1,c2){
+  document.documentElement.style.setProperty('--primary', c1);
+  document.documentElement.style.setProperty('--primary-light', c2);
+  document.documentElement.style.setProperty('--primary-bg', hexToRgba(c1, 0.12));
+  localStorage.setItem("qqtool_theme",JSON.stringify({p1:c1,p2:c2}));
+}
+function applyDarkMode(isDark){
+  if(isDark){
+    bodyEl.classList.add('dark');
+    localStorage.setItem("qqtool_dark","1");
+  }else{
+    bodyEl.classList.remove('dark');
+    localStorage.setItem("qqtool_dark","0");
+  }
+}
+if(savedTheme){
+  const t = JSON.parse(savedTheme);
+  setPrimary(t.p1,t.p2);
+  colorBtnsAll.forEach(b=>{
+    if(b.dataset.p1===t.p1) b.classList.add('active');
+    else b.classList.remove('active');
+  })
+}
+colorBtnsAll.forEach(btn=>{
+  btn.onclick=()=>{
+    colorBtnsAll.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    setPrimary(btn.dataset.p1,btn.dataset.p2);
+  }
+})
+if(savedDark===null){
+  const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyDarkMode(sysDark);
+}else{
+  applyDarkMode(savedDark==="1");
+}
+document.getElementById('modeBtn').onclick=()=>applyDarkMode(!bodyEl.classList.contains('dark'));
+document.getElementById('modeBtnQr').onclick=()=>applyDarkMode(!bodyEl.classList.contains('dark'));
+document.getElementById('modeBtnTs').onclick=()=>applyDarkMode(!bodyEl.classList.contains('dark'));
+document.getElementById('modeBtnText').onclick=()=>applyDarkMode(!bodyEl.classList.contains('dark'));
+document.getElementById('modeBtnRand').onclick=()=>applyDarkMode(!bodyEl.classList.contains('dark'));
+document.getElementById('modeBtnGroup').onclick=()=>applyDarkMode(!bodyEl.classList.contains('dark'));
+
+// ========= QQ好友工具逻辑 =========
+const uinInput = document.getElementById('uin');
+const msg = document.getElementById('msg');
+const clearBtn = document.getElementById('clearBtn');
+clearBtn.onclick = ()=>{
+  uinInput.value = '';
+  msg.textContent = '点击按钮尝试唤起QQ客户端';
+};
+function buildCardUrl(){
+  const uin = uinInput.value.trim();
+  return 'mqq://card/show_pslcard?src_type=internal&version=1'
+    +'&uin='+encodeURIComponent(uin)
+    +'&card_type=person&source=sharecard';
+}
+function buildChatUrl(){
+  const uin = uinInput.value.trim();
+  return 'mqq://im/chat?chat_type=wpa&version=1&src_type=web&uin='+encodeURIComponent(uin);
+}
+function openQQCard(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildCardUrl();
+  msg.textContent = '正在尝试打开资料卡…';
+  window.location.href = url;
+  setTimeout(()=>msg.textContent='未跳转？复制链接使用',1200);
+}
+function openQQChat(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildChatUrl();
+  msg.textContent = '正在尝试发起聊天…';
+  window.location.href = url;
+  setTimeout(()=>msg.textContent='未跳转？复制链接使用',1200);
+}
+async function copyCardProtocol(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildCardUrl();
+  try{
+    await navigator.clipboard.writeText(url);
+    msg.textContent = '✅资料卡协议已复制';
+  }catch(e){msg.textContent='❌复制失败：'+url;}
+}
+async function copyChatProtocol(){
+  const uin = uinInput.value.trim();
+  if (!/^\d+$/.test(uin)) {msg.textContent = '⚠️ 请输入正确纯数字QQ号';return;}
+  const url = buildChatUrl();
+  try{
+    await navigator.clipboard.writeText(url);
+    msg.textContent = '✅聊天协议已复制';
+  }catch(e){msg.textContent='❌复制失败：'+url;}
+}
+
+// ============新增 QQ群工具JS逻辑============
+const groupUinInput = document.getElementById('groupUin');
+const msgGroup = document.getElementById('msgGroup');
+const clearGroupBtn = document.getElementById('clearGroupBtn');
+clearGroupBtn.onclick = ()=>{
+  groupUinInput.value = '';
+  msgGroup.textContent = '点击按钮尝试唤起QQ群';
+};
+function buildGroupUrl(){
+  const g = groupUinInput.value.trim();
+  return 'mqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin='+encodeURIComponent(g);
+}
+function openQQGroup(){
+  const g = groupUinInput.value.trim();
+  if (!/^\d+$/.test(g)) {msgGroup.textContent = '⚠️ 请输入正确纯数字群号';return;}
+  const url = buildGroupUrl();
+  msgGroup.textContent = '正在尝试打开QQ群卡片…';
+  window.location.href = url;
+  setTimeout(()=>msgGroup.textContent='未跳转？复制链接使用',1200);
+}
+async function copyGroupProtocol(){
+  const g = groupUinInput.value.trim();
+  if (!/^\d+$/.test(g)) {msgGroup.textContent = '⚠️ 请输入正确纯数字群号';return;}
+  const url = buildGroupUrl();
+  try{
+    await navigator.clipboard.writeText(url);
+    msgGroup.textContent = '✅群协议链接已复制';
+  }catch(e){msgGroup.textContent='❌复制失败：'+url;}
+}
+
+// ========= 二维码生成逻辑（实时预览+防抖+Logo+历史+SVG导出） =========
+let qrInstance=null;
+let qrDebounceTimer=null;
+let logoImg=null;
+const qrBox = document.getElementById('qrcode-box');
+const qrContent = document.getElementById('qrContent');
+const qrSize = document.getElementById('qrSize');
+const qrMargin = document.getElementById('qrMargin');
+const qrLevel = document.getElementById('qrLevel');
+const qrFg = document.getElementById('qrFg');
+const qrBg = document.getElementById('qrBg');
+const btnGenQr = document.getElementById('btnGenQr');
+const btnClearQr = document.getElementById('btnClearQr');
+const btnDownloadPng = document.getElementById('btnDownloadPng');
+const btnDownloadSvg = document.getElementById('btnDownloadSvg');
+const logoFile = document.getElementById('logoFile');
+const clearLogoBtn = document.getElementById('clearLogo');
+const logoPreview = document.getElementById('logo-preview');
+const historyWrap = document.getElementById('historyWrap');
+//历史记录
+function getQrHistory(){
+  let arr = JSON.parse(localStorage.getItem("qr_history")||"[]");
+  return arr;
+}
+function saveQrHistory(text){
+  if(!text)return;
+  let arr = getQrHistory();
+  arr = arr.filter(x=>x!==text);
+  arr.unshift(text);
+  if(arr.length>12) arr.length=12;
+  localStorage.setItem("qr_history",JSON.stringify(arr));
+  renderHistory();
+}
+function renderHistory(){
+  const arr = getQrHistory();
+  historyWrap.innerHTML="";
+  arr.forEach(item=>{
+    const span = document.createElement("span");
+    span.className="history-item";
+    span.textContent=item;
+    span.title=item;
+    span.onclick=()=>{
+      qrContent.value=item;
+      debounceMakeQr();
+    }
+    historyWrap.appendChild(span);
+  })
+}
+renderHistory();
+//logo上传
+logoFile.onchange=function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload=ev=>{
+    logoPreview.src=ev.target.result;
+    logoPreview.style.display="block";
+    logoImg = new Image();
+    logoImg.src = ev.target.result;
+  }
+  reader.readAsDataURL(file);
+}
+clearLogoBtn.onclick=()=>{
+  logoFile.value="";
+  logoPreview.src="";
+  logoPreview.style.display="none";
+  logoImg=null;
+}
+//防抖
+function debounceMakeQr(){
+  clearTimeout(qrDebounceTimer);
+  qrDebounceTimer = setTimeout(makeQr,180);
+}
+function makeQr(){
+  qrBox.innerHTML='';
+  qrBox.appendChild(logoPreview);
+  const text = qrContent.value.trim();
+  if(!text){
+    return;
+  }
+  saveQrHistory(text);
+  qrInstance = new QRCode(qrBox,{
+    text:text,
+    width:Number(qrSize.value),
+    height:Number(qrSize.value),
+    colorDark:qrFg.value,
+    colorLight:qrBg.value,
+    correctLevel:QRCode.CorrectLevel[qrLevel.value]
+  })
+}
+qrContent.addEventListener('input',debounceMakeQr);
+qrFg.addEventListener('input',debounceMakeQr);
+qrBg.addEventListener('input',debounceMakeQr);
+qrLevel.addEventListener('change',debounceMakeQr);
+qrSize.addEventListener('input',debounceMakeQr);
+btnGenQr.onclick = makeQr;
+btnClearQr.onclick = ()=>{
+  qrContent.value='';
+  qrBox.innerHTML='';
+  qrBox.appendChild(logoPreview);
+  qrInstance=null;
+}
+btnDownloadPng.onclick=()=>{
+  const canvas = qrBox.querySelector('canvas');
+  const img = qrBox.querySelector('img');
+  const el = canvas||img;
+  if(!el)return;
+  const a=document.createElement('a');
+  a.download="qrcode.png";
+  a.href = el.toDataURL ? el.toDataURL("image/png") : el.src;
+  a.click();
+}
+btnDownloadSvg.onclick=()=>{
+  const text = qrContent.value.trim();
+  if(!text) return alert("请先生成二维码");
+  const size = Number(qrSize.value);
+  const fg = qrFg.value;
+  const bg = qrBg.value;
+  const svgText = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+  <rect width="${size}" height="${size}" fill="${bg}" />
+  </svg>`;
+  const blob = new Blob([svgText],{type:"image/svg+xml"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url;
+  a.download="qrcode.svg";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+//====================工具函数：时间戳转换====================
+const tsSec = document.getElementById('tsSec');
+const tsDatetime = document.getElementById('tsDatetime');
+function tsFromSec(){
+  const s = Number(tsSec.value);
+  if(isNaN(s))return;
+  const d = new Date(s*1000);
+  tsDatetime.value = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0')+" "+String(d.getHours()).padStart(2,'0')+":"+String(d.getMinutes()).padStart(2,'0')+":"+String(d.getSeconds()).padStart(2,'0');
+}
+function tsToSec(){
+  const str = tsDatetime.value;
+  const d = new Date(str);
+  tsSec.value = Math.floor(d.getTime()/1000);
+}
+function tsNow(){
+  const now = Math.floor(Date.now()/1000);
+  tsSec.value=now;
+  tsFromSec();
+}
+//文本工具
+const textInputUtil = document.getElementById('textInputUtil');
+function textUpper(){textInputUtil.value = textInputUtil.value.toUpperCase();}
+function textLower(){textInputUtil.value = textInputUtil.value.toLowerCase();}
+function textTrimAll(){textInputUtil.value = textInputUtil.value.replace(/\s+/g,"");}
+function textUrlEncode(){textInputUtil.value = encodeURIComponent(textInputUtil.value);}
+function textUrlDecode(){
+  try{textInputUtil.value = decodeURIComponent(textInputUtil.value);}catch(e){alert("解码失败");}
+}
+//随机数
+const randMin = document.getElementById('randMin');
+const randMax = document.getElementById('randMax');
+const randResult = document.getElementById('randResult');
+function genRandom(){
+  const min = Number(randMin.value);
+  const max = Number(randMax.value);
+  if(isNaN(min)||isNaN(max)||min>max){randResult.textContent="输入非法";return;}
+  const res = Math.floor(Math.random()*(max-min+1))+min;
+  randResult.textContent = res;
+}
+</script>
+</body>
+</html>
