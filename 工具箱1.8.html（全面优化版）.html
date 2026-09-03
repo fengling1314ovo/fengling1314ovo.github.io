@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7ff">
+<title>枫铃2026 - 工具箱</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}
+:root{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  --primary:#6366f1;
+  --primary-light:#818cf8;
+  --primary-bg:rgba(99, 102, 241, 0.12);
+  --text-main:#1e293b;
+  --text-secondary:#64748b;
+  --text-placeholder:#94a3b8;
+  --bg-card:rgba(255,255,255,0.85);
+  --bg-input:#f8fafc;
+  --border-color:#e2e8f0;
+  --shadow-card:0 18px 50px rgba(30,41,59,0.12);
+  --shadow-btn:0 8px 20px rgba(99, 102, 241, 0.22);
+  --toast-bg:rgba(30,41,59,0.92);
+  --toast-text:#fff;
+}
+body.dark{
+  --text-main:#f1f5f9;
+  --text-secondary:#94a3b8;
+  --text-placeholder:#64748b;
+  --bg-card:rgba(30,41,59,0.75);
+  --bg-input:rgba(15,23,42,0.4);
+  --border-color:rgba(148,163,184,0.18);
+  --shadow-card:0 18px 50px rgba(0,0,0,0.35);
+  --shadow-btn:0 8px 20px rgba(99, 102, 241, 0.3);
+  --toast-bg:rgba(241,245,249,0.95);
+  --toast-text:#0f172a;
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.18),transparent 32%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 32%),
+  linear-gradient(135deg,#0f172a,#1e293b) !important;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:24px;
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.14),transparent 30%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.10),transparent 30%),
+  linear-gradient(135deg,#f8faff,#eff2ff);
+  color:var(--text-main);
+  transition:background .3s ease,color .3s ease;
+}
+.wrap{width:min(100%,860px)}
+.card{
+  background:var(--bg-card);
+  backdrop-filter:blur(22px);
+  border:1px solid var(--border-color);
+  border-radius:30px;
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  transition:transform .24s ease,box-shadow .24s ease;
+}
+.card:hover{transform:translateY(-3px);}
+
+/* ===== Toast 轻量提示 ===== */
+.toast-container{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%);
+  z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;
+  pointer-events:none;
+}
+.toast{
+  background:var(--toast-bg);color:var(--toast-text);
+  padding:10px 20px;border-radius:12px;font-size:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.2);
+  animation:toastIn .3s ease,toastOut .3s ease 2.2s forwards;
+  max-width:90vw;text-align:center;
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-12px)}}
+
+/* ===== 面包屑导航 ===== */
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:0 28px;margin-top:4px;font-size:13px;color:var(--text-secondary);
+}
+.breadcrumb a{
+  color:var(--primary);text-decoration:none;cursor:pointer;
+  padding:2px 6px;border-radius:6px;transition:background .15s;
+}
+.breadcrumb a:hover{background:var(--primary-bg);}
+.breadcrumb .sep{color:var(--text-placeholder);}
+.breadcrumb .current{color:var(--text-main);font-weight:500;}
+
+/* ===== 页面切换淡入动画 ===== */
+.page-home,.tool-page,.page-qq,.page-qqgroup,.page-qrcode{
+  animation:pageFadeIn .28s ease;
+}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){
+  .page-home,.tool-page,.page-qq,.page-qqgroup,.page-qrcode{animation:none;}
+  .toast{animation:none;}
+}
+
+/* 首页 */
+.page-home{padding:40px 28px;text-align:center;}
+.page-home h1{font-size:28px;margin:0 0 10px;letter-spacing:.2px;font-weight:600}
+.page-home .sub{margin:0 0 12px;color:var(--text-secondary);font-size:15px}
+.home-top-bar{margin-bottom:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.btn-personal{
+  padding:8px 16px;border-radius:12px;border:1px solid var(--border-color);
+  background:var(--bg-input);color:var(--text-main);cursor:pointer;font-size:14px;
+  transition:background .15s,transform .12s;min-height:40px;
+}
+.btn-personal:hover{background:var(--primary-bg);}
+.btn-personal:active{transform:scale(0.97);}
+.home-buttons{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:620px;margin:0 auto}
+.home-btn{
+  padding:28px 16px;border-radius:20px;border:1px solid var(--border-color);
+  background:var(--bg-input);cursor:pointer;transition:.22s;min-height:44px;
+}
+.home-btn:hover{background:var(--primary-bg);transform:translateY(-4px)}
+.home-btn:active{transform:translateY(-1px) scale(0.98);}
+.home-btn .icon{font-size:38px;margin-bottom:10px}
+.home-btn .title{font-size:17px;font-weight:600;margin-bottom:4px}
+.home-btn .desc{font-size:12px;color:var(--text-secondary)}
+.home-footer{margin-top:40px;font-size:12px;color:var(--text-secondary);opacity:0.75}
+
+/* 个性化弹窗 */
+.modal-mask{
+  position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;
+  display:none;align-items:center;justify-content:center;padding:16px;
+}
+.modal-box{
+  background:var(--bg-card);backdrop-filter:blur(22px);
+  border:1px solid var(--border-color);border-radius:22px;
+  padding:24px 22px;min-width:280px;max-width:340px;
+}
+.modal-box h4{margin:0 0 16px 0;}
+.theme-bar-modal{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;
+}
+.color-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid transparent;cursor:pointer;transition:transform .15s;
+}
+.color-btn:hover{transform:scale(1.12);}
+.color-btn.active{border-color:#fff;box-shadow:0 0 0 2px var(--text-main);}
+.mode-toggle{
+  padding:6px 12px;border-radius:12px;
+  border:1px solid var(--border-color);background:var(--bg-input);
+  color:var(--text-main);cursor:pointer;font-size:14px;min-height:40px;
+}
+.modal-close{
+  margin-top:16px;width:100%;padding:8px;border-radius:12px;
+  border:1px solid var(--border-color);background:var(--bg-input);cursor:pointer;min-height:40px;
+}
+
+/* 公共头部 返回按钮 */
+.tool-header{
+  display:flex;align-items:center;justify-content:flex-start;
+  padding:20px 28px 6px;gap:12px;flex-wrap:wrap;
+}
+.back-btn{
+  border:none;background:var(--primary-bg);color:var(--primary);
+  padding:7px 14px;border-radius:12px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;gap:6px;min-height:40px;transition:transform .12s;
+}
+.back-btn:active{transform:scale(0.96);}
+
+/* QQ工具页面样式 */
+.page-qq{display:none}
+.page-qq .panel{padding:10px 28px 32px}
+.page-qq label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin:4px 0 10px}
+.page-qq .inputbox{
+  display:flex;align-items:center;gap:10px;
+  padding:4px 8px 4px 16px;background:var(--bg-input);
+  border:1px solid var(--border-color);border-radius:18px;transition:.22s;
+}
+.page-qq .inputbox:focus-within{
+  border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-bg);
+}
+.page-qq .icon{font-size:20px;color:var(--text-secondary)}
+.page-qq input{
+  flex:1;border:0;outline:0;background:transparent;
+  padding:14px 4px;font-size:17px;color:var(--text-main);min-width:0;
+}
+.page-qq input::placeholder{color:var(--text-placeholder)}
+.page-qq .clear-btn{
+  border:none;background:none;font-size:18px;color:var(--text-placeholder);cursor:pointer;padding:4px;
+}
+.page-qq .btn{
+  width:100%;border:0;border-radius:16px;
+  padding:15px 18px;margin-top:12px;font-size:16px;font-weight:600;
+  cursor:pointer;color:white;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  box-shadow:var(--shadow-btn);transition:transform .18s,box-shadow .18s,opacity .2s;min-height:48px;
+}
+.page-qq .btn:active{transform:translateY(2px);box-shadow:0 5px 14px rgba(99,102,241,.18)}
+.page-qq .row-buttons{display:flex;gap:10px;margin-top:12px}
+.page-qq .btn-outline{
+  flex:1;background:transparent;color:var(--primary);
+  border:1px solid var(--primary);box-shadow:none;
+}
+.page-qq .hint{
+  min-height:24px;margin:14px 2px 0;text-align:center;font-size:13px;color:var(--text-secondary);
+}
+.page-qq .tip{
+  margin-top:22px;padding:16px;border-radius:16px;background:rgba(148,163,184,0.08);
+  color:var(--text-secondary);font-size:12.5px;line-height:1.75;border:1px solid var(--border-color);
+}
+/* QQ群工具页面 */
+.page-qqgroup{display:none}
+.page-qqgroup .panel{padding:10px 28px 32px}
+.page-qqgroup label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin:4px 0 10px}
+.page-qqgroup .inputbox{
+  display:flex;align-items:center;gap:10px;
+  padding:4px 8px 4px 16px;background:var(--bg-input);
+  border:1px solid var(--border-color);border-radius:18px;transition:.22s;
+}
+.page-qqgroup .inputbox:focus-within{
+  border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-bg);
+}
+.page-qqgroup .icon{font-size:20px;color:var(--text-secondary)}
+.page-qqgroup input{
+  flex:1;border:0;outline:0;background:transparent;
+  padding:14px 4px;font-size:17px;color:var(--text-main);min-width:0;
+}
+.page-qqgroup input::placeholder{color:var(--text-placeholder)}
+.page-qqgroup .clear-btn{
+  border:none;background:none;font-size:18px;color:var(--text-placeholder);cursor:pointer;padding:4px;
+}
+.page-qqgroup .btn{
+  width:100%;border:0;border-radius:16px;
+  padding:15px 18px;margin-top:12px;font-size:16px;font-weight:600;
+  cursor:pointer;color:white;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  box-shadow:var(--shadow-btn);transition:transform .18s,box-shadow .18s,opacity .2s;min-height:48px;
+}
+.page-qqgroup .btn:active{transform:translateY(2px);box-shadow:0 5px 14px rgba(99,102,241,.18)}
+.page-qqgroup .row-buttons{display:flex;gap:10px;margin-top:12px}
+.page-qqgroup .btn-outline{
+  flex:1;background:transparent;color:var(--primary);
+  border:1px solid var(--primary);box-shadow:none;
+}
+.page-qqgroup .hint{
+  min-height:24px;margin:14px 2px 0;text-align:center;font-size:13px;color:var(--text-secondary);
+}
+.page-qqgroup .tip{
+  margin-top:22px;padding:16px;border-radius:16px;background:rgba(148,163,184,0.08);
+  color:var(--text-secondary);font-size:12.5px;line-height:1.75;border:1px solid var(--border-color);
+}
+/* 二维码页面样式 */
+.page-qrcode{display:none;padding:10px 28px 32px}
+.qr-grid{display:grid;grid-template-columns:1fr 320px;gap:30px}
+.qr-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0}
+.page-qrcode label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin:6px 0}
+.page-qrcode textarea{
+  width:100%;height:120px;padding:12px;border:1px solid var(--border-color);
+  border-radius:14px;background:var(--bg-input);color:var(--text-main);
+  resize:vertical;outline:none;font-size:15px;
+}
+.page-qrcode input,.page-qrcode select{
+  width:100%;padding:10px 12px;border:1px solid var(--border-color);
+  border-radius:12px;background:var(--bg-input);color:var(--text-main);outline:none;
+}
+.qr-actions{display:flex;gap:12px;margin-top:18px}
+.qr-btn{
+  flex:1;padding:11px;border-radius:12px;border:none;cursor:pointer;font-weight:600;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;min-height:44px;
+}
+.qr-preview{display:flex;flex-direction:column;align-items:center;gap:14px}
+#qrcode-box{
+  width:280px;height:280px;background:#fff;padding:14px;border-radius:12px;
+  display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,0.08);position:relative;
+}
+#qrcode-box canvas,#qrcode-box img{max-width:245px;max-height:245px}
+#logo-preview{position:absolute;width:72px;height:72px;border-radius:8px;object-fit:contain;display:none}
+.download-wrap{display:flex;gap:8px;width:100%}
+.download-qr{flex:1;padding:9px 10px;border-radius:12px;border:1px solid var(--border-color);background:var(--bg-input);cursor:pointer;color:var(--text-main);min-height:40px;}
+.logo-row{display:flex;gap:8px;margin:12px 0;align-items:center}
+.history-block{margin-top:16px}
+.history-item{display:inline-block;padding:4px 10px;margin:3px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border-color);cursor:pointer;font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/*独立工具页面通用样式 */
+.tool-page{display:none;padding:10px 28px 32px}
+.common-block{margin-bottom:24px;padding-bottom:18px}
+.common-block textarea,.common-block input{width:100%;padding:10px;border-radius:12px;background:var(--bg-input);border:1px solid var(--border-color);color:var(--text-main);outline:none;min-height:40px;}
+.common-btn{padding:9px 14px;border-radius:10px;background:var(--primary-bg);color:var(--primary);border:none;margin:6px 4px;cursor:pointer;min-height:40px;transition:transform .12s,opacity .15s;}
+.common-btn:active{transform:scale(0.96);}
+.common-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/*百宝箱首页列表页 */
+.page-chest-home{display:none;}
+.chest-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;
+}
+.chest-card{
+  padding:20px 14px;border-radius:18px;border:1px solid var(--border-color);
+  background:var(--bg-input);cursor:pointer;transition:.22s;text-align:center;min-height:44px;
+}
+.chest-card:hover{background:var(--primary-bg);transform:translateY(-3px);}
+.chest-card:active{transform:translateY(0) scale(0.98);}
+.chest-card .icon{font-size:32px;margin-bottom:8px}
+.chest-card .title{font-weight:600;font-size:16px;margin-bottom:4px;}
+.chest-card .desc{font-size:12px;color:var(--text-secondary)}
+
+/* 最近使用 */
+.recent-section{margin-bottom:20px;}
+.recent-section h4{margin:0 0 8px;font-size:14px;color:var(--text-secondary);font-weight:500;}
+.recent-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.recent-chip{
+  padding:6px 14px;border-radius:20px;background:var(--primary-bg);color:var(--primary);
+  font-size:13px;cursor:pointer;transition:transform .12s;border:1px solid transparent;
+}
+.recent-chip:hover{transform:scale(1.05);}
+.recent-empty{font-size:13px;color:var(--text-placeholder);}
+
+/* 历史记录列表 */
+.history-list{
+  margin-top:12px;padding:12px;border-radius:12px;background:var(--bg-input);
+  border:1px solid var(--border-color);max-height:160px;overflow-y:auto;
+}
+.history-list .h-item{
+  padding:6px 0;font-size:13px;color:var(--text-secondary);
+  border-bottom:1px dashed var(--border-color);display:flex;justify-content:space-between;align-items:center;
+}
+.history-list .h-item:last-child{border-bottom:none;}
+.history-list .h-item .h-time{font-size:11px;color:var(--text-placeholder);}
+.history-empty{font-size:13px;color:var(--text-placeholder);text-align:center;padding:8px;}
+
+/* 抛硬币动画 */
+.coin-area{display:flex;flex-direction:column;align-items:center;gap:16px;margin:20px 0;}
+.coin{
+  width:100px;height:100px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;font-weight:bold;color:#fff;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  box-shadow:0 8px 24px rgba(245,158,11,0.35);
+  transition:transform .6s ease;
+  perspective:600px;
+}
+.coin.flipping{animation:coinFlip 0.8s ease;}
+@keyframes coinFlip{
+  0%{transform:rotateY(0);}
+  50%{transform:rotateY(540deg) scale(1.1);}
+  100%{transform:rotateY(1080deg);}
+}
+.coin-stats{display:flex;gap:24px;font-size:14px;color:var(--text-secondary);}
+.coin-stats span b{color:var(--text-main);font-size:18px;}
+
+/* 自定义列表管理 */
+.custom-list-area{margin-top:16px;}
+.custom-input-row{display:flex;gap:8px;margin-bottom:10px;}
+.custom-input-row input{flex:1;}
+.custom-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.custom-tag{
+  padding:4px 10px;border-radius:16px;background:var(--bg-input);
+  border:1px solid var(--border-color);font-size:13px;display:flex;align-items:center;gap:4px;
+}
+.custom-tag .tag-del{
+  cursor:pointer;color:var(--text-placeholder);font-size:14px;
+  padding:0 2px;border-radius:4px;line-height:1;
+}
+.custom-tag .tag-del:hover{color:#ef4444;}
+
+/* 番茄钟模式切换 */
+.pomo-mode-row{display:flex;gap:8px;justify-content:center;margin-bottom:12px;}
+.pomo-mode-btn{
+  padding:6px 16px;border-radius:20px;border:1px solid var(--border-color);
+  background:var(--bg-input);color:var(--text-secondary);cursor:pointer;font-size:13px;
+  transition:all .15s;min-height:36px;
+}
+.pomo-mode-btn.active{
+  background:var(--primary);color:#fff;border-color:var(--primary);
+}
+.pomo-status{text-align:center;font-size:13px;color:var(--text-secondary);margin-top:8px;min-height:20px;}
+
+/* BMI 建议卡片 */
+.bmi-advice{
+  margin-top:14px;padding:14px;border-radius:12px;
+  background:var(--bg-input);border:1px solid var(--border-color);
+  font-size:13px;line-height:1.7;color:var(--text-secondary);
+}
+.bmi-advice .bmi-val{font-size:24px;font-weight:bold;color:var(--primary);}
+.bmi-advice .bmi-level{font-size:16px;font-weight:600;margin-left:8px;}
+
+/* 签文展示 */
+.fortune-result{
+  margin:20px 0;padding:24px;border-radius:16px;text-align:center;
+  background:linear-gradient(135deg,var(--primary-bg),transparent);
+  border:1px solid var(--border-color);min-height:120px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+}
+.fortune-result .f-level{font-size:28px;font-weight:bold;color:var(--primary);}
+.fortune-result .f-text{font-size:15px;color:var(--text-main);line-height:1.6;}
+
+/* 倒计时 */
+.countdown-display{
+  font-size:48px;font-weight:bold;text-align:center;margin:20px 0;
+  font-variant-numeric:tabular-nums;letter-spacing:2px;color:var(--primary);
+}
+.countdown-inputs{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.countdown-inputs .cd-unit{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.countdown-inputs .cd-unit input{width:70px;text-align:center;font-size:18px;}
+.countdown-inputs .cd-unit label{font-size:12px;color:var(--text-secondary);}
+
+/* 密码生成器 */
+.pw-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+.pw-option{
+  display:flex;align-items:center;gap:8px;padding:8px 12px;
+  border-radius:10px;background:var(--bg-input);border:1px solid var(--border-color);
+  cursor:pointer;font-size:14px;transition:background .15s;
+}
+.pw-option:hover{background:var(--primary-bg);}
+.pw-option input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary);cursor:pointer;}
+.pw-result-box{
+  display:flex;gap:8px;margin-top:12px;align-items:center;
+}
+.pw-result-box input{flex:1;font-family:monospace;font-size:15px;}
+
+@media(max-width:680px){
+  .home-buttons{grid-template-columns:1fr}
+  .qr-grid{grid-template-columns:1fr}
+  .qr-preview{order:-1;margin-bottom:20px}
+  .qr-fields{grid-template-columns:1fr 1fr}
+  .chest-grid{grid-template-columns:1fr;}
+  .pw-options{grid-template-columns:1fr;}
+  .countdown-display{font-size:36px;}
+}
+@media(max-width:420px){
+  body{padding:16px}
+  .wrap{width:100%}
+  .card{border-radius:24px}
+  .qr-fields{grid-template-columns:1fr}
+  .page-qq .row-buttons{flex-direction:column}
+  .page-qqgroup .row-buttons{flex-direction:column}
+  .download-wrap{flex-direction:column}
+  .breadcrumb{padding:0 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Toast 容器 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- 个性化弹窗蒙层 -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal-box">
+    <h4>🎨个性化设置</h4>
+    <div class="theme-bar-modal">
+      <div class="color-btn active" data-p1="#6366f1" data-p2="#818cf8" style="background:linear-gradient(135deg,#6366f1,#818cf8);"></div>
+      <div class="color-btn" data-p1="#ec4899" data-p2="#f472b6" style="background:linear-gradient(135deg,#ec4899,#f472b6);"></div>
+      <div class="color-btn" data-p1="#10b981" data-p2="#34d399" style="background:linear-gradient(135deg,#10b981,#34d399);"></div>
+      <div class="color-btn" data-p1="#f97316" data-p2="#fb923c" style="background:linear-gradient(135deg,#f97316,#fb923c);"></div>
+      <div class="color-btn" data-p1="#ef4444" data-p2="#f87171" style="background:linear-gradient(135deg,#ef4444,#f87171);"></div>
+    </div>
+    <button class="mode-toggle" id="globalModeBtn">🌓切换深色模式</button>
+    <button class="modal-close" id="modalCloseBtn">关闭</button>
+  </div>
+</div>
+
+<main class="wrap">
+<section class="card">
+  <!-- 首页 -->
+  <div class="page-home">
+    <h1>枫铃2026 工具箱</h1>
+    <p class="sub">选择需要打开的工具</p>
+    <div class="home-top-bar">
+      <button class="btn-personal" id="openModalBtn">🎨 个性化</button>
+      <button class="btn-personal" onclick="openPage('chestHome')">🧰 百宝箱</button>
+    </div>
+    <div class="home-buttons">
+      <div class="home-btn" onclick="openPage('qrcode')">
+        <div class="icon">📷</div>
+        <div class="title">二维码生成</div>
+        <div class="desc">支持Logo、PNG/SVG下载、本地历史</div>
+      </div>
+      <div class="home-btn" onclick="openPage('qq')">
+        <div class="icon">👤</div>
+        <div class="title">QQ快捷工具</div>
+        <div class="desc">打开QQ资料卡、发起聊天</div>
+      </div>
+      <div class="home-btn" onclick="openPage('qqgroup')">
+        <div class="icon">👥</div>
+        <div class="title">QQ群快捷工具</div>
+        <div class="desc">唤起QQ群卡片、复制群协议</div>
+      </div>
+      <div class="home-btn" onclick="openPage('timestamp')">
+        <div class="icon">⏱️</div>
+        <div class="title">时间戳转换</div>
+        <div class="desc">时间 ↔ 时间戳互转</div>
+      </div>
+      <div class="home-btn" onclick="openPage('textutil')">
+        <div class="icon">📝</div>
+        <div class="title">文本处理</div>
+        <div class="desc">大小写、去空格、编码解码</div>
+      </div>
+      <div class="home-btn" onclick="openPage('random')">
+        <div class="icon">🎲</div>
+        <div class="title">随机数生成</div>
+        <div class="desc">生成指定范围随机整数</div>
+      </div>
+      <div class="home-btn" onclick="openPage('jsonfmt')">
+        <div class="icon">📋</div>
+        <div class="title">JSON格式化</div>
+        <div class="desc">JSON美化/压缩/校验</div>
+      </div>
+      <div class="home-btn" onclick="openPage('base64')">
+        <div class="icon">🔐</div>
+        <div class="title">Base64编解码</div>
+        <div class="desc">文本Base64编码解码</div>
+      </div>
+      <div class="home-btn" onclick="openPage('hexconvert')">
+        <div class="icon">🔢</div>
+        <div class="title">进制转换</div>
+        <div class="desc">2/8/10/16进制互转</div>
+      </div>
+      <div class="home-btn" onclick="openPage('uuidgen')">
+        <div class="icon">🆔</div>
+        <div class="title">UUID生成</div>
+        <div class="desc">批量生成UUID v4</div>
+      </div>
+    </div>
+    <div class="home-footer">枫铃2026 Toolbox © 2026 本地静态工具箱</div>
+  </div>
+
+  <!-- ==========百宝箱列表首页页面========== -->
+  <div class="tool-page page-chest-home" id="pageChestHome">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a>
+      <span class="sep">/</span>
+      <span class="current">百宝箱</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px;">
+      <h3>🧰 趣味百宝箱</h3>
+      <div class="recent-section" id="recentSection">
+        <h4>🕐 最近使用</h4>
+        <div class="recent-chips" id="recentChips">
+          <span class="recent-empty">暂无最近使用记录</span>
+        </div>
+      </div>
+      <div class="chest-grid" id="chestGrid">
+        <div class="chest-card" onclick="openChestTool('dicePage','掷骰子')">
+          <div class="icon">🎲</div>
+          <div class="title">掷骰子</div>
+          <div class="desc">多颗骰子随机点数+历史</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('coinPage','抛硬币')">
+          <div class="icon">🪙</div>
+          <div class="title">抛硬币</div>
+          <div class="desc">翻转动画+正反面统计</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('eatPage','今天吃什么')">
+          <div class="icon">🍔</div>
+          <div class="title">今天吃什么</div>
+          <div class="desc">自定义美食列表</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('yesnoPage','是或否决策器')">
+          <div class="icon">🎯</div>
+          <div class="title">是或否决策器</div>
+          <div class="desc">帮你拿主意+历史</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('pomodoroPage','番茄钟')">
+          <div class="icon">⏲️</div>
+          <div class="title">番茄钟</div>
+          <div class="desc">专注/休息模式+持久化</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('bmiPage','BMI计算器')">
+          <div class="icon">⚖️</div>
+          <div class="title">BMI计算器</div>
+          <div class="desc">分级建议+状态记忆</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('fortunePage','抽签')">
+          <div class="icon">🎋</div>
+          <div class="title">抽签</div>
+          <div class="desc">自定义签文随机抽取</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('countdownPage','倒计时')">
+          <div class="icon">⏳</div>
+          <div class="title">倒计时</div>
+          <div class="desc">自定义时分秒倒计时</div>
+        </div>
+        <div class="chest-card" onclick="openChestTool('passwordPage','密码生成器')">
+          <div class="icon">🔑</div>
+          <div class="title">密码生成器</div>
+          <div class="desc">可配置强度随机密码</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 掷骰子独立页面 -->
+  <div class="tool-page" id="pageDicePage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">掷骰子</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🎲 掷骰子模拟器</h3>
+      <label>骰子面数(D4/D6/D8/D10/D12/D20)</label>
+      <input id="diceSides" type="number" value="6" min="2" max="100" inputmode="numeric">
+      <label>骰子颗数</label>
+      <input id="diceCount" type="number" value="1" min="1" max="30" inputmode="numeric">
+      <br>
+      <button class="common-btn" id="diceRollBtn" onclick="rollDice()">🎲 掷骰子</button>
+      <button class="common-btn" onclick="copyDiceResult()">📋 复制结果</button>
+      <button class="common-btn" onclick="clearDiceHistory()">🗑 清空历史</button>
+      <div id="diceResult" style="margin-top:10px;font-size:17px;font-weight:600;min-height:24px;"></div>
+      <div class="history-list" id="diceHistory">
+        <div class="history-empty">暂无投掷记录</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 抛硬币独立页面 -->
+  <div class="tool-page" id="pageCoinPage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">抛硬币</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🪙 抛硬币</h3>
+      <div class="coin-area">
+        <div class="coin" id="coinEl">?</div>
+        <button class="common-btn" id="coinFlipBtn" onclick="flipCoin()">🪙 抛一次硬币</button>
+        <button class="common-btn" onclick="resetCoinStats()">🔄 重置统计</button>
+      </div>
+      <div class="coin-stats">
+        <span>正面 <b id="coinHeads">0</b></span>
+        <span>反面 <b id="coinTails">0</b></span>
+        <span>总次数 <b id="coinTotal">0</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 今天吃什么独立页面 -->
+  <div class="tool-page" id="pageEatPage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">今天吃什么</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🍔 今天吃什么</h3>
+      <button class="common-btn" onclick="randomFood()">🍽 随机选择美食</button>
+      <button class="common-btn" onclick="copyFoodResult()">📋 复制结果</button>
+      <div id="foodResult" style="margin-top:12px;font-size:20px;font-weight:bold;min-height:28px;"></div>
+      <div class="custom-list-area">
+        <h4 style="font-size:14px;color:var(--text-secondary);margin:16px 0 8px;">🍴 自定义美食列表</h4>
+        <div class="custom-input-row">
+          <input id="foodInput" placeholder="输入美食名称，回车添加" onkeydown="if(event.key==='Enter')addFood()">
+          <button class="common-btn" onclick="addFood()">添加</button>
+        </div>
+        <div class="custom-tags" id="foodTags"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 是或否决策器独立页面 -->
+  <div class="tool-page" id="pageYesnoPage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">是或否决策器</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🎯 是或否决策器</h3>
+      <button class="common-btn" onclick="yesNoDecide()">🎯 帮我做决定</button>
+      <button class="common-btn" onclick="clearYesnoHistory()">🗑 清空历史</button>
+      <div id="yesnoResult" style="margin-top:12px;font-size:22px;font-weight:bold;min-height:30px;"></div>
+      <div class="history-list" id="yesnoHistory">
+        <div class="history-empty">暂无决策记录</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 番茄钟独立页面 -->
+  <div class="tool-page" id="pagePomodoroPage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">番茄钟</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>⏲️ 番茄钟</h3>
+      <div class="pomo-mode-row">
+        <button class="pomo-mode-btn active" id="pomoFocusBtn" onclick="setPomoMode('focus')">🎯 专注 25分钟</button>
+        <button class="pomo-mode-btn" id="pomoBreakBtn" onclick="setPomoMode('break')">☕ 休息 5分钟</button>
+      </div>
+      <div id="pomTime" style="font-size:48px;text-align:center;margin:12px 0;font-weight:bold;font-variant-numeric:tabular-nums;">25:00</div>
+      <div style="text-align:center;">
+        <button class="common-btn" id="pomoStartBtn" onclick="pomStart()">▶ 开始</button>
+        <button class="common-btn" onclick="pomPause()">⏸ 暂停</button>
+        <button class="common-btn" onclick="pomReset()">🔄 重置</button>
+      </div>
+      <div class="pomo-status" id="pomoStatus"></div>
+    </div>
+  </div>
+
+  <!-- BMI计算器独立页面 -->
+  <div class="tool-page" id="pageBmiPage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">BMI计算器</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>⚖️ BMI身体指数</h3>
+      <label>身高(cm)</label>
+      <input id="bmiHeight" type="number" placeholder="例如 170" min="50" max="250" inputmode="numeric">
+      <label>体重(kg)</label>
+      <input id="bmiWeight" type="number" placeholder="例如 62" min="20" max="300" inputmode="numeric">
+      <br>
+      <button class="common-btn" onclick="calcBmi()">📊 计算BMI</button>
+      <button class="common-btn" onclick="clearBmi()">🗑 清除</button>
+      <div id="bmiResult"></div>
+    </div>
+  </div>
+
+  <!-- 抽签独立页面 -->
+  <div class="tool-page" id="pageFortunePage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">抽签</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🎋 抽签</h3>
+      <div style="text-align:center;">
+        <button class="common-btn" onclick="drawFortune()">🎋 抽一签</button>
+      </div>
+      <div class="fortune-result" id="fortuneResult">
+        <div style="color:var(--text-placeholder);font-size:14px;">点击上方按钮抽签</div>
+      </div>
+      <div class="custom-list-area">
+        <h4 style="font-size:14px;color:var(--text-secondary);margin:16px 0 8px;">📝 自定义签文（格式：等级|内容，如 大吉|万事如意）</h4>
+        <div class="custom-input-row">
+          <input id="fortuneInput" placeholder="例如：中吉|诸事顺遂" onkeydown="if(event.key==='Enter')addFortune()">
+          <button class="common-btn" onclick="addFortune()">添加</button>
+        </div>
+        <div class="custom-tags" id="fortuneTags"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 倒计时独立页面 -->
+  <div class="tool-page" id="pageCountdownPage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">倒计时</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>⏳ 倒计时</h3>
+      <div class="countdown-display" id="cdDisplay">00:05:00</div>
+      <div class="countdown-inputs">
+        <div class="cd-unit"><input id="cdHours" type="number" value="0" min="0" max="99" inputmode="numeric"><label>时</label></div>
+        <div class="cd-unit"><input id="cdMinutes" type="number" value="5" min="0" max="59" inputmode="numeric"><label>分</label></div>
+        <div class="cd-unit"><input id="cdSeconds" type="number" value="0" min="0" max="59" inputmode="numeric"><label>秒</label></div>
+      </div>
+      <div style="text-align:center;margin-top:16px;">
+        <button class="common-btn" id="cdStartBtn" onclick="cdStart()">▶ 开始</button>
+        <button class="common-btn" onclick="cdPause()">⏸ 暂停</button>
+        <button class="common-btn" onclick="cdReset()">🔄 重置</button>
+      </div>
+      <div class="pomo-status" id="cdStatus"></div>
+    </div>
+  </div>
+
+  <!-- 密码生成器独立页面 -->
+  <div class="tool-page" id="pagePasswordPage">
+    <div class="tool-header">
+      <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    </div>
+    <div class="breadcrumb">
+      <a onclick="goHome()">首页</a><span class="sep">/</span>
+      <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
+      <span class="current">密码生成器</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🔑 密码生成器</h3>
+      <label>密码长度</label>
+      <input id="pwLength" type="number" value="16" min="4" max="64" inputmode="numeric">
+      <div class="pw-options">
+        <label class="pw-option"><input type="checkbox" id="pwLower" checked> 小写字母 a-z</label>
+        <label class="pw-option"><input type="checkbox" id="pwUpper" checked> 大写字母 A-Z</label>
+        <label class="pw-option"><input type="checkbox" id="pwNumber" checked> 数字 0-9</label>
+        <label class="pw-option"><input type="checkbox" id="pwSymbol"> 特殊符号 !@#$</label>
+      </div>
+      <div style="text-align:center;">
+        <button class="common-btn" onclick="generatePassword()">🔑 生成密码</button>
+      </div>
+      <div class="pw-result-box">
+        <input id="pwResult" readonly placeholder="生成的密码将显示在这里">
+        <button class="common-btn" onclick="copyPassword()">📋 复制</button>
+      </div>
+      <div id="pwStrength" style="margin-top:8px;font-size:13px;color:var(--text-secondary);"></div>
+    </div>
+  </div>
+
+  <!-- QQ工具页面 -->
+  <div class="page-qq">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="panel">
+      <label for="uin">QQ 号码</label>
+      <div class="inputbox">
+        <span class="icon">👤</span>
+        <input id="uin" value="" inputmode="numeric" autocomplete="off" placeholder="请输入QQ号">
+        <button class="clear-btn" id="clearBtn" title="清空输入">✕</button>
+      </div>
+      <button class="btn" id="openCardBtn" onclick="openQQCard()">打开 QQ 资料卡</button>
+      <button class="btn" id="chatBtn" onclick="openQQChat()">💬发起QQ聊天</button>
+      <div class="row-buttons">
+        <button class="btn btn-outline" id="copyCardBtn" onclick="copyCardProtocol()">复制资料卡链接</button>
+        <button class="btn btn-outline" id="copyChatBtn" onclick="copyChatProtocol()">复制聊天链接</button>
+      </div>
+      <p class="hint" id="msg">点击按钮尝试唤起QQ客户端</p>
+      <div class="tip">
+💡 如果点击无响应：普通浏览器会拦截自定义协议跳转。<br>
+建议复制链接手动使用；QQ内置浏览器打开效果最佳。
+      </div>
+    </div>
+  </div>
+  <!-- QQ群工具页面 -->
+  <div class="page-qqgroup">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="panel">
+      <label for="groupUin">QQ 群号</label>
+      <div class="inputbox">
+        <span class="icon">👥</span>
+        <input id="groupUin" value="" inputmode="numeric" autocomplete="off" placeholder="请输入QQ群号">
+        <button class="clear-btn" id="clearGroupBtn" title="清空输入">✕</button>
+      </div>
+      <button class="btn" id="openGroupBtn" onclick="openQQGroup()">打开 QQ群卡片</button>
+      <div class="row-buttons">
+        <button class="btn btn-outline" id="copyGroupBtn" onclick="copyGroupProtocol()">复制群协议链接</button>
+      </div>
+      <p class="hint" id="msgGroup">点击按钮尝试唤起QQ群</p>
+      <div class="tip">
+💡 如果点击无响应：浏览器拦截自定义协议。<br>
+mqqapi协议仅手机端生效；电脑浏览器复制链接无效。
+      </div>
+    </div>
+  </div>
+  <!-- 二维码生成页面 -->
+  <div class="page-qrcode">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="qr-grid">
+      <div class="qr-form">
+        <label>输入内容</label>
+        <textarea id="qrContent" placeholder="输入网址、文字生成二维码"></textarea>
+        <div class="logo-row">
+          <input type="file" id="logoFile" accept="image/*">
+          <button class="common-btn" id="clearLogo">清除Logo</button>
+        </div>
+        <div class="qr-fields">
+          <div><label>大小(px)</label><input id="qrSize" type="number" value="512"></div>
+          <div><label>边距</label><input id="qrMargin" type="number" value="1"></div>
+          <div><label>容错级别</label>
+            <select id="qrLevel">
+              <option value="L">L low</option><option value="M">M medium</option>
+              <option value="Q">Q quartile</option><option value="H">H high</option>
+            </select>
+          </div>
+          <div><label>前景色</label><input id="qrFg" type="color" value="#000000"></div>
+          <div><label>背景色</label><input id="qrBg" type="color" value="#ffffff"></div>
+        </div>
+        <div class="qr-actions">
+          <button class="qr-btn" id="btnGenQr">生成二维码</button>
+          <button class="qr-btn" id="btnClearQr" style="opacity:0.85">清空</button>
+        </div>
+        <div class="history-block">
+          <label>历史记录(点击回填)</label>
+          <div id="historyWrap"></div>
+        </div>
+      </div>
+      <div class="qr-preview">
+        <div id="qrcode-box">
+          <img id="logo-preview" alt="logo">
+        </div>
+        <div class="download-wrap">
+          <button class="download-qr" id="btnDownloadPng">下载PNG</button>
+          <button class="download-qr" id="btnDownloadSvg">下载SVG</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 时间戳转换 -->
+  <div class="tool-page" id="pageTimestamp">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>⏱️时间戳转换</h3>
+      <label>Unix时间戳(秒)</label>
+      <input id="tsSec" placeholder="输入时间戳">
+      <label>日期时间</label>
+      <input id="tsDatetime" placeholder="2026-09-02 12:00:00">
+      <br>
+      <button class="common-btn" onclick="tsFromSec()">时间戳转时间</button>
+      <button class="common-btn" onclick="tsToSec()">时间转时间戳</button>
+      <button class="common-btn" onclick="tsNow()">获取当前时间戳</button>
+    </div>
+  </div>
+  <!-- 文本处理 -->
+  <div class="tool-page" id="pageTextutil">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>📝文本处理</h3>
+      <textarea id="textInputUtil" placeholder="粘贴文本"></textarea>
+      <br>
+      <button class="common-btn" onclick="textUpper()">全部大写</button>
+      <button class="common-btn" onclick="textLower()">全部小写</button>
+      <button class="common-btn" onclick="textTrimAll()">去除全部空格</button>
+      <button class="common-btn" onclick="textUrlEncode()">URL编码</button>
+      <button class="common-btn" onclick="textUrlDecode()">URL解码</button>
+    </div>
+  </div>
+  <!-- 随机数生成 -->
+  <div class="tool-page" id="pageRandom">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🎲随机数生成</h3>
+      <label>最小值</label><input id="randMin" value="1">
+      <label>最大值</label><input id="randMax" value="100">
+      <br>
+      <button class="common-btn" onclick="genRandom()">生成随机整数</button>
+      <div id="randResult" style="margin-top:10px;font-size:18px;font-weight:bold"></div>
+    </div>
+  </div>
+  <!-- JSON格式化 -->
+  <div class="tool-page" id="pageJsonfmt">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>📋 JSON格式化</h3>
+      <textarea id="jsonInput" rows="10" placeholder="粘贴JSON文本"></textarea>
+      <br>
+      <button class="common-btn" onclick="jsonPretty()">格式化美化</button>
+      <button class="common-btn" onclick="jsonCompress()">压缩JSON</button>
+      <button class="common-btn" onclick="jsonValidate()">校验JSON</button>
+      <button class="common-btn" onclick="jsonClear()">清空</button>
+      <div id="jsonTip" style="margin-top:10px;color:var(--text-secondary);"></div>
+    </div>
+  </div>
+  <!-- Base64编解码 -->
+  <div class="tool-page" id="pageBase64">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🔐 Base64 编解码</h3>
+      <textarea id="b64Input" rows="8" placeholder="输入文本或base64字符串"></textarea>
+      <br>
+      <button class="common-btn" onclick="b64Encode()">文本→Base64编码</button>
+      <button class="common-btn" onclick="b64Decode()">Base64→文本解码</button>
+      <button class="common-btn" onclick="b64Clear()">清空</button>
+    </div>
+  </div>
+  <!-- 进制转换 -->
+  <div class="tool-page" id="pageHexconvert">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🔢进制转换(2/8/10/16)</h3>
+      <label>输入数值</label><input id="hexInput" placeholder="输入数字">
+      <label>原进制(2,8,10,16)</label><input id="hexFrom" value="10">
+      <br>
+      <button class="common-btn" onclick="doConvert()">执行转换</button>
+      <div id="hexResult" style="margin-top:12px;line-height:1.8;"></div>
+    </div>
+  </div>
+  <!-- UUID生成 -->
+  <div class="tool-page" id="pageUuidgen">
+    <div class="tool-header">
+      <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
+    </div>
+    <div class="common-block" style="padding:0 28px 32px">
+      <h3>🆔 UUID v4生成</h3>
+      <label>生成数量</label><input id="uuidCount" value="5">
+      <br>
+      <button class="common-btn" onclick="genUuid()">生成UUID</button>
+      <button class="common-btn" onclick="copyAllUuid()">复制全部</button>
+      <textarea id="uuidOut" readonly rows="8" style="margin-top:10px;"></textarea>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+// ==================== 全局工具函数 ====================
+// Toast 轻量提示
+function showToast(msg, duration){
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(()=>{ if(toast.parentNode) toast.parentNode.removeChild(toast); }, (duration||2500)+50);
+}
+// 防抖工具
+function debounce(fn, wait){
+  let t; return function(...args){ clearTimeout(t); t = setTimeout(()=>fn.apply(this,args), wait); };
+}
+// localStorage 安全读写
+function lsGet(key, def){ try{ const v = localStorage.getItem(key); return v===null?def:JSON.parse(v); }catch(e){ return def; } }
+function lsSet(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+// 复制文本
+async function copyText(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); document.body.removeChild(ta); return true; }
+    catch(err){ document.body.removeChild(ta); return false; }
+  }
+}
+// 当前时间字符串
+function nowTimeStr(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+}
+
+// ==================== 页面切换 ====================
+const pageHome = document.querySelector('.page-home');
+const pageQq = document.querySelector('.page-qq');
+const pageQqGroup = document.querySelector('.page-qqgroup');
+const pageQrcode = document.querySelector('.page-qrcode');
+const pageTimestamp = document.getElementById('pageTimestamp');
+const pageTextutil = document.getElementById('pageTextutil');
+const pageRandom = document.getElementById('pageRandom');
+const pageJsonfmt = document.getElementById('pageJsonfmt');
+const pageBase64 = document.getElementById('pageBase64');
+const pageHexconvert = document.getElementById('pageHexconvert');
+const pageUuidgen = document.getElementById('pageUuidgen');
+const pageChestHome = document.getElementById('pageChestHome');
+const pageDicePage = document.getElementById('pageDicePage');
+const pageCoinPage = document.getElementById('pageCoinPage');
+const pageEatPage = document.getElementById('pageEatPage');
+const pageYesnoPage = document.getElementById('pageYesnoPage');
+const pagePomodoroPage = document.getElementById('pagePomodoroPage');
+const pageBmiPage = document.getElementById('pageBmiPage');
+const pageFortunePage = document.getElementById('pageFortunePage');
+const pageCountdownPage = document.getElementById('pageCountdownPage');
+const pagePasswordPage = document.getElementById('pagePasswordPage');
+
+const allToolPages = [
+  pageQq, pageQqGroup, pageQrcode, pageTimestamp, pageTextutil, pageRandom,
+  pageJsonfmt, pageBase64, pageHexconvert, pageUuidgen, pageChestHome,
+  pageDicePage, pageCoinPage, pageEatPage, pageYesnoPage, pagePomodoroPage,
+  pageBmiPage, pageFortunePage, pageCountdownPage, pagePasswordPage
+];
+
+// 离开页面前清理定时器（修复番茄钟/倒计时后台运行bug）
+function cleanupBeforePageSwitch(){
+  if(pomoTimer){ clearInterval(pomoTimer); pomoTimer=null; savePomoState(); }
+  if(cdTimer){ clearInterval(cdTimer); cdTimer=null; }
+}
+
+function openPage(name){
+  cleanupBeforePageSwitch();
+  pageHome.style.display='none';
+  allToolPages.forEach(p=>p.style.display='none');
+  const map = {
+    qq:pageQq, qqgroup:pageQqGroup, qrcode:pageQrcode, timestamp:pageTimestamp,
+    textutil:pageTextutil, random:pageRandom, jsonfmt:pageJsonfmt, base64:pageBase64,
+    hexconvert:pageHexconvert, uuidgen:pageUuidgen, chestHome:pageChestHome,
+    dicePage:pageDicePage, coinPage:pageCoinPage, eatPage:pageEatPage,
+    yesnoPage:pageYesnoPage, pomodoroPage:pagePomodoroPage, bmiPage:pageBmiPage,
+    fortunePage:pageFortunePage, countdownPage:pageCountdownPage, passwordPage:pagePasswordPage
+  };
+  if(map[name]) map[name].style.display='block';
+}
+function goHome(){
+  cleanupBeforePageSwitch();
+  pageHome.style.display='block';
+  allToolPages.forEach(p=>p.style.display='none');
+}
+
+// ==================== 最近使用 ====================
+const CHEST_TOOLS = {
+  dicePage:'掷骰子', coinPage:'抛硬币', eatPage:'今天吃什么',
+  yesnoPage:'是或否决策器', pomodoroPage:'番茄钟', bmiPage:'BMI计算器',
+  fortunePage:'抽签', countdownPage:'倒计时', passwordPage:'密码生成器'
+};
+function openChestTool(pageId, title){
+  // 记录最近使用
+  let recent = lsGet('chest_recent', []);
+  recent = recent.filter(x=>x.id!==pageId);
+  recent.unshift({id:pageId, title:title});
+  if(recent.length>6) recent.length=6;
+  lsSet('chest_recent', recent);
+  renderRecent();
+  openPage(pageId);
+}
+function renderRecent(){
+  const recent = lsGet('chest_recent', []);
+  const box = document.getElementById('recentChips');
+  if(!recent.length){ box.innerHTML='<span class="recent-empty">暂无最近使用记录</span>'; return; }
+  box.innerHTML = recent.map(x=>
+    `<span class="recent-chip" onclick="openChestTool('${x.id}','${x.title}')">${x.title}</span>`
+  ).join('');
+}
+renderRecent();
+
+// ==================== 弹窗逻辑 ====================
+const modalMask = document.getElementById('modalMask');
+const openModalBtn = document.getElementById('openModalBtn');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+openModalBtn.onclick = ()=>{ modalMask.style.display='flex'; };
+modalCloseBtn.onclick = ()=>{ modalMask.style.display='none'; };
+modalMask.onclick = (e)=>{ if(e.target === modalMask) modalMask.style.display='none'; };
+
+// ==================== 主题、深色模式 ====================
+const bodyEl = document.body;
+const colorBtnsAll = document.querySelectorAll('.modal-box .color-btn');
+const globalModeBtn = document.getElementById('globalModeBtn');
+let savedTheme = localStorage.getItem("qqtool_theme");
+let savedDark = localStorage.getItem("qqtool_dark");
+function hexToRgba(hex, alpha){
+  var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return 'rgba('+r+', '+g+', '+b+', '+alpha+')';
+}
+function setPrimary(c1,c2){
+  document.documentElement.style.setProperty('--primary', c1);
+  document.documentElement.style.setProperty('--primary-light', c2);
+  document.documentElement.style.setProperty('--primary-bg', hexToRgba(c1, 0.12));
+  localStorage.setItem("qqtool_theme",JSON.stringify({p1:c1,p2:c2}));
+}
+function applyDarkMode(isDark){
+  if(isDark){ bodyEl.classList.add('dark'); localStorage.setItem("qqtool_dark","1"); }
+  else{ bodyEl.classList.remove('dark'); localStorage.setItem("qqtool_dark","0"); }
+}
+if(savedTheme){
+  const t = JSON.parse(savedTheme);
+  setPrimary(t.p1,t.p2);
+  colorBtnsAll.forEach(b=>{ if(b.dataset.p1===t.p1) b.classList.add('active'); else b.classList.remove('active'); });
+}
+colorBtnsAll.forEach(btn=>{
+  btn.onclick=()=>{
+    colorBtnsAll.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    setPrimary(btn.dataset.p1,btn.dataset.p2);
+  };
+});
+if(savedDark===null){
+  applyDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+}else{
+  applyDarkMode(savedDark==="1");
+}
+globalModeBtn.onclick=()=>applyDarkMode(!bodyEl.classList.contains('dark'));
+
+// ==================== QQ好友工具 ====================
+const uinInput = document.getElementById('uin');
+const msg = document.getElementById('msg');
+const clearBtn = document.getElementById('clearBtn');
+clearBtn.onclick = ()=>{ uinInput.value=''; msg.textContent='点击按钮尝试唤起QQ客户端'; };
+function buildCardUrl(){ const uin=uinInput.value.trim(); return 'mqq://card/show_pslcard?src_type=internal&version=1&uin='+encodeURIComponent(uin)+'&card_type=person&source=sharecard'; }
+function buildChatUrl(){ const uin=uinInput.value.trim(); return 'mqq://im/chat?chat_type=wpa&version=1&src_type=web&uin='+encodeURIComponent(uin); }
+function openQQCard(){
+  const uin=uinInput.value.trim();
+  if(!/^\d+$/.test(uin)){ showToast('⚠️ 请输入正确纯数字QQ号'); return; }
+  msg.textContent='正在尝试打开资料卡…';
+  window.location.href=buildCardUrl();
+  setTimeout(()=>msg.textContent='未跳转？复制链接使用',1200);
+}
+function openQQChat(){
+  const uin=uinInput.value.trim();
+  if(!/^\d+$/.test(uin)){ showToast('⚠️ 请输入正确纯数字QQ号'); return; }
+  msg.textContent='正在尝试发起聊天…';
+  window.location.href=buildChatUrl();
+  setTimeout(()=>msg.textContent='未跳转？复制链接使用',1200);
+}
+async function copyCardProtocol(){
+  const uin=uinInput.value.trim();
+  if(!/^\d+$/.test(uin)){ showToast('⚠️ 请输入正确纯数字QQ号'); return; }
+  if(await copyText(buildCardUrl())){ msg.textContent='✅资料卡协议已复制'; showToast('已复制资料卡链接'); }
+  else msg.textContent='❌复制失败';
+}
+async function copyChatProtocol(){
+  const uin=uinInput.value.trim();
+  if(!/^\d+$/.test(uin)){ showToast('⚠️ 请输入正确纯数字QQ号'); return; }
+  if(await copyText(buildChatUrl())){ msg.textContent='✅聊天协议已复制'; showToast('已复制聊天链接'); }
+  else msg.textContent='❌复制失败';
+}
+
+// ==================== QQ群工具 ====================
+const groupUinInput = document.getElementById('groupUin');
+const msgGroup = document.getElementById('msgGroup');
+const clearGroupBtn = document.getElementById('clearGroupBtn');
+clearGroupBtn.onclick = ()=>{ groupUinInput.value=''; msgGroup.textContent='点击按钮尝试唤起QQ群'; };
+function buildGroupUrl(){ const g=groupUinInput.value.trim(); return 'mqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin='+encodeURIComponent(g); }
+function openQQGroup(){
+  const g=groupUinInput.value.trim();
+  if(!/^\d+$/.test(g)){ showToast('⚠️ 请输入正确纯数字群号'); return; }
+  msgGroup.textContent='正在尝试打开QQ群卡片…';
+  window.location.href=buildGroupUrl();
+  setTimeout(()=>msgGroup.textContent='未跳转？复制链接使用',1200);
+}
+async function copyGroupProtocol(){
+  const g=groupUinInput.value.trim();
+  if(!/^\d+$/.test(g)){ showToast('⚠️ 请输入正确纯数字群号'); return; }
+  if(await copyText(buildGroupUrl())){ msgGroup.textContent='✅群协议链接已复制'; showToast('已复制群协议链接'); }
+  else msgGroup.textContent='❌复制失败';
+}
+
+// ==================== 二维码生成 ====================
+let qrInstance=null, qrDebounceTimer=null, logoImg=null;
+const qrBox=document.getElementById('qrcode-box'), qrContent=document.getElementById('qrContent'),
+  qrSize=document.getElementById('qrSize'), qrMargin=document.getElementById('qrMargin'),
+  qrLevel=document.getElementById('qrLevel'), qrFg=document.getElementById('qrFg'),
+  qrBg=document.getElementById('qrBg'), btnGenQr=document.getElementById('btnGenQr'),
+  btnClearQr=document.getElementById('btnClearQr'), btnDownloadPng=document.getElementById('btnDownloadPng'),
+  btnDownloadSvg=document.getElementById('btnDownloadSvg'), logoFile=document.getElementById('logoFile'),
+  clearLogoBtn=document.getElementById('clearLogo'), logoPreview=document.getElementById('logo-preview'),
+  historyWrap=document.getElementById('historyWrap');
+function getQrHistory(){ return lsGet('qr_history',[]); }
+function saveQrHistory(text){
+  if(!text)return; let arr=getQrHistory(); arr=arr.filter(x=>x!==text); arr.unshift(text);
+  if(arr.length>12)arr.length=12; lsSet('qr_history',arr); renderHistory();
+}
+function renderHistory(){
+  const arr=getQrHistory(); historyWrap.innerHTML='';
+  arr.forEach(item=>{
+    const span=document.createElement('span'); span.className='history-item';
+    span.textContent=item; span.title=item;
+    span.onclick=()=>{ qrContent.value=item; debounceMakeQr(); };
+    historyWrap.appendChild(span);
+  });
+}
+renderHistory();
+logoFile.onchange=function(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{ logoPreview.src=ev.target.result; logoPreview.style.display='block'; logoImg=new Image(); logoImg.src=ev.target.result; };
+  reader.readAsDataURL(file);
+};
+clearLogoBtn.onclick=()=>{ logoFile.value=''; logoPreview.src=''; logoPreview.style.display='none'; logoImg=null; };
+function debounceMakeQr(){ clearTimeout(qrDebounceTimer); qrDebounceTimer=setTimeout(makeQr,180); }
+function makeQr(){
+  qrBox.innerHTML=''; qrBox.appendChild(logoPreview);
+  const text=qrContent.value.trim(); if(!text)return;
+  saveQrHistory(text);
+  qrInstance=new QRCode(qrBox,{text:text,width:Number(qrSize.value),height:Number(qrSize.value),colorDark:qrFg.value,colorLight:qrBg.value,correctLevel:QRCode.CorrectLevel[qrLevel.value]});
+}
+qrContent.addEventListener('input',debounceMakeQr); qrFg.addEventListener('input',debounceMakeQr);
+qrBg.addEventListener('input',debounceMakeQr); qrLevel.addEventListener('change',debounceMakeQr);
+qrSize.addEventListener('input',debounceMakeQr);
+btnGenQr.onclick=makeQr;
+btnClearQr.onclick=()=>{ qrContent.value=''; qrBox.innerHTML=''; qrBox.appendChild(logoPreview); qrInstance=null; };
+btnDownloadPng.onclick=()=>{
+  const canvas=qrBox.querySelector('canvas'), img=qrBox.querySelector('img'), el=canvas||img;
+  if(!el){ showToast('请先生成二维码'); return; }
+  const a=document.createElement('a'); a.download='qrcode.png';
+  a.href=el.toDataURL?el.toDataURL('image/png'):el.src; a.click();
+  showToast('已下载PNG');
+};
+btnDownloadSvg.onclick=()=>{
+  const text=qrContent.value.trim();
+  if(!text){ showToast('请先生成二维码'); return; }
+  const size=Number(qrSize.value), fg=qrFg.value, bg=qrBg.value;
+  const svgText=`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><rect width="${size}" height="${size}" fill="${bg}" /></svg>`;
+  const blob=new Blob([svgText],{type:'image/svg+xml'}), url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='qrcode.svg'; a.click(); URL.revokeObjectURL(url);
+  showToast('已下载SVG');
+};
+
+// ==================== 时间戳转换 ====================
+const tsSec=document.getElementById('tsSec'), tsDatetime=document.getElementById('tsDatetime');
+function tsFromSec(){
+  const s=Number(tsSec.value); if(isNaN(s)){ showToast('请输入有效时间戳'); return; }
+  const d=new Date(s*1000);
+  tsDatetime.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+}
+function tsToSec(){ const d=new Date(tsDatetime.value); if(isNaN(d.getTime())){ showToast('日期格式无效'); return; } tsSec.value=Math.floor(d.getTime()/1000); }
+function tsNow(){ tsSec.value=Math.floor(Date.now()/1000); tsFromSec(); }
+
+// ==================== 文本工具 ====================
+const textInputUtil=document.getElementById('textInputUtil');
+function textUpper(){ textInputUtil.value=textInputUtil.value.toUpperCase(); }
+function textLower(){ textInputUtil.value=textInputUtil.value.toLowerCase(); }
+function textTrimAll(){ textInputUtil.value=textInputUtil.value.replace(/\s+/g,''); }
+function textUrlEncode(){ textInputUtil.value=encodeURIComponent(textInputUtil.value); }
+function textUrlDecode(){ try{ textInputUtil.value=decodeURIComponent(textInputUtil.value); }catch(e){ showToast('解码失败'); } }
+
+// ==================== 随机数 ====================
+const randMin=document.getElementById('randMin'), randMax=document.getElementById('randMax'), randResult=document.getElementById('randResult');
+function genRandom(){
+  const min=Number(randMin.value), max=Number(randMax.value);
+  if(isNaN(min)||isNaN(max)||min>max){ randResult.textContent='输入非法'; showToast('请检查输入范围'); return; }
+  randResult.textContent=Math.floor(Math.random()*(max-min+1))+min;
+}
+
+// ==================== JSON格式化 ====================
+const jsonInput=document.getElementById('jsonInput'), jsonTip=document.getElementById('jsonTip');
+function jsonPretty(){ try{ const obj=JSON.parse(jsonInput.value); jsonInput.value=JSON.stringify(obj,null,2); jsonTip.textContent='✅格式化成功'; showToast('格式化成功'); }catch(e){ jsonTip.textContent='❌JSON解析错误：'+e.message; } }
+function jsonCompress(){ try{ const obj=JSON.parse(jsonInput.value); jsonInput.value=JSON.stringify(obj); jsonTip.textContent='✅压缩完成'; showToast('压缩完成'); }catch(e){ jsonTip.textContent='❌JSON解析错误：'+e.message; } }
+function jsonValidate(){ try{ JSON.parse(jsonInput.value); jsonTip.textContent='✅JSON格式合法'; showToast('JSON格式合法'); }catch(e){ jsonTip.textContent='❌JSON格式错误：'+e.message; } }
+function jsonClear(){ jsonInput.value=''; jsonTip.textContent=''; }
+
+// ==================== Base64 ====================
+const b64Input=document.getElementById('b64Input');
+function b64Encode(){ try{ b64Input.value=btoa(unescape(encodeURIComponent(b64Input.value))); showToast('编码成功'); }catch(e){ showToast('编码失败'); } }
+function b64Decode(){ try{ b64Input.value=decodeURIComponent(escape(atob(b64Input.value.trim()))); showToast('解码成功'); }catch(e){ showToast('解码失败，请检查base64字符串'); } }
+function b64Clear(){ b64Input.value=''; }
+
+// ==================== 进制转换 ====================
+const hexInput=document.getElementById('hexInput'), hexFrom=document.getElementById('hexFrom'), hexResult=document.getElementById('hexResult');
+function doConvert(){
+  hexResult.innerText=''; const valStr=hexInput.value.trim(), fromBase=Number(hexFrom.value);
+  if(![2,8,10,16].includes(fromBase)){ hexResult.innerText='仅支持2,8,10,16进制'; return; }
+  const dec=parseInt(valStr,fromBase);
+  if(isNaN(dec)){ hexResult.innerText='数值无效'; showToast('请输入有效数值'); return; }
+  hexResult.innerText=`十进制：${dec}\n二进制：${dec.toString(2)}\n八进制：${dec.toString(8)}\n十六进制：${dec.toString(16).toUpperCase()}`;
+}
+
+// ==================== UUID ====================
+const uuidCount=document.getElementById('uuidCount'), uuidOut=document.getElementById('uuidOut');
+function uuidv4(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){ const r=Math.random()*16|0, v=c==='x'?r:(r&0x3|0x8); return v.toString(16); }); }
+function genUuid(){
+  const cnt=Number(uuidCount.value);
+  if(isNaN(cnt)||cnt<1||cnt>200){ showToast('数量范围1-200'); return; }
+  const arr=[]; for(let i=0;i<cnt;i++) arr.push(uuidv4()); uuidOut.value=arr.join('\n');
+  showToast('已生成'+cnt+'个UUID');
+}
+async function copyAllUuid(){ if(!uuidOut.value){ showToast('请先生成UUID'); return; } if(await copyText(uuidOut.value)) showToast('已复制全部UUID'); else showToast('复制失败'); }
+
+// ==================== 百宝箱：掷骰子 ====================
+const diceSidesEl=document.getElementById('diceSides'), diceCountEl=document.getElementById('diceCount'),
+  diceResultEl=document.getElementById('diceResult'), diceHistoryEl=document.getElementById('diceHistory');
+// 恢复输入状态
+(function(){ const s=lsGet('dice_sides',6), c=lsGet('dice_count',1); diceSidesEl.value=s; diceCountEl.value=c; })();
+diceSidesEl.addEventListener('change',()=>lsSet('dice_sides',Number(diceSidesEl.value)||6));
+diceCountEl.addEventListener('change',()=>lsSet('dice_count',Number(diceCountEl.value)||1));
+
+let diceRolling=false;
+function rollDice(){
+  if(diceRolling)return;
+  const sides=Number(diceSidesEl.value), cnt=Number(diceCountEl.value);
+  if(!sides||sides<2||sides>100){ showToast('骰子面数范围2-100'); return; }
+  if(!cnt||cnt<1||cnt>30){ showToast('骰子颗数范围1-30'); return; }
+  diceRolling=true;
+  const btn=document.getElementById('diceRollBtn'); btn.disabled=true;
+  let ticks=0;
+  const anim=setInterval(()=>{
+    let res=[]; for(let i=0;i<cnt;i++) res.push(Math.floor(Math.random()*sides)+1);
+    diceResultEl.textContent='🎲 投掷中… '+res.join(', ');
+    ticks++;
+    if(ticks>=8){
+      clearInterval(anim);
+      let res=[]; let sum=0; for(let i=0;i<cnt;i++){ const n=Math.floor(Math.random()*sides)+1; res.push(n); sum+=n; }
+      const text=`点数：${res.join(', ')} ｜总和：${sum}`;
+      diceResultEl.textContent=text;
+      // 保存历史
+      let hist=lsGet('dice_history',[]);
+      hist.unshift({text:text,time:nowTimeStr()});
+      if(hist.length>20)hist.length=20;
+      lsSet('dice_history',hist); renderDiceHistory();
+      diceRolling=false; btn.disabled=false;
+    }
+  },60);
+}
+function renderDiceHistory(){
+  const hist=lsGet('dice_history',[]);
+  if(!hist.length){ diceHistoryEl.innerHTML='<div class="history-empty">暂无投掷记录</div>'; return; }
+  diceHistoryEl.innerHTML=hist.map(h=>`<div class="h-item"><span>${h.text}</span><span class="h-time">${h.time}</span></div>`).join('');
+}
+renderDiceHistory();
+function copyDiceResult(){ if(!diceResultEl.textContent||diceResultEl.textContent.includes('投掷中')){ showToast('暂无结果可复制'); return; } copyText(diceResultEl.textContent).then(ok=>showToast(ok?'已复制结果':'复制失败')); }
+function clearDiceHistory(){ lsSet('dice_history',[]); renderDiceHistory(); showToast('历史已清空'); }
+
+// ==================== 百宝箱：抛硬币 ====================
+const coinEl=document.getElementById('coinEl'), coinHeadsEl=document.getElementById('coinHeads'),
+  coinTailsEl=document.getElementById('coinTails'), coinTotalEl=document.getElementById('coinTotal');
+let coinStats=lsGet('coin_stats',{heads:0,tails:0});
+function updateCoinStats(){ coinHeadsEl.textContent=coinStats.heads; coinTailsEl.textContent=coinStats.tails; coinTotalEl.textContent=coinStats.heads+coinStats.tails; }
+updateCoinStats();
+let coinFlipping=false;
+function flipCoin(){
+  if(coinFlipping)return;
+  coinFlipping=true;
+  coinEl.classList.add('flipping');
+  coinEl.textContent='?';
+  setTimeout(()=>{
+    const isHeads=Math.random()>0.5;
+    coinEl.textContent=isHeads?'正':'反';
+    if(isHeads)coinStats.heads++; else coinStats.tails++;
+    lsSet('coin_stats',coinStats);
+    updateCoinStats();
+    coinEl.classList.remove('flipping');
+    coinFlipping=false;
+    showToast(isHeads?'🪙 正面！':'🪙 反面！');
+  },800);
+}
+function resetCoinStats(){ coinStats={heads:0,tails:0}; lsSet('coin_stats',coinStats); updateCoinStats(); showToast('统计已重置'); }
+
+// ==================== 百宝箱：今天吃什么 ====================
+const foodResultEl=document.getElementById('foodResult'), foodInputEl=document.getElementById('foodInput'), foodTagsEl=document.getElementById('foodTags');
+const DEFAULT_FOODS=['火锅','烧烤','奶茶','麻辣烫','炸鸡','汉堡','螺蛳粉','米线','炒饭','披萨','寿司','牛肉面','小龙虾','饺子','冒菜','烤肉','盖浇饭','馄饨'];
+let foodList=lsGet('food_list',DEFAULT_FOODS);
+function renderFoodTags(){
+  if(!foodList.length){ foodTagsEl.innerHTML='<span class="recent-empty">列表为空，请添加美食</span>'; return; }
+  foodTagsEl.innerHTML=foodList.map((f,i)=>`<span class="custom-tag">${f}<span class="tag-del" onclick="removeFood(${i})">×</span></span>`).join('');
+}
+renderFoodTags();
+function addFood(){
+  const v=foodInputEl.value.trim();
+  if(!v){ showToast('请输入美食名称'); return; }
+  if(foodList.includes(v)){ showToast('已存在该美食'); return; }
+  foodList.push(v); lsSet('food_list',foodList); renderFoodTags(); foodInputEl.value='';
+  showToast('已添加：'+v);
+}
+function removeFood(i){ foodList.splice(i,1); lsSet('food_list',foodList); renderFoodTags(); }
+let foodRolling=false;
+function randomFood(){
+  if(foodRolling)return;
+  if(!foodList.length){ showToast('美食列表为空，请先添加'); return; }
+  foodRolling=true; let ticks=0;
+  const anim=setInterval(()=>{
+    foodResultEl.textContent='🍽 '+foodList[Math.floor(Math.random()*foodList.length)];
+    ticks++; if(ticks>=10){ clearInterval(anim);
+      const pick=foodList[Math.floor(Math.random()*foodList.length)];
+      foodResultEl.textContent='🍽 就吃：'+pick; foodRolling=false; showToast('就决定是：'+pick);
+    }
+  },70);
+}
+function copyFoodResult(){ if(!foodResultEl.textContent){ showToast('暂无结果'); return; } copyText(foodResultEl.textContent).then(ok=>showToast(ok?'已复制':'复制失败')); }
+
+// ==================== 百宝箱：是或否决策器 ====================
+const yesnoResultEl=document.getElementById('yesnoResult'), yesnoHistoryEl=document.getElementById('yesnoHistory');
+const YESNO_LIST=['✅是的','❌不要','🤔再想想','✅可以做','❌不建议','👍没问题','👎算了吧','💡换个思路','🔥果断去做','🌧️今天不太合适','☀️正是好时机'];
+let yesnoRolling=false;
+function yesNoDecide(){
+  if(yesnoRolling)return;
+  yesnoRolling=true; let ticks=0;
+  const anim=setInterval(()=>{
+    yesnoResultEl.textContent=YESNO_LIST[Math.floor(Math.random()*YESNO_LIST.length)];
+    ticks++; if(ticks>=12){ clearInterval(anim);
+      const pick=YESNO_LIST[Math.floor(Math.random()*YESNO_LIST.length)];
+      yesnoResultEl.textContent=pick;
+      let hist=lsGet('yesno_history',[]);
+      hist.unshift({text:pick,time:nowTimeStr()});
+      if(hist.length>20)hist.length=20;
+      lsSet('yesno_history',hist); renderYesnoHistory();
+      yesnoRolling=false;
+    }
+  },65);
+}
+function renderYesnoHistory(){
+  const hist=lsGet('yesno_history',[]);
+  if(!hist.length){ yesnoHistoryEl.innerHTML='<div class="history-empty">暂无决策记录</div>'; return; }
+  yesnoHistoryEl.innerHTML=hist.map(h=>`<div class="h-item"><span>${h.text}</span><span class="h-time">${h.time}</span></div>`).join('');
+}
+renderYesnoHistory();
+function clearYesnoHistory(){ lsSet('yesno_history',[]); renderYesnoHistory(); showToast('历史已清空'); }
+
+// ==================== 百宝箱：番茄钟（持久化+模式切换+离开暂停） ====================
+const pomTimeEl=document.getElementById('pomTime'), pomoStatusEl=document.getElementById('pomoStatus'),
+  pomoFocusBtn=document.getElementById('pomoFocusBtn'), pomoBreakBtn=document.getElementById('pomoBreakBtn');
+let pomoTimer=null, pomoMode=lsGet('pomo_mode','focus'), pomoSeconds=0;
+const POMO_DURATIONS={focus:25*60, break:5*60};
+function getPomoTotal(){ return POMO_DURATIONS[pomoMode]; }
+function savePomoState(){ lsSet('pomo_seconds',pomoSeconds); lsSet('pomo_mode',pomoMode); }
+function loadPomoState(){
+  pomoMode=lsGet('pomo_mode','focus');
+  pomoSeconds=lsGet('pomo_seconds',getPomoTotal());
+  if(pomoSeconds<=0||pomoSeconds>getPomoTotal()) pomoSeconds=getPomoTotal();
+  updatePomoModeUI(); updatePomDom();
+}
+function updatePomoModeUI(){
+  pomoFocusBtn.classList.toggle('active',pomoMode==='focus');
+  pomoBreakBtn.classList.toggle('active',pomoMode==='break');
+}
+function updatePomDom(){
+  const m=Math.floor(pomoSeconds/60), s=pomoSeconds%60;
+  pomTimeEl.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function setPomoMode(mode){
+  if(pomoTimer){ showToast('计时进行中，请先暂停或重置'); return; }
+  pomoMode=mode; pomoSeconds=getPomoTotal(); savePomoState();
+  updatePomoModeUI(); updatePomDom(); pomoStatusEl.textContent='';
+  showToast(mode==='focus'?'已切换到专注模式':'已切换到休息模式');
+}
+function pomStart(){
+  if(pomoTimer)return;
+  if(pomoSeconds<=0){ pomoSeconds=getPomoTotal(); }
+  pomoStatusEl.textContent=pomoMode==='focus'?'🎯 专注中…':'☕ 休息中…';
+  pomoTimer=setInterval(()=>{
+    pomoSeconds--; savePomoState(); updatePomDom();
+    if(pomoSeconds<=0){
+      clearInterval(pomoTimer); pomoTimer=null;
+      pomoStatusEl.textContent='⏰ 时间到！';
+      showToast(pomoMode==='focus'?'🎯 专注结束！该休息啦':'☕ 休息结束！继续加油');
+      // 尝试浏览器通知
+      if('Notification' in window && Notification.permission==='granted'){
+        new Notification('番茄钟',{body:pomoMode==='focus'?'专注时间结束，休息一下吧！':'休息时间结束，继续专注吧！'});
+      }
+      pomoSeconds=getPomoTotal(); savePomoState(); updatePomDom();
+    }
+  },1000);
+  // 请求通知权限
+  if('Notification' in window && Notification.permission==='default'){ Notification.requestPermission(); }
+}
+function pomPause(){ if(pomoTimer){ clearInterval(pomoTimer); pomoTimer=null; pomoStatusEl.textContent='⏸ 已暂停'; savePomoState(); showToast('已暂停'); } }
+function pomReset(){ if(pomoTimer)clearInterval(pomoTimer); pomoTimer=null; pomoSeconds=getPomoTotal(); savePomoState(); updatePomDom(); pomoStatusEl.textContent=''; showToast('已重置'); }
+loadPomoState();
+
+// ==================== 百宝箱：BMI ====================
+const bmiHeightEl=document.getElementById('bmiHeight'), bmiWeightEl=document.getElementById('bmiWeight'), bmiResultEl=document.getElementById('bmiResult');
+// 恢复输入
+(function(){ const h=lsGet('bmi_height',''), w=lsGet('bmi_weight',''); bmiHeightEl.value=h; bmiWeightEl.value=w; })();
+bmiHeightEl.addEventListener('change',()=>lsSet('bmi_height',bmiHeightEl.value));
+bmiWeightEl.addEventListener('change',()=>lsSet('bmi_weight',bmiWeightEl.value));
+function calcBmi(){
+  const h=Number(bmiHeightEl.value)/100, w=Number(bmiWeightEl.value);
+  if(!h||h<0.5||h>2.5){ showToast('请输入有效身高(50-250cm)'); return; }
+  if(!w||w<20||w>300){ showToast('请输入有效体重(20-300kg)'); return; }
+  const bmi=w/(h*h);
+  let level='', advice='', color='';
+  if(bmi<18.5){ level='偏瘦'; color='#3b82f6'; advice='体重偏轻，建议增加营养摄入，适当进行力量训练增肌。'; }
+  else if(bmi<24){ level='正常'; color='#10b981'; advice='体重在健康范围内，继续保持均衡饮食和规律运动！'; }
+  else if(bmi<28){ level='超重'; color='#f59e0b'; advice='体重略高，建议控制热量摄入，增加有氧运动，每周至少150分钟中等强度运动。'; }
+  else{ level='肥胖'; color='#ef4444'; advice='体重较高，建议咨询医生或营养师制定科学减重计划，循序渐进。'; }
+  bmiResultEl.innerHTML=`<div class="bmi-advice">
+    <div><span class="bmi-val">${bmi.toFixed(2)}</span><span class="bmi-level" style="color:${color}">${level}</span></div>
+    <div style="margin-top:8px;">${advice}</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--text-placeholder);">参考标准：偏瘦&lt;18.5 / 正常18.5-23.9 / 超重24-27.9 / 肥胖≥28（中国成人标准）</div>
+  </div>`;
+  showToast('BMI计算完成');
+}
+function clearBmi(){ bmiHeightEl.value=''; bmiWeightEl.value=''; bmiResultEl.innerHTML=''; lsSet('bmi_height',''); lsSet('bmi_weight',''); showToast('已清除'); }
+
+// ==================== 百宝箱：抽签 ====================
+const fortuneResultEl=document.getElementById('fortuneResult'), fortuneInputEl=document.getElementById('fortuneInput'), fortuneTagsEl=document.getElementById('fortuneTags');
+const DEFAULT_FORTUNES=[
+  {level:'大吉',text:'万事如意，心想事成，今日宜大胆行动！'},
+  {level:'中吉',text:'诸事顺遂，稳步前行，贵人相助。'},
+  {level:'小吉',text:'小有收获，积少成多，宜守不宜攻。'},
+  {level:'平',text:'平平淡淡，无喜无忧，保持平常心。'},
+  {level:'小凶',text:'略有波折，谨慎行事，宜静不宜动。'},
+  {level:'末吉',text:'虽有阻滞，但终有转机，坚持就是胜利。'}
+];
+let fortuneList=lsGet('fortune_list',DEFAULT_FORTUNES);
+function renderFortuneTags(){
+  if(!fortuneList.length){ fortuneTagsEl.innerHTML='<span class="recent-empty">暂无签文，请添加</span>'; return; }
+  fortuneTagsEl.innerHTML=fortuneList.map((f,i)=>`<span class="custom-tag">【${f.level}】${f.text}<span class="tag-del" onclick="removeFortune(${i})">×</span></span>`).join('');
+}
+renderFortuneTags();
+function addFortune(){
+  const v=fortuneInputEl.value.trim();
+  if(!v){ showToast('请输入签文'); return; }
+  const parts=v.split('|');
+  if(parts.length<2){ showToast('格式：等级|内容，如 大吉|万事如意'); return; }
+  fortuneList.push({level:parts[0].trim(),text:parts.slice(1).join('|').trim()});
+  lsSet('fortune_list',fortuneList); renderFortuneTags(); fortuneInputEl.value='';
+  showToast('已添加签文');
+}
+function removeFortune(i){ fortuneList.splice(i,1); lsSet('fortune_list',fortuneList); renderFortuneTags(); }
+let fortuneRolling=false;
+function drawFortune(){
+  if(fortuneRolling)return;
+  if(!fortuneList.length){ showToast('签文为空，请先添加'); return; }
+  fortuneRolling=true; let ticks=0;
+  const anim=setInterval(()=>{
+    const f=fortuneList[Math.floor(Math.random()*fortuneList.length)];
+    fortuneResultEl.innerHTML=`<div class="f-level" style="opacity:0.6">${f.level}</div><div class="f-text">${f.text}</div>`;
+    ticks++; if(ticks>=12){ clearInterval(anim);
+      const f=fortuneList[Math.floor(Math.random()*fortuneList.length)];
+      fortuneResultEl.innerHTML=`<div class="f-level">${f.level}</div><div class="f-text">${f.text}</div>`;
+      fortuneRolling=false; showToast('抽到：'+f.level);
+    }
+  },70);
+}
+
+// ==================== 百宝箱：倒计时 ====================
+const cdDisplayEl=document.getElementById('cdDisplay'), cdHoursEl=document.getElementById('cdHours'),
+  cdMinutesEl=document.getElementById('cdMinutes'), cdSecondsEl=document.getElementById('cdSeconds'),
+  cdStatusEl=document.getElementById('cdStatus');
+let cdTimer=null, cdTotalSeconds=0, cdRemaining=0;
+function cdGetInputSeconds(){
+  const h=Math.max(0,Number(cdHoursEl.value)||0), m=Math.max(0,Number(cdMinutesEl.value)||0), s=Math.max(0,Number(cdSecondsEl.value)||0);
+  return h*3600+m*60+s;
+}
+function cdUpdateDisplay(sec){
+  const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
+  cdDisplayEl.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+// 初始化显示
+(function(){ cdUpdateDisplay(cdGetInputSeconds()); })();
+[cdHoursEl,cdMinutesEl,cdSecondsEl].forEach(el=>el.addEventListener('input',()=>{ if(!cdTimer) cdUpdateDisplay(cdGetInputSeconds()); }));
+function cdStart(){
+  if(cdTimer)return;
+  if(cdRemaining<=0){ cdRemaining=cdGetInputSeconds(); cdTotalSeconds=cdRemaining; }
+  if(cdRemaining<=0){ showToast('请设置倒计时时间'); return; }
+  cdStatusEl.textContent='⏳ 倒计时中…';
+  cdTimer=setInterval(()=>{
+    cdRemaining--; cdUpdateDisplay(cdRemaining);
+    if(cdRemaining<=0){
+      clearInterval(cdTimer); cdTimer=null;
+      cdStatusEl.textContent='⏰ 时间到！';
+      showToast('⏰ 倒计时结束！');
+      if('Notification' in window && Notification.permission==='granted'){ new Notification('倒计时',{body:'时间到！'}); }
+      if('Notification' in window && Notification.permission==='default'){ Notification.requestPermission(); }
+    }
+  },1000);
+}
+function cdPause(){ if(cdTimer){ clearInterval(cdTimer); cdTimer=null; cdStatusEl.textContent='⏸ 已暂停'; showToast('已暂停'); } }
+function cdReset(){ if(cdTimer)clearInterval(cdTimer); cdTimer=null; cdRemaining=0; cdUpdateDisplay(cdGetInputSeconds()); cdStatusEl.textContent=''; showToast('已重置'); }
+
+// ==================== 百宝箱：密码生成器 ====================
+const pwLengthEl=document.getElementById('pwLength'), pwLowerEl=document.getElementById('pwLower'),
+  pwUpperEl=document.getElementById('pwUpper'), pwNumberEl=document.getElementById('pwNumber'),
+  pwSymbolEl=document.getElementById('pwSymbol'), pwResultEl=document.getElementById('pwResult'),
+  pwStrengthEl=document.getElementById('pwStrength');
+const PW_SETS={lower:'abcdefghijklmnopqrstuvwxyz',upper:'ABCDEFGHIJKLMNOPQRSTUVWXYZ',number:'0123456789',symbol:'!@#$%^&*()_+-=[]{}|;:,.<>?'};
+function generatePassword(){
+  const len=Number(pwLengthEl.value);
+  if(isNaN(len)||len<4||len>64){ showToast('密码长度范围4-64'); return; }
+  let chars='';
+  if(pwLowerEl.checked)chars+=PW_SETS.lower;
+  if(pwUpperEl.checked)chars+=PW_SETS.upper;
+  if(pwNumberEl.checked)chars+=PW_SETS.number;
+  if(pwSymbolEl.checked)chars+=PW_SETS.symbol;
+  if(!chars){ showToast('请至少选择一种字符类型'); return; }
+  let pw='';
+  const arr=new Uint32Array(len);
+  crypto.getRandomValues(arr);
+  for(let i=0;i<len;i++) pw+=chars[arr[i]%chars.length];
+  pwResultEl.value=pw;
+  // 强度评估
+  let score=0;
+  if(len>=8)score++; if(len>=12)score++; if(len>=16)score++;
+  if(pwLowerEl.checked)score++; if(pwUpperEl.checked)score++;
+  if(pwNumberEl.checked)score++; if(pwSymbolEl.checked)score+=2;
+  let level='', color='';
+  if(score<=3){ level='弱'; color='#ef4444'; }
+  else if(score<=5){ level='中等'; color='#f59e0b'; }
+  else if(score<=7){ level='强'; color='#10b981'; }
+  else{ level='非常强'; color='#3b82f6'; }
+  pwStrengthEl.innerHTML=`强度：<b style="color:${color}">${level}</b>（${len}位，${[pwLowerEl.checked&&'小写',pwUpperEl.checked&&'大写',pwNumberEl.checked&&'数字',pwSymbolEl.checked&&'符号'].filter(Boolean).join('/')}）`;
+  showToast('密码已生成');
+}
+async function copyPassword(){ if(!pwResultEl.value){ showToast('请先生成密码'); return; } if(await copyText(pwResultEl.value)) showToast('已复制密码'); else showToast('复制失败'); }
+
+// 页面可见性变化时暂停计时器（进一步防止后台运行）
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    if(pomoTimer){ clearInterval(pomoTimer); pomoTimer=null; savePomoState(); pomoStatusEl.textContent='⏸ 页面隐藏，已暂停'; }
+    if(cdTimer){ clearInterval(cdTimer); cdTimer=null; cdStatusEl.textContent='⏸ 页面隐藏，已暂停'; }
+  }
+});
+</script>
+</body>
+</html>
