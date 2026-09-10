@@ -1103,7 +1103,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .game-canvas{
   border:2px solid var(--border-color);border-radius:12px;
   background:var(--bg-input);max-width:100%;touch-action:none;
+  transition:none !important;
 }
+.game-canvas:active{transform:none !important;opacity:1 !important;}
 .game-info{display:flex;gap:16px;justify-content:center;margin:12px 0;font-size:14px;flex-wrap:wrap;}
 .game-info span b{color:var(--primary);font-size:16px;}
 .game-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0;}
@@ -1371,7 +1373,8 @@ body.dark .pin-rule-card{background:#1e293b !important;}
 .piano-col:last-child{border-right:none;}
 .piano-tile{position:absolute;width:100%;height:80px;background:#222;border-radius:4px;cursor:pointer;}
 .piano-tile.tapped{background:#888;}
-.piano-canvas{display:block;width:280px;height:420px;margin:14px auto;background:#fff;border:2px solid var(--border-color);border-radius:10px;cursor:pointer;touch-action:none;}
+.piano-canvas{display:block;width:280px;height:420px;margin:14px auto;background:#fff;border:2px solid var(--border-color);border-radius:10px;cursor:pointer;touch-action:none;transition:none !important;}
+.piano-canvas:active{transform:none !important;opacity:1 !important;}
 
 /* ===== 单位换算器 ===== */
 .uc-cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
@@ -1820,6 +1823,7 @@ body.dark .pin-rule-card{background:#1e293b !important;}
       <div class="rule-item"><span class="rule-icon">🎓</span><span class="rule-text">输入 毕业初中 解锁高中</span></div>
       <div class="rule-item"><span class="rule-icon">🎓</span><span class="rule-text">输入 毕业高中 解锁大学</span></div>
       <div class="rule-item"><span class="rule-icon">🎓</span><span class="rule-text">输入 毕业大学 自动解锁全部学校</span></div>
+      <div class="rule-item"><span class="rule-icon">⌨️</span><span class="rule-text">输入 解锁打字 解锁全部打字关卡</span></div>
       <div class="rule-item"><span class="rule-icon">♾️</span><span class="rule-text">无次数上限，可重复兑换</span></div>
     </div>
     <div class="rule-tab-content" id="ruleTab-pet" style="display:none;">
@@ -1970,7 +1974,7 @@ body.dark .pin-rule-card{background:#1e293b !important;}
     <div class="tool-header">
       <button class="back-btn" onclick="goHome()"><span>←</span> 返回首页</button>
       <button class="back-btn" style="margin-left:auto;background:var(--primary-bg);color:var(--primary);font-weight:600;margin-right:6px;" onclick="openChestTool('pinballShopPage','弹珠商店')">
-        🔮 弹珠 <span id="pinChestCount" style="background:var(--primary);color:#fff;border-radius:10px;padding:1px 8px;font-size:12px;margin-left:4px;">0</span>
+        🛒 store
       </button>
       <button class="back-btn" style="background:var(--primary-bg);color:var(--primary);font-weight:600;" onclick="openChestTool('statusPage','个人状态')">
         📊 状态
@@ -2022,6 +2026,10 @@ body.dark .pin-rule-card{background:#1e293b !important;}
         <button class="chest-cat-btn cat-btn-item" data-cat="creative" onclick="filterChest('creative')">🎨 创意</button>
       </div>
       <div class="chest-grid" id="chestGrid">
+        <!-- 打字练习（红色置顶） -->
+        <div class="chest-card red" data-cat="game" onclick="openChestTool('typingPage','打字练习')">
+          <div class="icon">⌨️</div><div class="title">打字练习</div><div class="desc">金山打字通风格练习</div>
+        </div>
         <!-- 打弹珠（红色置顶） -->
         <div class="chest-card red" data-cat="game" onclick="openChestTool('pinballPage','打弹珠')">
           <div class="icon">🔮</div><div class="title">打弹珠</div><div class="desc">经典弹珠台弹射得分</div>
@@ -2197,9 +2205,6 @@ body.dark .pin-rule-card{background:#1e293b !important;}
         </div>
         <div class="chest-card gold" data-cat="game" onclick="openChestTool('match3Page','消消乐')">
           <div class="icon">🍎</div><div class="title">消消乐</div><div class="desc">三消连线赢金币</div>
-        </div>
-        <div class="chest-card gold" data-cat="game" onclick="openChestTool('typingPage','打字练习')">
-          <div class="icon">⌨️</div><div class="title">打字练习</div><div class="desc">练手速赢金币</div>
         </div>
         <div class="chest-card gold" data-cat="game" onclick="openChestTool('linkGamePage','连连看')">
           <div class="icon">🔗</div><div class="title">连连看</div><div class="desc">配对连线消除</div>
@@ -3914,6 +3919,9 @@ body.dark .pin-rule-card{background:#1e293b !important;}
       <a onclick="goHome()">首页</a><span class="sep">/</span>
       <span class="current">QQ快捷工具</span>
     </div>
+    <div class="common-block" style="padding:0 28px 0">
+      <h3>👤 QQ快捷工具</h3>
+    </div>
     <div class="panel">
       <label for="uin">QQ 号码</label>
       <div class="inputbox">
@@ -3943,6 +3951,9 @@ body.dark .pin-rule-card{background:#1e293b !important;}
       <a onclick="goHome()">首页</a><span class="sep">/</span>
       <span class="current">QQ群快捷工具</span>
     </div>
+    <div class="common-block" style="padding:0 28px 0">
+      <h3>👥 QQ群快捷工具</h3>
+    </div>
     <div class="panel">
       <label for="groupUin">QQ 群号</label>
       <div class="inputbox">
@@ -3969,6 +3980,9 @@ mqqapi协议仅手机端生效；电脑浏览器复制链接无效。
     <div class="breadcrumb">
       <a onclick="goHome()">首页</a><span class="sep">/</span>
       <span class="current">二维码生成</span>
+    </div>
+    <div class="common-block" style="padding:0 28px 0">
+      <h3>📷 二维码生成</h3>
     </div>
     <div class="qr-grid">
       <div class="qr-form">
@@ -6193,12 +6207,83 @@ mqqapi协议仅手机端生效；电脑浏览器复制链接无效。
   .m3-cell.m3-pop{animation:m3pop .28s ease forwards;}
   @keyframes m3pop{0%{transform:scale(1);opacity:1;}60%{transform:scale(1.3);opacity:1;}100%{transform:scale(0);opacity:0;}}
 
-  /* 打字练习 */
-  .typing-sentence{font-size:20px;line-height:2.2;color:var(--text-placeholder);text-align:center;margin:12px 0;min-height:88px;word-break:break-all;}
-  .typing-sentence span{transition:all .1s;}
-  .typing-sentence span.ok{color:#10b981;}
-  .typing-sentence span.bad{color:#ef4444;background:rgba(239,68,68,.18);border-radius:4px;}
-  .typing-input{width:100%;box-sizing:border-box;font-size:18px;padding:12px 14px;border-radius:12px;border:1px solid var(--border-color);background:var(--bg-input);color:var(--text-main);outline:none;}
+  /* 打字通 - 内部视图切换动画（跟随个性化设置） */
+  #tyCourseView,#tyLevelView,#tyPracticeView{
+    animation-name:var(--page-anim-name,pageAnimDefault);
+    animation-duration:var(--page-anim-duration,0.28s);
+    animation-timing-function:var(--page-anim-ease,ease);
+  }
+  /* 打字通 - 课程选择 */
+  .ty-course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:16px 0;}
+  .ty-course-card{background:var(--bg-input);border:1px solid var(--border-color);border-radius:14px;padding:18px;cursor:pointer;transition:all .2s;}
+  .ty-course-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1);border-color:var(--primary);}
+  .ty-course-card .icon{font-size:32px;margin-bottom:8px;}
+  .ty-course-card .name{font-size:16px;font-weight:600;margin-bottom:4px;}
+  .ty-course-card .desc{font-size:12px;color:var(--text-placeholder);line-height:1.5;}
+  .ty-course-card .progress{height:4px;background:var(--border-color);border-radius:2px;margin-top:10px;overflow:hidden;}
+  .ty-course-card .progress-bar{height:100%;background:var(--primary);border-radius:2px;transition:width .3s;}
+  /* 打字通 - 关卡选择 */
+  .ty-level-list{display:flex;flex-direction:column;gap:10px;margin:16px 0;}
+  .ty-level-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg-input);border:1px solid var(--border-color);border-radius:12px;cursor:pointer;transition:all .2s;}
+  .ty-level-item:hover{border-color:var(--primary);}
+  .ty-level-item.locked{opacity:.5;cursor:not-allowed;}
+  .ty-level-item .lv-num{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0;font-size:14px;}
+  .ty-level-item.locked .lv-num{background:var(--border-color);}
+  .ty-level-item .lv-info{flex:1;min-width:0;}
+  .ty-level-item .lv-name{font-size:14px;font-weight:500;}
+  .ty-level-item .lv-desc{font-size:12px;color:var(--text-placeholder);margin-top:2px;}
+  .ty-level-item .lv-stars{color:#f59e0b;font-size:14px;flex-shrink:0;}
+  /* 打字通 - 练习界面 */
+  .ty-practice-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+  .ty-practice-title{font-size:16px;font-weight:600;}
+  .ty-stats{display:flex;gap:14px;font-size:13px;flex-wrap:wrap;}
+  .ty-stats .stat-item{display:flex;align-items:center;gap:4px;color:var(--text-placeholder);}
+  .ty-stats .stat-val{font-weight:600;color:var(--primary);}
+  .ty-text-display{background:var(--bg-input);border:1px solid var(--border-color);border-radius:14px;padding:20px 24px;margin:12px 0;min-height:100px;font-size:22px;line-height:2;letter-spacing:1px;word-break:break-all;user-select:none;}
+  .ty-text-display .char{position:relative;transition:all .1s;}
+  .ty-text-display .char.pending{color:var(--text-placeholder);}
+  .ty-text-display .char.correct{color:#10b981;}
+  .ty-text-display .char.wrong{color:#ef4444;background:rgba(239,68,68,.18);border-radius:4px;}
+  .ty-text-display .char.current{color:var(--primary);font-weight:700;}
+  .ty-text-display .char.current::after{content:'';position:absolute;left:0;bottom:-2px;width:100%;height:3px;background:var(--primary);animation:tyblink 1s infinite;}
+  @keyframes tyblink{0%,100%{opacity:1;}50%{opacity:0;}}
+  /* 虚拟键盘 */
+  .ty-keyboard{background:var(--bg-input);border:1px solid var(--border-color);border-radius:14px;padding:14px;margin-top:12px;user-select:none;}
+  .ty-kb-row{display:flex;justify-content:center;gap:4px;margin-bottom:4px;}
+  .ty-kb-key{min-width:30px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;border:1px solid var(--border-color);background:#fff;transition:all .1s;position:relative;flex-shrink:0;}
+  .ty-kb-key.wide{min-width:48px;}
+  .ty-kb-key.xwide{min-width:64px;}
+  .ty-kb-key.space{min-width:180px;flex:1;max-width:280px;}
+  .ty-kb-key.f-lpinky{background:#fce7f3;border-color:#f9a8d4;}
+  .ty-kb-key.f-lring{background:#dbeafe;border-color:#93c5fd;}
+  .ty-kb-key.f-lmiddle{background:#d1fae5;border-color:#6ee7b7;}
+  .ty-kb-key.f-lindex{background:#ffedd5;border-color:#fdba74;}
+  .ty-kb-key.f-rindex{background:#fef9c3;border-color:#fde047;}
+  .ty-kb-key.f-rmiddle{background:#ede9fe;border-color:#c4b5fd;}
+  .ty-kb-key.f-rring{background:#fee2e2;border-color:#fca5a5;}
+  .ty-kb-key.f-rpinky{background:#f3f4f6;border-color:#d1d5db;}
+  .ty-kb-key.f-thumb{background:#e5e7eb;border-color:#9ca3af;}
+  .ty-kb-key.active{box-shadow:0 0 0 3px var(--primary),0 0 12px rgba(59,130,246,.5);transform:scale(1.12);z-index:2;}
+  .ty-kb-key.hit-correct{background:#10b981!important;color:#fff;border-color:#059669!important;}
+  .ty-kb-key.hit-wrong{background:#ef4444!important;color:#fff;border-color:#dc2626!important;animation:tyshake .3s;}
+  @keyframes tyshake{0%,100%{transform:translateX(0);}25%{transform:translateX(-3px);}75%{transform:translateX(3px);}}
+  /* 指法提示 */
+  .ty-finger-guide{display:flex;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .ty-finger-guide .fg-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-placeholder);}
+  .ty-finger-guide .fg-dot{width:12px;height:12px;border-radius:3px;}
+  /* 结果弹窗 */
+  .ty-result-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.25);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:1000;animation:tyfadein .25s ease;}
+  @keyframes tyfadein{from{opacity:0;}to{opacity:1;}}
+  .ty-result-card{background:var(--bg-card);border-radius:20px;padding:32px;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;animation:typopin .3s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes typopin{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .ty-result-close{position:absolute;top:12px;right:14px;width:30px;height:30px;border-radius:50%;border:none;background:var(--bg-input);color:var(--text-placeholder);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;}
+  .ty-result-close:hover{background:var(--border-color);color:var(--text-main);transform:rotate(90deg);}
+  .ty-result-card .result-icon{font-size:56px;margin-bottom:12px;}
+  .ty-result-card .result-title{font-size:22px;font-weight:700;margin-bottom:8px;}
+  .ty-result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:20px 0;}
+  .ty-result-stats .rs-item{background:var(--bg-input);border-radius:12px;padding:14px;}
+  .ty-result-stats .rs-val{font-size:24px;font-weight:700;color:var(--primary);}
+  .ty-result-stats .rs-label{font-size:12px;color:var(--text-placeholder);margin-top:4px;}
 
   /* 连连看 */
   .lk-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;max-width:430px;margin:16px auto;position:relative;}
@@ -6265,27 +6350,48 @@ mqqapi协议仅手机端生效；电脑浏览器复制链接无效。
   </div>
 </div>
 
-<!-- ============ 打字练习 独立页面 ============ -->
+<!-- ============ 打字通 独立页面 ============ -->
 <div class="tool-page" id="pageTypingPage">
   <div class="tool-header">
-    <button class="back-btn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
+    <button class="back-btn" id="tyBackBtn" onclick="openPage('chestHome')"><span>←</span> 返回百宝箱</button>
   </div>
   <div class="breadcrumb">
     <a onclick="goHome()">首页</a><span class="sep">/</span>
     <a onclick="openPage('chestHome')">百宝箱</a><span class="sep">/</span>
-    <span class="current">打字练习</span>
+    <span id="tyCrumb"><span class="current">打字通</span></span>
   </div>
   <div class="common-block" style="padding:0 28px 32px">
-    <h3>⌨️ 打字练习</h3>
-    <div class="game-info">
-      <span id="tyStat">速度 -- | 正确率 -- | 完成 0/3</span>
+    <!-- 课程选择视图 -->
+    <div id="tyCourseView">
+      <h3>⌨️ 打字通</h3>
+      <p style="font-size:13px;color:var(--text-placeholder);margin:8px 0 16px;">从键位到文章，循序渐进提升打字速度与正确率</p>
+      <div class="ty-course-grid" id="tyCourseGrid"></div>
     </div>
-    <div class="typing-sentence" id="tySentence"></div>
-    <input type="text" class="typing-input" id="tyInput" placeholder="在这里输入上面的句子…" autocomplete="off">
-    <div class="game-controls">
-      <button class="common-btn" onclick="tySkip()">⏭️ 跳过此句</button>
+    <!-- 关卡选择视图 -->
+    <div id="tyLevelView" style="display:none;">
+      <h3 id="tyLevelTitle" style="margin:0 0 14px;">课程</h3>
+      <div class="ty-level-list" id="tyLevelList"></div>
     </div>
-    <p style="text-align:center;font-size:13px;color:var(--text-placeholder);margin-top:8px;">绿色=正确，红色=错误，累计完成 3 句奖励 5 金币</p>
+    <!-- 练习视图 -->
+    <div id="tyPracticeView" style="display:none;" onclick="document.getElementById('tyHiddenInput').focus()">
+      <input type="text" id="tyHiddenInput" style="position:fixed;opacity:0;width:1px;height:1px;top:0;left:0;border:none;padding:0;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div class="ty-practice-header">
+        <div class="ty-practice-title" id="tyPracticeTitle">练习</div>
+        <div class="ty-stats">
+          <span class="stat-item">速度 <span class="stat-val" id="tySpeed">0</span>/分</span>
+          <span class="stat-item">正确率 <span class="stat-val" id="tyAcc">100</span>%</span>
+          <span class="stat-item">进度 <span class="stat-val" id="tyProgress">0</span>%</span>
+        </div>
+      </div>
+      <div class="ty-text-display" id="tyTextDisplay"></div>
+      <div class="ty-keyboard" id="tyKeyboard"></div>
+      <div class="ty-finger-guide" id="tyFingerGuide"></div>
+      <div class="game-controls" style="margin-top:14px;">
+        <button class="common-btn" onclick="tyRestart()">🔄 重新开始</button>
+        <button class="common-btn" onclick="tyBackToLevels()">📋 关卡列表</button>
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--text-placeholder);margin-top:8px;">直接用键盘输入，屏幕键盘会高亮提示当前应按的键；退格可修正</p>
+    </div>
   </div>
 </div>
 
@@ -7418,11 +7524,22 @@ document.addEventListener('keydown',function(e){
 
 // ==================== 五子棋 ====================
 const GOMOKU_N=15, GOMOKU_SIZE=30;
-let gomokuBoard, gomokuOver, gomokuTurn;
+let gomokuBoard, gomokuOver, gomokuTurn, gomokuTouchBound=false;
 function gomokuInit(){
   gomokuBoard=Array.from({length:GOMOKU_N},()=>Array(GOMOKU_N).fill(0));
   gomokuOver=false;gomokuTurn=1;
   gomokuDraw();
+  if(!gomokuTouchBound){
+    const cv=document.getElementById('gomokuCanvas');
+    if(cv){
+      cv.addEventListener('touchend',function(e){
+        e.preventDefault();e.stopPropagation();
+        const t=e.changedTouches[0];
+        gomokuHandlePoint(t.clientX,t.clientY);
+      },{passive:false});
+      gomokuTouchBound=true;
+    }
+  }
 }
 function gomokuDraw(){
   const cv=document.getElementById('gomokuCanvas');
@@ -7448,13 +7565,16 @@ function gomokuDraw(){
   }
 }
 function gomokuClick(e){
+  gomokuHandlePoint(e.clientX,e.clientY);
+}
+function gomokuHandlePoint(clientX,clientY){
   if(gomokuOver||gomokuTurn!==1)return;
   const cv=document.getElementById('gomokuCanvas');
   const rect=cv.getBoundingClientRect();
   const scaleX=cv.width/rect.width;
   const scaleY=cv.height/rect.height;
-  const x=(e.clientX-rect.left)*scaleX;
-  const y=(e.clientY-rect.top)*scaleY;
+  const x=(clientX-rect.left)*scaleX;
+  const y=(clientY-rect.top)*scaleY;
   const c=Math.round((x-GOMOKU_SIZE/2)/GOMOKU_SIZE);
   const r=Math.round((y-GOMOKU_SIZE/2)/GOMOKU_SIZE);
   if(r<0||r>=GOMOKU_N||c<0||c>=GOMOKU_N||gomokuBoard[r][c])return;
@@ -7675,7 +7795,7 @@ document.addEventListener('touchmove',function(e){
 },{passive:true});
 
 // ==================== 别踩白块 ====================
-let pianoTiles,pianoScore,pianoSpeed,pianoTimer,pianoStarted,pianoOver;
+let pianoTiles,pianoScore,pianoSpeed,pianoTimer,pianoStarted,pianoOver,pianoTouchBound=false;
 const PIANO_COLS=4,PIANO_TILE_H=80,PIANO_BOARD_H=420;
 function pianoInit(){
   pianoTiles=[];pianoScore=0;pianoSpeed=1.2;pianoStarted=false;pianoOver=false;
@@ -7684,6 +7804,17 @@ function pianoInit(){
     pianoTiles.push({col:Math.floor(Math.random()*PIANO_COLS),y:-PIANO_TILE_H*(8-i),tapped:false});
   }
   pianoDraw();
+  if(!pianoTouchBound){
+    const cv=document.getElementById('pianoCanvas');
+    if(cv){
+      cv.addEventListener('touchend',function(e){
+        e.preventDefault();e.stopPropagation();
+        const t=e.changedTouches[0];
+        pianoBoardTap(t.clientX,t.clientY);
+      },{passive:false});
+      pianoTouchBound=true;
+    }
+  }
 }
 function pianoDraw(){
   const canvas=document.getElementById('pianoCanvas');
@@ -9292,6 +9423,32 @@ function redeemCode(){
     // 刷新上学页面和状态页
     if(typeof renderSchoolList === 'function') renderSchoolList();
     if(typeof updateStatusPage === 'function') updateStatusPage();
+  }else if(code==='解锁打字'){
+    // 解锁所有打字关卡
+    try {
+      const typingCourses = [
+        {id:'keys', count:8},
+        {id:'words', count:6},
+        {id:'sentences', count:6},
+        {id:'articles', count:4},
+        {id:'poems', count:25}
+      ];
+      let progress = {};
+      try {
+        const saved = localStorage.getItem('typingProgress');
+        progress = saved ? JSON.parse(saved) : {};
+      } catch(e) {}
+      typingCourses.forEach(c => {
+        for(let i = 0; i < c.count; i++) {
+          progress[c.id + '_' + i] = { speed: 999, acc: 100 };
+        }
+      });
+      localStorage.setItem('typingProgress', JSON.stringify(progress));
+      showToast('🎉 兑换成功！已解锁全部打字关卡');
+      closeCodeModal();
+    } catch(e) {
+      showToast('❌ 解锁失败');
+    }
   }else{
     showToast('❌ 神秘代码错误');
   }
@@ -13752,6 +13909,10 @@ const TOOL_INDEX = [
   {name:'打弹珠',desc:'经典弹珠台弹射得分',cat:'游戏',source:'chest',page:'pinballPage',icon:'🔮'},
   {name:'弹珠商店',desc:'购买各种颜色的弹珠',cat:'游戏',source:'chest',page:'pinballShopPage',icon:'🛒'},
   {name:'别踩白块',desc:'点击黑块别踩白',cat:'游戏',source:'chest',page:'pianoPage',icon:'🎹'},
+  {name:'找不同',desc:'限时找出所有差异',cat:'游戏',source:'chest',page:'spotDiffPage',icon:'🔍'},
+  {name:'消消乐',desc:'三消连线赢金币',cat:'游戏',source:'chest',page:'match3Page',icon:'🍎'},
+  {name:'打字练习',desc:'练手速赢金币',cat:'游戏',source:'chest',page:'typingPage',icon:'⌨️'},
+  {name:'连连看',desc:'配对连线消除',cat:'游戏',source:'chest',page:'linkGamePage',icon:'🔗'},
   // 百宝箱 - 测算
   {name:'今日运势',desc:'每日固定运势测算',cat:'测算',source:'chest',page:'fortuneTodayPage',icon:'🌟'},
   {name:'今日人品',desc:'每日人品值检测',cat:'测算',source:'chest',page:'jinriPage',icon:'🍀'},
@@ -17993,7 +18154,7 @@ function initSpotDiff() {
 // ==================== 2. 消消乐 match3 ====================
 var M3_ROWS = 8, M3_COLS = 8;
 var M3_TYPES = ['🍎','🍊','🍋','🍇','🍓','🍉'];
-let m3Grid = [], m3Score = 0, m3Time = 90, m3Timer = null, m3Sel = null, m3Lock = false, m3Combo = 0;
+let m3Grid = [], m3Score = 0, m3Time = 90, m3Timer = null, m3Sel = null, m3Lock = false, m3Combo = 0, m3TouchBound = false;
 
 function m3RandType() { return M3_TYPES[Math.floor(Math.random() * M3_TYPES.length)]; }
 
@@ -18022,6 +18183,7 @@ function m3Render() {
     for (let c = 0; c < M3_COLS; c++) {
       const d = document.createElement('div');
       d.className = 'm3-cell';
+      d.dataset.r = r; d.dataset.c = c;
       d.textContent = m3Grid[r] ? (m3Grid[r][c] || '') : '';
       if (m3Sel && m3Sel.r === r && m3Sel.c === c) d.classList.add('m3-sel');
       d.onclick = () => m3Click(r, c);
@@ -18090,6 +18252,7 @@ function m3ResolveCascade() {
 }
 
 function m3Click(r, c) {
+  if (!m3Timer) m3Start();
   if (m3Lock || m3Time <= 0) return;
   if (!m3Grid[r][c]) return;
   if (!m3Sel) { m3Sel = { r, c }; m3Render(); return; }
@@ -18133,109 +18296,327 @@ function m3End() {
 }
 
 function initMatch3() {
-  const g = document.getElementById('m3Grid');
-  g.innerHTML = '';
-  m3Grid = [];
-  for (let r = 0; r < M3_ROWS; r++) m3Grid.push(new Array(M3_COLS).fill(''));
-  for (let r = 0; r < M3_ROWS; r++) for (let c = 0; c < M3_COLS; c++) {
-    const d = document.createElement('div');
-    d.className = 'm3-cell'; d.textContent = '';
-    g.appendChild(d);
-  }
+  m3Score = 0; m3Time = 90; m3Combo = 0; m3Sel = null; m3Lock = false;
+  if (m3Timer) { clearInterval(m3Timer); m3Timer = null; }
+  m3InitGrid();
+  m3Render();
   document.getElementById('m3Score').textContent = '0';
   document.getElementById('m3Time').textContent = '90';
   document.getElementById('m3Combo').textContent = 'x1';
   document.getElementById('m3StartBtn').textContent = '▶️ 开始游戏';
+  if (!m3TouchBound) {
+    const g = document.getElementById('m3Grid');
+    g.addEventListener('touchend', function(e){
+      e.preventDefault(); e.stopPropagation();
+      const cell = e.target.closest('.m3-cell');
+      if (!cell) return;
+      const r = parseInt(cell.dataset.r, 10);
+      const c = parseInt(cell.dataset.c, 10);
+      if (!isNaN(r) && !isNaN(c)) m3Click(r, c);
+    }, {passive: false});
+    m3TouchBound = true;
+  }
 }
 
-// ==================== 3. 打字练习 typing ====================
-var TYPING_ZH = [
-  '今天天气很好，适合出去走走。',
-  '编程是一门需要耐心和创造力的艺术。',
-  '春天来了，花儿开了，鸟儿在枝头歌唱。',
-  '生活就像一盒巧克力，你永远不知道下一颗是什么味道。',
-  '读书破万卷，下笔如有神。',
-  '千里之行，始于足下。',
-  '书山有路勤为径，学海无涯苦作舟。',
-  '健康的身体是革命的本钱。',
-  '保持好奇心，每天进步一点点。',
-  '友谊是两颗心真诚相待。',
-  '愿你走出半生，归来仍是少年。'
+// ==================== 3. 打字通 typing ====================
+// 手指分区映射
+const TY_FINGER_MAP = {
+  '`':'lpinky','1':'lpinky','q':'lpinky','a':'lpinky','z':'lpinky',
+  '2':'lring','w':'lring','s':'lring','x':'lring',
+  '3':'lmiddle','e':'lmiddle','d':'lmiddle','c':'lmiddle',
+  '4':'lindex','5':'lindex','r':'lindex','t':'lindex','f':'lindex','g':'lindex','v':'lindex','b':'lindex',
+  '6':'rindex','7':'rindex','y':'rindex','u':'rindex','h':'rindex','j':'rindex','n':'rindex','m':'rindex',
+  '8':'rmiddle','i':'rmiddle','k':'rmiddle',',':'rmiddle',
+  '9':'rring','o':'rring','l':'rring','.':'rring',
+  '0':'rpinky','-':'rpinky','=':'rpinky','p':'rpinky','[':'rpinky',']':'rpinky',';':'rpinky',"'":'rpinky','/':'rpinky','\\':'rpinky',
+  ' ':'thumb'
+};
+// 键盘布局
+const TY_KEYBOARD_LAYOUT = [
+  [{k:'`',w:1},{k:'1',w:1},{k:'2',w:1},{k:'3',w:1},{k:'4',w:1},{k:'5',w:1},{k:'6',w:1},{k:'7',w:1},{k:'8',w:1},{k:'9',w:1},{k:'0',w:1},{k:'-',w:1},{k:'=',w:1},{k:'Backspace',w:2,label:'⌫'}],
+  [{k:'Tab',w:1.5,label:'Tab'},{k:'q',w:1},{k:'w',w:1},{k:'e',w:1},{k:'r',w:1},{k:'t',w:1},{k:'y',w:1},{k:'u',w:1},{k:'i',w:1},{k:'o',w:1},{k:'p',w:1},{k:'[',w:1},{k:']',w:1},{k:'\\',w:1.5}],
+  [{k:'Caps',w:1.75,label:'Caps'},{k:'a',w:1},{k:'s',w:1},{k:'d',w:1},{k:'f',w:1},{k:'g',w:1},{k:'h',w:1},{k:'j',w:1},{k:'l',w:1},{k:';',w:1},{k:"'",w:1},{k:'Enter',w:2.25,label:'Enter'}],
+  [{k:'Shift',w:2.25,label:'Shift'},{k:'z',w:1},{k:'x',w:1},{k:'c',w:1},{k:'v',w:1},{k:'b',w:1},{k:'n',w:1},{k:'m',w:1},{k:',',w:1},{k:'.',w:1},{k:'/',w:1},{k:'Shift',w:2.75,label:'Shift'}],
+  [{k:'Ctrl',w:1.5,label:'Ctrl'},{k:'Win',w:1.5,label:'Win'},{k:'Alt',w:1.5,label:'Alt'},{k:' ',w:6,label:'Space',isSpace:true},{k:'Alt',w:1.5,label:'Alt'},{k:'Win',w:1.5,label:'Win'},{k:'Menu',w:1.5,label:'Menu'},{k:'Ctrl',w:1.5,label:'Ctrl'}]
 ];
-var TYPING_EN = [
-  'The quick brown fox jumps over the lazy dog.',
-  'Practice makes perfect in every skill.',
-  'Technology changes the world every single day.',
-  'A journey of a thousand miles begins with one step.',
-  'Success is not final, failure is not fatal.',
-  'Keep calm and carry on with a smile.',
-  'The early bird catches the warm juicy worm.',
-  'Time flies fast when you are having great fun.',
-  'Believe in yourself and you can do anything.',
-  'Dream big and work hard to make it real.',
-  'Where there is a will there is a way.'
+// 课程数据
+const TY_COURSES = [
+  {id:'keys',name:'键位练习',icon:'⌨️',desc:'熟悉键盘布局，掌握正确指法',levels:[
+    {name:'基准键位',desc:'asdf jkl; 双手基准键',text:'asdf jkl; asdf jkl; asdf jkl; fjdk sla; fjdk sla; asdf jkl; fjdk sla; asdf jkl; fjdk sla;'},
+    {name:'上排字母',desc:'qwerty uiop 上排键位',text:'qwer tyui qwer tyui qwerty uiop qwerty uiop qwer tyui qwerty uiop; qwer tyui qwerty uiop;'},
+    {name:'下排字母',desc:'zxcv bnm 下排键位',text:'zxcv bnm zxcv bnm zxcvbnm zxcvbnm zxcv bnm zxcv bnm zxcvbnm; zxcv bnm zxcvbnm;'},
+    {name:'数字键位',desc:'1234567890 数字行',text:'1234 5678 1234 5678 1234567890 1234567890 1234 5678 90 1234567890; 1357 2468 0246 13579;'},
+    {name:'符号键位',desc:'!@#$%^&*() 常用符号',text:'!@#$ %^&* ()!@ #$%^ &*() !@#$%^&*() @#$% ^&*! ()@# $%^& *!() @#$%^&*();'},
+    {name:'大小写混合',desc:'AbCdEfG 大小写交替',text:'AbCd EfGh IjKl MnOp QrSt UvWx YzAb CdEf GhIj KlMn OpQr StUv WxYz; AbC dEf gHi jKl mNo pQr sTu vWx yZa;'},
+    {name:'综合键位',desc:'全键盘字母综合练习',text:'the quick brown fox jumps over the lazy dog pack my box with five dozen liquor jugs how vexingly quick daft zebras jump sphinx of black quartz judge my vow'},
+    {name:'极速盲打',desc:'随机字母快速挑战',text:'qkjm zxwp vbnr tyui asdf ghjl qwer zxcv tyui opas dfgh jklz xcvb nmqw erty uiop asdf ghjk lzxc vbnm qwer tyui op;'},
+  ]},
+  {id:'words',name:'单词练习',icon:'📝',desc:'常用英文单词，提升输入流畅度',levels:[
+    {name:'短单词',desc:'3-4字母常用词',text:'the and for are but not you all any can had her was one our out day get has him his how man new now old see two way who boy did its let put say she too use'},
+    {name:'中等单词',desc:'5-6字母常用词',text:'about after again being could every first found great house large learn never other place plant point right small sound spell still study their there these thing think three water where which world would write'},
+    {name:'长单词',desc:'7字母以上进阶词',text:'another because between country develop example however include question remember sentence together understand different important knowledge beautiful wonderful experience'},
+    {name:'常用动词',desc:'be have do go make 等',text:'be have do say go get make know think take see come want look use give find tell ask work seem feel leave call keep let begin seem help talk turn start show hear play run move live believe'},
+    {name:'常用形容词',desc:'good big happy 等',text:'good new first last long great little own other old right big high different small large next early young important few public bad same able basic early free full hard high low open'},
+    {name:'编程关键词',desc:'if else function return 等',text:'if else for while do switch case break continue return function var let const class extends new this super import export default from async await try catch throw finally typeof instanceof void delete in of'},
+  ]},
+  {id:'sentences',name:'句子练习',icon:'📖',desc:'完整句子，训练连贯输入',levels:[
+    {name:'简单短句',desc:'日常简单英文句子',text:'I am a student. She is my friend. We go to school. He likes apples. The cat is cute. I love my family. Today is sunny. We are happy. It is a book. You are kind.'},
+    {name:'中等句子',desc:'中等长度英文句子',text:'The quick brown fox jumps over the lazy dog. Practice makes perfect in every skill. Technology changes the world every single day. A journey of a thousand miles begins with one step. Knowledge is power and practice is key.'},
+    {name:'中文句子',desc:'中文句子输入练习',text:'今天天气很好，适合出去走走。编程是一门需要耐心和创造力的艺术。春天来了，花儿开了，鸟儿在枝头歌唱。读书破万卷，下笔如有神。千里之行，始于足下。'},
+    {name:'英文名言',desc:'经典英文名言警句',text:'Stay hungry, stay foolish. The only way to do great work is to love what you do. In the middle of difficulty lies opportunity. Life is what happens when you are busy making other plans. Be the change you wish to see in the world.'},
+    {name:'古诗词',desc:'经典唐诗宋词',text:'床前明月光，疑是地上霜。举头望明月，低头思故乡。春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。白日依山尽，黄河入海流。欲穷千里目，更上一层楼。'},
+    {name:'代码行',desc:'常见代码行输入',text:'const sum = a + b; function hello(){ return "world"; } if(x > 0){ y = x * 2; } for(let i=0;i<10;i++){ arr.push(i); } const obj = {name:"tom", age:18}; let result = await fetch(url);'},
+  ]},
+  {id:'articles',name:'文章练习',icon:'📚',desc:'长篇文章，挑战极限速度',levels:[
+    {name:'短文精选',desc:'100字左右英文短文',text:'Learning to type well is a valuable skill that can save you countless hours over your lifetime. Start slowly, focus on accuracy first, and speed will come naturally with practice. Keep your fingers on the home keys and never look down at the keyboard.'},
+    {name:'长文挑战',desc:'200字以上进阶文章',text:'The art of touch typing is built on muscle memory and consistent practice. When you first begin, it may feel awkward and slow, but with dedication, your fingers will learn to find the keys without conscious thought. The key is to maintain proper finger placement at all times. Each finger has its own territory on the keyboard, and respecting these boundaries ensures maximum efficiency. Over time, you will find yourself typing faster and with fewer errors. Remember that consistency matters more than speed in the early stages. So be patient, practice regularly, and watch your skills improve day by day.'},
+    {name:'中文散文',desc:'经典中文散文片段',text:'燕子去了，有再来的时候；杨柳枯了，有再青的时候；桃花谢了，有再开的时候。但是，聪明的，你告诉我，我们的日子为什么一去不复返呢？是有人偷了他们罢：那是谁？又藏在何处呢？是他们自己逃走了罢：现在又到了哪里呢？'},
+    {name:'技术文章',desc:'编程技术类英文文章',text:'JavaScript is a versatile programming language that powers the interactive web. Originally created in just ten days, it has evolved into one of the most widely used languages in the world. Modern JavaScript features like arrow functions, template literals, and destructuring make code cleaner and more readable. Asynchronous programming with promises and async await allows developers to handle complex workflows with ease. Whether you are building web applications, server side tools, or mobile apps, JavaScript has something to offer.'},
+  ]},
+  {id:'poems',name:'古诗抄写',icon:'🏮',desc:'经典古诗词，边打字边欣赏文学之美',levels:[
+    {name:'咏鹅',desc:'骆宾王 · 五言古诗',text:'鹅，鹅，鹅，曲项向天歌。白毛浮绿水，红掌拨清波。'},
+    {name:'静夜思',desc:'李白 · 五言绝句',text:'床前明月光，疑是地上霜。举头望明月，低头思故乡。'},
+    {name:'春晓',desc:'孟浩然 · 五言绝句',text:'春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。'},
+    {name:'登鹳雀楼',desc:'王之涣 · 五言绝句',text:'白日依山尽，黄河入海流。欲穷千里目，更上一层楼。'},
+    {name:'悯农',desc:'李绅 · 五言绝句',text:'锄禾日当午，汗滴禾下土。谁知盘中餐，粒粒皆辛苦。'},
+    {name:'江雪',desc:'柳宗元 · 五言绝句',text:'千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。'},
+    {name:'望庐山瀑布',desc:'李白 · 七言绝句',text:'日照香炉生紫烟，遥看瀑布挂前川。飞流直下三千尺，疑是银河落九天。'},
+    {name:'绝句',desc:'杜甫 · 七言绝句',text:'两个黄鹂鸣翠柳，一行白鹭上青天。窗含西岭千秋雪，门泊东吴万里船。'},
+    {name:'游子吟',desc:'孟郊 · 五言古诗',text:'慈母手中线，游子身上衣。临行密密缝，意恐迟迟归。谁言寸草心，报得三春晖。'},
+    {name:'水调歌头',desc:'苏轼 · 宋词',text:'明月几时有？把酒问青天。不知天上宫阙，今夕是何年。我欲乘风归去，又恐琼楼玉宇，高处不胜寒。起舞弄清影，何似在人间。'},
+    {name:'鹿柴',desc:'王维 · 五言绝句',text:'空山不见人，但闻人语响。返景入深林，复照青苔上。'},
+    {name:'咏柳',desc:'贺知章 · 七言绝句',text:'碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。'},
+    {name:'回乡偶书',desc:'贺知章 · 七言绝句',text:'少小离家老大回，乡音无改鬓毛衰。儿童相见不相识，笑问客从何处来。'},
+    {name:'出塞',desc:'王昌龄 · 七言绝句',text:'秦时明月汉时关，万里长征人未还。但使龙城飞将在，不教胡马度阴山。'},
+    {name:'九月九日忆山东兄弟',desc:'王维 · 七言绝句',text:'独在异乡为异客，每逢佳节倍思亲。遥知兄弟登高处，遍插茱萸少一人。'},
+    {name:'望天门山',desc:'李白 · 七言绝句',text:'天门中断楚江开，碧水东流至此回。两岸青山相对出，孤帆一片日边来。'},
+    {name:'早发白帝城',desc:'李白 · 七言绝句',text:'朝辞白帝彩云间，千里江陵一日还。两岸猿声啼不住，轻舟已过万重山。'},
+    {name:'赠汪伦',desc:'李白 · 七言绝句',text:'李白乘舟将欲行，忽闻岸上踏歌声。桃花潭水深千尺，不及汪伦送我情。'},
+    {name:'山行',desc:'杜牧 · 七言绝句',text:'远上寒山石径斜，白云生处有人家。停车坐爱枫林晚，霜叶红于二月花。'},
+    {name:'清明',desc:'杜牧 · 七言绝句',text:'清明时节雨纷纷，路上行人欲断魂。借问酒家何处有，牧童遥指杏花村。'},
+    {name:'枫桥夜泊',desc:'张继 · 七言绝句',text:'月落乌啼霜满天，江枫渔火对愁眠。姑苏城外寒山寺，夜半钟声到客船。'},
+    {name:'题西林壁',desc:'苏轼 · 七言绝句',text:'横看成岭侧成峰，远近高低各不同。不识庐山真面目，只缘身在此山中。'},
+    {name:'饮湖上初晴后雨',desc:'苏轼 · 七言绝句',text:'水光潋滟晴方好，山色空蒙雨亦奇。欲把西湖比西子，淡妆浓抹总相宜。'},
+    {name:'春夜喜雨',desc:'杜甫 · 五言律诗',text:'好雨知时节，当春乃发生。随风潜入夜，润物细无声。野径云俱黑，江船火独明。晓看红湿处，花重锦官城。'},
+  ]}
 ];
-let tySentence = '', tyStartTs = 0, tyCompleted = 0, tyRewarded = false, tyLock = false;
+// 状态
+let tyCurrentCourse = null, tyCurrentLevel = 0, tyText = '', tyPos = 0, tyCorrectCount = 0, tyTotalTyped = 0, tyStartTime = 0, tyProgress = {}, tyInputBound = false, tyLastInputLen = 0;
 
-function tyNext() {
-  const zh = Math.random() < 0.5;
-  const pool = zh ? TYPING_ZH : TYPING_EN;
-  tySentence = pool[Math.floor(Math.random() * pool.length)];
-  tyStartTs = Date.now();
-  tyLock = false;
-  const input = document.getElementById('tyInput');
-  input.value = '';
-  document.getElementById('tySentence').innerHTML =
-    tySentence.split('').map(ch => '<span>' + (ch === ' ' ? '&nbsp;' : ch) + '</span>').join('');
-  tyUpdateStat(0, 0);
-  input.focus();
+function tyLoadProgress() {
+  try { const s = localStorage.getItem('typingProgress'); tyProgress = s ? JSON.parse(s) : {}; } catch(e) { tyProgress = {}; }
 }
-
-function tyUpdateStat(typedLen, correctLen) {
-  const minutes = (Date.now() - tyStartTs) / 60000;
-  const speed = minutes > 0 && typedLen > 0 ? Math.round(typedLen / minutes) : 0;
-  const acc = typedLen > 0 ? Math.round(correctLen / typedLen * 100) : 100;
-  document.getElementById('tyStat').textContent =
-    '速度 ' + speed + '/分 | 正确率 ' + acc + '% | 完成 ' + tyCompleted + '/3';
+function tySaveProgress() {
+  try { localStorage.setItem('typingProgress', JSON.stringify(tyProgress)); } catch(e) {}
 }
-
+function tyRenderCourses() {
+  const grid = document.getElementById('tyCourseGrid');
+  grid.innerHTML = TY_COURSES.map(c => {
+    const total = c.levels.length, done = c.levels.filter((_,i) => tyProgress[c.id+'_'+i]).length, pct = Math.round(done/total*100);
+    return '<div class="ty-course-card" onclick="tySelectCourse(\''+c.id+'\')"><div class="icon">'+c.icon+'</div><div class="name">'+c.name+'</div><div class="desc">'+c.desc+'</div><div class="progress"><div class="progress-bar" style="width:'+pct+'%"></div></div></div>';
+  }).join('');
+}
+function tySelectCourse(courseId) {
+  tyCurrentCourse = TY_COURSES.find(c => c.id === courseId);
+  document.getElementById('tyLevelTitle').textContent = tyCurrentCourse.icon + ' ' + tyCurrentCourse.name;
+  tyRenderLevels();
+  tyShowView('level');
+}
+function tyRenderLevels() {
+  const list = document.getElementById('tyLevelList');
+  list.innerHTML = tyCurrentCourse.levels.map((lv, i) => {
+    const key = tyCurrentCourse.id+'_'+i, done = tyProgress[key];
+    const locked = i > 0 && !tyProgress[tyCurrentCourse.id+'_'+(i-1)];
+    const stars = done ? (done.acc >= 95 ? '⭐⭐⭐' : done.acc >= 85 ? '⭐⭐' : '⭐') : '';
+    const desc = lv.desc + (done ? ' · 最高 '+done.speed+'字/分 '+done.acc+'%' : '');
+    return '<div class="ty-level-item '+(locked?'locked':'')+'" onclick="'+(locked?'':'tyStartLevel('+i+')')+'"><div class="lv-num">'+(locked?'🔒':i+1)+'</div><div class="lv-info"><div class="lv-name">'+lv.name+'</div><div class="lv-desc">'+desc+'</div></div><div class="lv-stars">'+stars+'</div></div>';
+  }).join('');
+}
+function tyStartLevel(levelIdx) {
+  tyCurrentLevel = levelIdx;
+  const lv = tyCurrentCourse.levels[levelIdx];
+  tyText = lv.text; tyPos = 0; tyCorrectCount = 0; tyTotalTyped = 0; tyStartTime = Date.now(); tyLastInputLen = 0;
+  document.getElementById('tyPracticeTitle').textContent = tyCurrentCourse.name+' - '+lv.name;
+  const input = document.getElementById('tyHiddenInput');
+  if (input) { input.value = ''; setTimeout(() => input.focus(), 50); }
+  tyRenderText(); tyRenderKeyboard(); tyRenderFingerGuide(); tyUpdateStats();
+  tyShowView('practice');
+}
+function tyRenderText() {
+  const display = document.getElementById('tyTextDisplay');
+  display.innerHTML = tyText.split('').map((ch, i) => {
+    let cls = 'pending';
+    if (i === tyPos) cls = 'current';
+    const show = ch === ' ' ? '&nbsp;' : ch;
+    return '<span class="char '+cls+'" data-idx="'+i+'">'+show+'</span>';
+  }).join('');
+}
+function tyRenderKeyboard() {
+  const kb = document.getElementById('tyKeyboard');
+  kb.innerHTML = TY_KEYBOARD_LAYOUT.map(row => {
+    return '<div class="ty-kb-row">'+row.map(key => {
+      const finger = TY_FINGER_MAP[key.k.toLowerCase()] || '';
+      const label = key.label || key.k;
+      let wc = '';
+      if (key.isSpace) wc = 'space';
+      else if (key.w >= 2) wc = 'xwide';
+      else if (key.w >= 1.5) wc = 'wide';
+      return '<div class="ty-kb-key f-'+finger+' '+wc+'" data-key="'+key.k.toLowerCase()+'">'+label+'</div>';
+    }).join('')+'</div>';
+  }).join('');
+  tyHighlightCurrentKey();
+}
+function tyHighlightCurrentKey() {
+  document.querySelectorAll('.ty-kb-key').forEach(k => k.classList.remove('active'));
+  if (tyPos >= tyText.length) return;
+  const ch = tyText[tyPos].toLowerCase();
+  const el = document.querySelector('.ty-kb-key[data-key="'+ch+'"]');
+  if (el) el.classList.add('active');
+}
+function tyRenderFingerGuide() {
+  const guide = document.getElementById('tyFingerGuide');
+  const fingers = [
+    {n:'左手小指',c:'#f9a8d4'},{n:'左手无名指',c:'#93c5fd'},{n:'左手中指',c:'#6ee7b7'},{n:'左手食指',c:'#fdba74'},
+    {n:'右手食指',c:'#fde047'},{n:'右手中指',c:'#c4b5fd'},{n:'右手无名指',c:'#fca5a5'},{n:'右手小指',c:'#d1d5db'}
+  ];
+  guide.innerHTML = fingers.map(f => '<div class="fg-item"><div class="fg-dot" style="background:'+f.c+'"></div>'+f.n+'</div>').join('');
+}
 function tyOnInput() {
-  if (tyLock) return;
-  const input = document.getElementById('tyInput');
-  const val = input.value;
-  const spans = document.querySelectorAll('#tySentence span');
-  let correct = 0;
-  for (let i = 0; i < tySentence.length; i++) {
-    const sp = spans[i];
-    if (i < val.length) {
-      if (val[i] === tySentence[i]) { sp.className = 'ok'; correct++; }
-      else sp.className = 'bad';
-    } else sp.className = '';
+  if (document.getElementById('tyPracticeView').style.display === 'none') return;
+  const input = document.getElementById('tyHiddenInput');
+  if (!input) return;
+  let val = input.value;
+  // 防止输入超过目标文本长度
+  if (val.length > tyText.length) {
+    val = val.substring(0, tyText.length);
+    input.value = val;
   }
-  tyUpdateStat(val.length, correct);
-  if (val.length === tySentence.length) {
-    tyLock = true;
-    tyCompleted++;
-    const minutes = Math.max((Date.now() - tyStartTs) / 60000, 0.01);
-    const speed = Math.round(tySentence.length / minutes);
-    const acc = Math.round(correct / val.length * 100);
-    showToast('✅ 完成！速度 ' + speed + '/分，正确率 ' + acc + '%');
-    if (tyCompleted >= 3 && !tyRewarded) {
-      tyRewarded = true;
-      bpAddCoins(5, 'typing');
-      showToast('🎉 累计完成 3 句！奖励 5 金币');
+  // 累计总输入字符数（只算新增的，退格不重复计）
+  if (val.length > tyLastInputLen) {
+    tyTotalTyped += val.length - tyLastInputLen;
+  }
+  tyLastInputLen = val.length;
+  tyPos = val.length;
+  // 逐字符比对并更新显示
+  let correct = 0;
+  const spans = document.querySelectorAll('#tyTextDisplay .char');
+  for (let i = 0; i < tyText.length; i++) {
+    const sp = spans[i];
+    if (!sp) continue;
+    if (i < val.length) {
+      if (val[i] === tyText[i]) { sp.className = 'char correct'; correct++; }
+      else sp.className = 'char wrong';
+    } else if (i === val.length) {
+      sp.className = 'char current';
+    } else {
+      sp.className = 'char pending';
     }
-    setTimeout(tyNext, 900);
+  }
+  tyCorrectCount = correct;
+  tyHighlightCurrentKey();
+  tyUpdateStats();
+  if (val.length >= tyText.length) tyFinish();
+}
+function tyUpdateStats() {
+  const minutes = (Date.now() - tyStartTime) / 60000;
+  const speed = minutes > 0 ? Math.round(tyPos / minutes) : 0;
+  const acc = tyTotalTyped > 0 ? Math.round(tyCorrectCount / tyTotalTyped * 100) : 100;
+  const progress = Math.round(tyPos / tyText.length * 100);
+  document.getElementById('tySpeed').textContent = speed;
+  document.getElementById('tyAcc').textContent = acc;
+  document.getElementById('tyProgress').textContent = progress;
+}
+function tyFinish() {
+  const minutes = Math.max((Date.now() - tyStartTime) / 60000, 0.01);
+  const speed = Math.round(tyText.length / minutes);
+  const acc = Math.round(tyCorrectCount / tyTotalTyped * 100);
+  const key = tyCurrentCourse.id+'_'+tyCurrentLevel;
+  const prev = tyProgress[key];
+  if (!prev || speed > prev.speed) { tyProgress[key] = { speed, acc }; tySaveProgress(); }
+  // 完成关卡奖励1314金币（任意模式任意关卡，每次完成都奖励）
+  if (typeof bpAddCoins === 'function') bpAddCoins(1314, 'typing');
+  tyShowResult(speed, acc);
+}
+function tyShowResult(speed, acc) {
+  const stars = acc >= 95 ? '⭐⭐⭐' : acc >= 85 ? '⭐⭐' : '⭐';
+  const ov = document.createElement('div');
+  ov.className = 'ty-result-overlay'; ov.id = 'tyResultOverlay';
+  const hasNext = tyCurrentLevel < tyCurrentCourse.levels.length - 1;
+  ov.innerHTML = '<div class="ty-result-card"><button class="ty-result-close" onclick="tyCloseResult()" title="关闭">✕</button><div class="result-icon">🎉</div><div class="result-title">练习完成！</div><div style="font-size:24px;margin:8px 0;">'+stars+'</div><div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;border-radius:12px;padding:10px 16px;margin:10px 0;display:flex;align-items:center;justify-content:center;gap:8px;"><span style="font-size:20px;">💰</span><span style="font-weight:700;color:#92400e;font-size:16px;">+1314 金币</span></div><div class="ty-result-stats"><div class="rs-item"><div class="rs-val">'+speed+'</div><div class="rs-label">速度 (字/分)</div></div><div class="rs-item"><div class="rs-val">'+acc+'%</div><div class="rs-label">正确率</div></div></div><div style="display:flex;gap:10px;justify-content:center;margin-top:8px;"><button class="common-btn" onclick="tyRestart()">🔄 再来一次</button>'+(hasNext?'<button class="common-btn" onclick="tyNextLevel()">➡️ 下一关</button>':'')+'</div><button class="common-btn" style="margin-top:10px;width:100%;" onclick="tyBackToLevels()">📋 关卡列表</button></div>';
+  document.body.appendChild(ov);
+}
+function tyCloseResult() {
+  document.getElementById('tyResultOverlay')?.remove();
+  tyBackToLevels();
+}
+function tyNextLevel() {
+  document.getElementById('tyResultOverlay')?.remove();
+  if (tyCurrentLevel < tyCurrentCourse.levels.length - 1) tyStartLevel(tyCurrentLevel + 1);
+  else { tyBackToLevels(); if (typeof showToast === 'function') showToast('🎉 已完成本课程全部关卡！'); }
+}
+function tyRestart() {
+  document.getElementById('tyResultOverlay')?.remove();
+  tyStartLevel(tyCurrentLevel);
+}
+function tyBackToLevels() {
+  document.getElementById('tyResultOverlay')?.remove();
+  tyRenderLevels();
+  tyShowView('level');
+}
+function tyBackToCourses() {
+  tyRenderCourses();
+  tyShowView('course');
+}
+function tyUpdateCrumb(view) {
+  const crumb = document.getElementById('tyCrumb');
+  if (!crumb) return;
+  if (view === 'course') {
+    crumb.innerHTML = '<span class="current">打字通</span>';
+  } else if (view === 'level') {
+    crumb.innerHTML = '<a onclick="tyBackToCourses()">打字通</a><span class="sep">/</span><span class="current">'+tyCurrentCourse.name+'</span>';
+  } else if (view === 'practice') {
+    const lvName = tyCurrentCourse.levels[tyCurrentLevel].name;
+    crumb.innerHTML = '<a onclick="tyBackToCourses()">打字通</a><span class="sep">/</span><a onclick="tyBackToLevels()">'+tyCurrentCourse.name+'</a><span class="sep">/</span><span class="current">'+lvName+'</span>';
   }
 }
-
-function tySkip() { tyNext(); }
-
+function tyUpdateBackBtn(view) {
+  const btn = document.getElementById('tyBackBtn');
+  if (!btn) return;
+  if (view === 'course') {
+    btn.innerHTML = '<span>←</span> 返回百宝箱';
+    btn.onclick = function() { openPage('chestHome'); };
+  } else if (view === 'level') {
+    btn.innerHTML = '<span>←</span> 返回打字通';
+    btn.onclick = tyBackToCourses;
+  } else if (view === 'practice') {
+    btn.innerHTML = '<span>←</span> 返回' + tyCurrentCourse.name;
+    btn.onclick = tyBackToLevels;
+  }
+}
+function tyShowView(view) {
+  const views = {
+    course: document.getElementById('tyCourseView'),
+    level: document.getElementById('tyLevelView'),
+    practice: document.getElementById('tyPracticeView')
+  };
+  Object.keys(views).forEach(k => { views[k].style.display = k === view ? '' : 'none'; });
+  // 重新触发页面切换动画（跟随个性化设置）
+  const activeEl = views[view];
+  activeEl.style.animation = 'none';
+  void activeEl.offsetWidth;
+  activeEl.style.animation = '';
+  tyUpdateCrumb(view);
+  tyUpdateBackBtn(view);
+}
 function initTyping() {
-  tyCompleted = 0; tyRewarded = false;
-  const input = document.getElementById('tyInput');
-  input.oninput = tyOnInput;
-  tyNext();
+  tyLoadProgress();
+  tyRenderCourses();
+  tyShowView('course');
+  if (!tyInputBound) {
+    const input = document.getElementById('tyHiddenInput');
+    if (input) input.addEventListener('input', tyOnInput);
+    tyInputBound = true;
+  }
 }
 
 // ==================== 4. 连连看 linkGame ====================
