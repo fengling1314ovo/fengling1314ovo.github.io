@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f5f7ff">
+<title>更新日志 - 枫铃工具箱</title>
+<style>
+*{box-sizing:border-box;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+
+:root{
+  --primary:#6366f1;
+  --primary-light:#818cf8;
+  --primary-bg:rgba(99, 102, 241, 0.12);
+  --text-main:#1e293b;
+  --text-secondary:#64748b;
+  --text-placeholder:#94a3b8;
+  --bg-card:rgba(255,255,255,0.85);
+  --bg-input:#f8fafc;
+  --border-color:#e2e8f0;
+  --radius-lg:16px;
+  --radius-xl:20px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --text-main:#f1f5f9;
+    --text-secondary:#94a3b8;
+    --text-placeholder:#94a3b8;
+    --bg-card:rgba(30,41,59,0.9);
+    --bg-input:rgba(15,23,42,0.5);
+    --border-color:rgba(148,163,184,0.2);
+  }
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.18),transparent 32%),
+             radial-gradient(circle at 85% 85%,rgba(168,85,247,.12),transparent 40%),
+             linear-gradient(180deg,#f5f7ff 0%,#eef2ff 100%);
+  color:var(--text-main);
+}
+
+@media (prefers-color-scheme: dark){
+  body{
+    background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.16),transparent 32%),
+               radial-gradient(circle at 85% 85%,rgba(168,85,247,.12),transparent 40%),
+               linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%);
+  }
+}
+
+/* 顶部导航 */
+.nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+  padding:16px 20px;
+  background:var(--bg-card);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border-color);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.back-btn{
+  width:40px;
+  height:40px;
+  border:none;
+  border-radius:12px;
+  background:var(--bg-input);
+  color:var(--text-main);
+  font-size:18px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.15s ease;
+}
+.back-btn:active{
+  transform:scale(0.94);
+  opacity:0.85;
+}
+
+.nav-title{
+  font-size:18px;
+  font-weight:700;
+  flex:1;
+}
+
+/* 主内容区 */
+.container{
+  max-width:680px;
+  margin:0 auto;
+  padding:24px 20px 40px;
+}
+
+/* 版本卡片 */
+.version-card{
+  background:var(--bg-card);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border-color);
+  border-radius:var(--radius-xl);
+  padding:24px;
+  margin-bottom:20px;
+  box-shadow:0 4px 20px rgba(99,102,241,0.06);
+  animation:cardIn 0.3s ease backwards;
+}
+.version-card:nth-child(2){animation-delay:0.05s;}
+.version-card:nth-child(3){animation-delay:0.1s;}
+.version-card:nth-child(4){animation-delay:0.15s;}
+
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(16px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+.version-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.version-num{
+  font-size:20px;
+  font-weight:700;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.version-date{
+  font-size:13px;
+  color:var(--text-placeholder);
+  padding:4px 10px;
+  background:var(--bg-input);
+  border-radius:8px;
+}
+
+.version-badge{
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:6px;
+  font-size:11px;
+  font-weight:600;
+  margin-left:8px;
+  vertical-align:middle;
+}
+.badge-new{
+  background:#10b981;
+  color:#fff;
+}
+.badge-beta{
+  background:#f59e0b;
+  color:#fff;
+}
+
+/* 更新类型分组 */
+.update-group{
+  margin-bottom:16px;
+}
+.update-group:last-child{
+  margin-bottom:0;
+}
+
+.update-type{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.update-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.update-list li{
+  padding:8px 0 8px 24px;
+  position:relative;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--text-secondary);
+}
+
+.update-list li::before{
+  content:'';
+  position:absolute;
+  left:8px;
+  top:16px;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--primary);
+  opacity:0.6;
+}
+
+/* 类型颜色 */
+.type-feature .dot{color:#10b981;}
+.type-fix .dot{color:#f59e0b;}
+.type-optimize .dot{color:#6366f1;}
+.type-security .dot{color:#ef4444;}
+
+/* 空状态 */
+.empty-state{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--text-placeholder);
+}
+.empty-state .icon{
+  font-size:48px;
+  margin-bottom:16px;
+}
+.empty-state .text{
+  font-size:15px;
+}
+
+/* 加载动画 */
+.loading{
+  text-align:center;
+  padding:40px;
+  color:var(--text-placeholder);
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<div class="nav">
+  <button class="back-btn" onclick="goBack()">←</button>
+  <div class="nav-title">📋 更新日志</div>
+</div>
+
+<!-- 主内容 -->
+<div class="container" id="updateList">
+  <div class="loading">加载中...</div>
+</div>
+
+<script>
+// 示例数据 - 后面你可以在这里加更新内容
+const updateLogs = [
+  {
+    version: 'v1.0.0',
+    date: '2026-09-25',
+    badge: 'new', // new / beta / ''
+    updates: {
+      feature: [
+        '新增用户注册登录系统',
+        '新增云端存档同步功能',
+        '新增自动同步设置（5/10/20/30/40/50/60分钟可选）'
+      ],
+      fix: [
+        '修复切换账号后提示登录过期的问题',
+        '修复注销按钮无反应的问题'
+      ],
+      optimize: [
+        '优化存档数据压缩，体积减少70%',
+        '优化弹窗动画效果'
+      ],
+      security: [
+        '密码加盐哈希存储，更安全'
+      ]
+    }
+  },
+  {
+    version: 'v0.9.0',
+    date: '2026-09-20',
+    badge: 'beta',
+    updates: {
+      feature: [
+        '工具箱初版上线'
+      ],
+      optimize: [
+        '优化页面加载速度'
+      ]
+    }
+  }
+];
+
+function renderUpdates(){
+  const container = document.getElementById('updateList');
+  
+  if(!updateLogs || updateLogs.length === 0){
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">📝</div>
+        <div class="text">暂无更新日志</div>
+      </div>
+    `;
+    return;
+  }
+  
+  const html = updateLogs.map(log => {
+    let badgeHtml = '';
+    if(log.badge === 'new') badgeHtml = '<span class="version-badge badge-new">最新</span>';
+    if(log.badge === 'beta') badgeHtml = '<span class="version-badge badge-beta">测试</span>';
+    
+    let groupsHtml = '';
+    
+    if(log.updates.feature && log.updates.feature.length > 0){
+      groupsHtml += `
+        <div class="update-group type-feature">
+          <div class="update-type"><span class="dot">✨</span> 新功能</div>
+          <ul class="update-list">
+            ${log.updates.feature.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+    
+    if(log.updates.fix && log.updates.fix.length > 0){
+      groupsHtml += `
+        <div class="update-group type-fix">
+          <div class="update-type"><span class="dot">🔧</span> 问题修复</div>
+          <ul class="update-list">
+            ${log.updates.fix.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+    
+    if(log.updates.optimize && log.updates.optimize.length > 0){
+      groupsHtml += `
+        <div class="update-group type-optimize">
+          <div class="update-type"><span class="dot">⚡</span> 优化改进</div>
+          <ul class="update-list">
+            ${log.updates.optimize.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+    
+    if(log.updates.security && log.updates.security.length > 0){
+      groupsHtml += `
+        <div class="update-group type-security">
+          <div class="update-type"><span class="dot">🔒</span> 安全相关</div>
+          <ul class="update-list">
+            ${log.updates.security.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+    
+    return `
+      <div class="version-card">
+        <div class="version-header">
+          <div class="version-num">${log.version} ${badgeHtml}</div>
+          <div class="version-date">${log.date}</div>
+        </div>
+        ${groupsHtml}
+      </div>
+    `;
+  }).join('');
+  
+  container.innerHTML = html;
+}
+
+function goBack(){
+  if(window.history.length > 1){
+    history.back();
+  } else {
+    window.location.href = '/';
+  }
+}
+
+// 页面加载完成后渲染
+renderUpdates();
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
