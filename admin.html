@@ -151,6 +151,27 @@ body{
   height:38px;padding:0 16px;border:none;border-radius:10px;
   background:var(--primary);color:#fff;font-size:14px;cursor:pointer;
 }
+/* 移动端适配 */
+@media (max-width: 768px){
+  body{ padding:16px 12px; }
+  .container{ max-width:100%; }
+  .stats-grid{ grid-template-columns:repeat(2,1fr); gap:10px; }
+  .stat-card{ padding:14px; }
+  .stat-card .value{ font-size:22px; }
+  .admin-header{ flex-direction:column; gap:10px; align-items:flex-start; padding:14px 16px; }
+  .admin-header h1{ font-size:16px; }
+  .tabs{ overflow-x:auto; flex-wrap:nowrap; }
+  .tab-btn{ white-space:nowrap; min-width:100px; }
+  .search-bar{ flex-wrap:wrap; }
+  .search-bar input, .search-bar select{ flex:1 1 100%; min-width:0; }
+  .search-bar button{ flex:0 0 auto; }
+  .user-table{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .user-table table{ min-width:600px; }
+  .action-btns{ flex-wrap:wrap; }
+  .action-btns button{ padding:4px 8px; font-size:11px; }
+  .modal-box{ padding:18px; margin:0; }
+  .login-box{ margin:40px auto; padding:24px; }
+}
 </style>
 </head>
 <body>
