@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f5f7ff">
+<title>说明 - 枫铃工具箱</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+:root{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  --primary:#6366f1;
+  --primary-light:#818cf8;
+  --primary-bg:rgba(99, 102, 241, 0.12);
+  --text-main:#1e293b;
+  --text-secondary:#64748b;
+  --text-placeholder:#94a3b8;
+  --bg-card:rgba(255,255,255,0.85);
+  --bg-input:#f8fafc;
+  --border-color:#e2e8f0;
+}
+body.dark{
+  --text-main:#f1f5f9;
+  --text-secondary:#94a3b8;
+  --text-placeholder:#94a3b8;
+  --bg-card:rgba(30,41,59,0.9);
+  --bg-input:rgba(15,23,42,0.5);
+  --border-color:rgba(148,163,184,0.18);
+}
+body{
+  margin:0;min-height:100vh;
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.16),transparent 32%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 32%),
+  radial-gradient(circle at 50% 100%,rgba(168,85,247,.10),transparent 45%),
+  linear-gradient(160deg,#f8faff 0%,#eef1ff 50%,#eaf6ff 100%);
+  background-attachment:fixed;color:var(--text-main);transition:background .3s ease,color .3s ease;
+}
+body.dark{
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.18),transparent 32%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 32%),
+  linear-gradient(135deg,#0f172a,#1e293b);
+}
+.sticky-nav{
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(180deg,rgba(248,250,255,0.72),rgba(248,250,255,0.52));
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  padding:16px 28px 12px;
+  border-bottom:1px solid rgba(226,232,240,0.6);
+  box-shadow:0 2px 12px rgba(30,41,59,0.04);
+}
+body.dark .sticky-nav{
+  background:linear-gradient(180deg,rgba(15,23,42,0.72),rgba(15,23,42,0.52));
+  border-bottom-color:rgba(148,163,184,0.15);
+  box-shadow:0 2px 12px rgba(0,0,0,0.2);
+}
+.tool-header{display:flex;align-items:center;justify-content:flex-start;gap:12px;flex-wrap:wrap;}
+.back-btn{
+  border:none;background:var(--primary-bg);color:var(--primary);
+  padding:7px 14px;border-radius:12px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;gap:6px;min-height:40px;transition:transform .12s;
+}
+.back-btn:active{transform:scale(0.96);}
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  margin-top:4px;font-size:13px;color:var(--text-secondary);
+}
+.breadcrumb a{color:var(--primary);text-decoration:none;cursor:pointer;padding:2px 6px;border-radius:6px;transition:background .15s;}
+.breadcrumb a:hover{background:var(--primary-bg);}
+.breadcrumb .sep{color:var(--text-placeholder);}
+.breadcrumb .current{color:var(--text-main);font-weight:500;}
+.content{max-width:900px;margin:0 auto;padding:16px 28px 32px;}
+.common-block h3{margin:0 0 16px;font-size:20px;color:var(--text-main);}
+.notice-card{
+  padding:16px;border-radius:14px;background:var(--bg-input);
+  border:1px solid var(--border-color);line-height:1.8;font-size:14px;
+}
+.notice-card .date{color:var(--primary);font-weight:600;margin-bottom:8px;}
+.notice-card ul{margin:8px 0;padding-left:20px;}
+.notice-card li{margin:4px 0;}
+.notice-card .warn{color:var(--text-secondary);margin-top:10px;}
+.notice-title{font-weight:600;margin:0 0 10px;font-size:15px;}
+.manual-card{padding:16px;border-radius:14px;background:var(--bg-input);border:1px solid var(--border-color);line-height:1.8;font-size:14px;margin-bottom:12px;}
+.manual-card h4{margin:0 0 8px;font-size:15px;color:var(--primary);}
+.manual-card p{margin:0 0 6px;}
+.manual-card ul{margin:6px 0;padding-left:20px;}
+.manual-card li{margin:3px 0;}
+code{background:var(--bg-card);padding:2px 8px;border-radius:6px;font-family:monospace;font-size:13px;border:1px solid var(--border-color);}
+
+/* 页面进入动画 */
+.anim-wrap{
+  animation-name:var(--page-anim-name,pageAnimDefault);
+  animation-duration:var(--page-anim-duration,0.28s);
+  animation-timing-function:var(--page-anim-ease,ease);
+  animation-fill-mode:both;
+}
+@keyframes pageAnimDefault{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pageAnimSlide{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pageAnimZoom{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+@keyframes pageAnimRotate{from{opacity:0;transform:scale(0.9) rotate(-1deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes pageAnimBlur{from{opacity:0;transform:translateY(6px);filter:blur(6px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+.section-fade{animation:sectionFade 0.3s ease;}
+@keyframes sectionFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+  <div class="sticky-nav">
+    <button class="back-btn" id="topBackBtn" onclick="history.back()" style="margin-bottom:8px;"><span>←</span> 返回</button>
+    <div class="breadcrumb" id="crumbBar">
+      <a onclick="history.back()" style="cursor:pointer;">首页</a><span class="sep">/</span>
+      <span class="current" id="crumbCurrent">说明</span>
+    </div>
+  </div>
+  <div class="content anim-wrap" id="animWrap">
+    <div class="common-block">
+      <h3>📖 枫铃工具箱说明</h3>
+
+      <!-- 更新日志 -->
+      <div id="sectionLog">
+        <div style="margin-bottom:16px;">
+          <button onclick="showManual()" style="width:100%;padding:14px;border:none;border-radius:14px;background:var(--primary);color:#fff;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(99,102,241,0.25);">
+            📖 查看说明书
+          </button>
+        </div>
+        <div class="notice-card">
+          <div class="notice-title">📢 更新日志</div>
+          <div class="date">9月27日 新增</div>
+          <p style="margin:0 0 8px;">新增 5 个工具箱：</p>
+          <ul>
+            <li>💱 汇率换算</li>
+            <li>🌐 IP 查询</li>
+            <li>🖥️ 查询服务器 IP</li>
+            <li>☀️ 天气查询</li>
+            <li>📊 生成条形码</li>
+            <li>📷 二维码生成新增扫描二维码功能</li>
+          </ul>
+          <p class="warn">⚠️ 注意：以上功能并不会调用枫铃工具箱的服务器，而是调用其他公开服务器的 API，可以理解为这些功能使用的都是别人的服务器。</p>
+          <div class="date" style="margin-top:14px;">9月27日 更新</div>
+          <ul>
+            <li>已删除部分杂项里的工具，并将剩下的工具放入了首页"更多"里面</li>
+            <li>将杂项按钮替换为了说明按钮，说明打开是一个全新的网页，首次加载缓慢</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 说明书 -->
+      <div id="sectionManual" style="display:none;">
+        <div class="manual-card">
+          <h4>📷 二维码生成</h4>
+          <p>输入文字或链接生成二维码，支持添加Logo、自定义颜色、下载PNG/SVG。</p>
+          <ul>
+            <li>点击「📷 扫码」可调用摄像头或上传图片扫描二维码</li>
+            <li>生成的二维码会自动保存在本地历史记录中</li>
+          </ul>
+          <button onclick="showQrManual()" style="margin-top:10px;padding:8px 16px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:13px;font-weight:600;cursor:pointer;">
+            📖 二维码生成说明书
+          </button>
+        </div>
+
+        <div class="manual-card">
+          <h4>👤 QQ快捷工具</h4>
+          <p>输入对方QQ号，可打开QQ资料卡、发起聊天。</p>
+          <button onclick="showQqManual()" style="margin-top:10px;padding:8px 16px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:13px;font-weight:600;cursor:pointer;">
+            📖 QQ快捷工具说明书
+          </button>
+        </div>
+
+        <div class="manual-card">
+          <h4>👥 QQ群快捷工具</h4>
+          <p>输入QQ群号，可打开QQ群资料卡页面。</p>
+          <button onclick="showQqGroupManual()" style="margin-top:10px;padding:8px 16px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:13px;font-weight:600;cursor:pointer;">
+            📖 QQ群快捷工具说明书
+          </button>
+        </div>
+
+        <button onclick="showOtherManual()" style="width:100%;margin-top:4px;padding:14px;border:none;border-radius:14px;background:var(--primary);color:#fff;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(99,102,241,0.25);">
+          📚 其他说明书
+        </button>
+      </div>
+
+      <!-- QQ快捷工具说明书 -->
+      <div id="sectionQq" style="display:none;">
+        <div class="manual-card">
+          <h4>👤 QQ快捷工具说明书</h4>
+          <p style="margin:0 0 8px;">我发现很多人不会使用QQ快捷工具。</p>
+          <p style="margin:0 0 8px;">QQ快捷工具是输入对方QQ号，然后点击"打开QQ资料卡"就可以打开对方的资料卡。</p>
+          <div style="padding:10px 14px;border-radius:10px;background:var(--primary-bg);color:var(--primary);font-weight:500;margin:8px 0;">
+            注意：这个功能只能在QQ中打开网站使用，或者是浏览器打开网站使用。
+          </div>
+          <ul>
+            <li>"发起聊天"只对好友有效</li>
+            <li>"打开资料卡"不是好友也能打开</li>
+            <li>可以打开一些不让搜索的QQ号的资料卡</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- QQ群快捷工具说明书 -->
+      <div id="sectionQqGroup" style="display:none;">
+        <div class="manual-card">
+          <h4>👥 QQ群快捷工具说明书</h4>
+          <p style="margin:0 0 8px;">我发现很多人不会使用QQ群快捷工具。</p>
+          <p style="margin:0 0 8px;">输入一个QQ群，然后点"打开QQ群卡片"就可以打开那个群的资料卡页面。</p>
+          <div style="padding:10px 14px;border-radius:10px;background:var(--primary-bg);color:var(--primary);font-weight:500;margin:8px 0;">
+            注意：这个功能只能在浏览器打开才能正常使用。
+          </div>
+          <ul>
+            <li>可以打开一些不让搜索的群的资料卡</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 二维码生成说明书 -->
+      <div id="sectionQr" style="display:none;">
+        <div class="manual-card">
+          <h4>📷 二维码生成说明书</h4>
+          <p style="margin:0 0 8px;">我发现很多人不会使用生成二维码功能，比如生成了一个二维码，微信扫描了无法进入链接里的网站。</p>
+          <p style="margin:0 0 8px;">这是因为你<strong>没在链接前面加上 <code>https://</code></strong>。</p>
+          <div style="padding:10px 14px;border-radius:10px;background:var(--primary-bg);color:var(--primary);font-weight:500;margin:8px 0;">
+            比如你用生成二维码功能，生成了一个进入 qq.com 的链接，格式应该是 <code>https://qq.com</code>，而不是 <code>qq.com</code>。
+          </div>
+          <p style="margin:0 0 4px;color:#ef4444;">❌ 错误：<code>qq.com</code></p>
+          <p style="margin:0;color:#22c55e;">✅ 正确：<code>https://qq.com</code></p>
+        </div>
+      </div>
+
+      <!-- 其他说明书 -->
+      <div id="sectionOther" style="display:none;">
+        <div class="manual-card">
+          <h4>📊 条形码生成</h4>
+          <p>输入数字或字母生成条形码，支持 CODE128、EAN13、UPC 等多种格式。</p>
+          <ul><li>同样支持扫码识别条形码</li></ul>
+        </div>
+        <div class="manual-card">
+          <h4>💱 汇率换算（需联网）</h4>
+          <p>实时汇率换算，支持30+主流货币。数据来自公开汇率API。</p>
+        </div>
+        <div class="manual-card">
+          <h4>🌐 IP 查询（需联网）</h4>
+          <p>查询当前IP地址的归属地、运营商。打开页面自动查询一次。</p>
+        </div>
+        <div class="manual-card">
+          <h4>🔍 查询服务器IP（需联网）</h4>
+          <p>输入域名查询网站服务器的IP地址和归属地，默认查询 fengling1314ovo.top。</p>
+        </div>
+        <div class="manual-card">
+          <h4>☀️ 天气查询（需联网）</h4>
+          <p>选择城市查询实时天气、温度、湿度、风速等。数据来自 Open-Meteo。</p>
+        </div>
+        <div class="manual-card">
+          <h4>🧰 百宝箱</h4>
+          <p>包含小游戏、趣味测试、占卜、工具等多种内容。存档保存在本地。</p>
+        </div>
+        <div class="manual-card">
+          <h4>🎨 个性化</h4>
+          <p>可自定义主题颜色、深色模式、页面动画和节日粒子效果。设置保存在本地浏览器。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+<script>
+function hexToRgba(hex, alpha){
+  var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return 'rgba('+r+', '+g+', '+b+', '+alpha+')';
+}
+function showManual(){
+  document.getElementById('sectionLog').style.display='none';
+  document.getElementById('sectionOther').style.display='none';
+  document.getElementById('sectionQr').style.display='none';
+  document.getElementById('sectionQq').style.display='none';
+  document.getElementById('sectionQqGroup').style.display='none';
+  const m=document.getElementById('sectionManual');
+  m.style.display='block';
+  m.classList.remove('section-fade');
+  void m.offsetWidth;
+  m.classList.add('section-fade');
+  document.getElementById('crumbBar').innerHTML='<a onclick="history.back()" style="cursor:pointer;">首页</a><span class="sep">/</span><a onclick="showLog()" style="cursor:pointer;">说明</a><span class="sep">/</span><span class="current">说明书</span>';
+  document.title='说明书 - 枫铃工具箱';
+  document.getElementById('topBackBtn').setAttribute('onclick','showLog()');
+  document.getElementById('topBackBtn').innerHTML='<span>←</span> 返回说明';
+  window.scrollTo(0,0);
+}
+function showLog(){
+  document.getElementById('sectionManual').style.display='none';
+  document.getElementById('sectionOther').style.display='none';
+  document.getElementById('sectionQr').style.display='none';
+  document.getElementById('sectionQq').style.display='none';
+  document.getElementById('sectionQqGroup').style.display='none';
+  const l=document.getElementById('sectionLog');
+  l.style.display='block';
+  l.classList.remove('section-fade');
+  void l.offsetWidth;
+  l.classList.add('section-fade');
+  document.getElementById('crumbBar').innerHTML='<a onclick="history.back()" style="cursor:pointer;">首页</a><span class="sep">/</span><span class="current">说明</span>';
+  document.title='说明 - 枫铃工具箱';
+  document.getElementById('topBackBtn').setAttribute('onclick','history.back()');
+  document.getElementById('topBackBtn').innerHTML='<span>←</span> 返回';
+  window.scrollTo(0,0);
+}
+function showQrManual(){
+  document.getElementById('sectionManual').style.display='none';
+  const q=document.getElementById('sectionQr');
+  q.style.display='block';
+  q.classList.remove('section-fade');
+  void q.offsetWidth;
+  q.classList.add('section-fade');
+  document.getElementById('crumbBar').innerHTML='<a onclick="history.back()" style="cursor:pointer;">首页</a><span class="sep">/</span><a onclick="showLog()" style="cursor:pointer;">说明</a><span class="sep">/</span><a onclick="showManual()" style="cursor:pointer;">说明书</a><span class="sep">/</span><span class="current">二维码生成说明书</span>';
+  document.title='二维码生成说明书 - 枫铃工具箱';
+  document.getElementById('topBackBtn').setAttribute('onclick','showManual()');
+  document.getElementById('topBackBtn').innerHTML='<span>←</span> 返回说明书';
+  window.scrollTo(0,0);
+}
+function showQqManual(){
+  document.getElementById('sectionManual').style.display='none';
+  const q=document.getElementById('sectionQq');
+  q.style.display='block';
+  q.classList.remove('section-fade');
+  void q.offsetWidth;
+  q.classList.add('section-fade');
+  document.getElementById('crumbBar').innerHTML='<a onclick="history.back()" style="cursor:pointer;">首页</a><span class="sep">/</span><a onclick="showLog()" style="cursor:pointer;">说明</a><span class="sep">/</span><a onclick="showManual()" style="cursor:pointer;">说明书</a><span class="sep">/</span><span class="current">QQ快捷工具说明书</span>';
+  document.title='QQ快捷工具说明书 - 枫铃工具箱';
+  document.getElementById('topBackBtn').setAttribute('onclick','showManual()');
+  document.getElementById('topBackBtn').innerHTML='<span>←</span> 返回说明书';
+  window.scrollTo(0,0);
+}
+function showQqGroupManual(){
+  document.getElementById('sectionManual').style.display='none';
+  const q=document.getElementById('sectionQqGroup');
+  q.style.display='block';
+  q.classList.remove('section-fade');
+  void q.offsetWidth;
+  q.classList.add('section-fade');
+  document.getElementById('crumbBar').innerHTML='<a onclick="history.back()" style="cursor:pointer;">首页</a><span class="sep">/</span><a onclick="showLog()" style="cursor:pointer;">说明</a><span class="sep">/</span><a onclick="showManual()" style="cursor:pointer;">说明书</a><span class="sep">/</span><span class="current">QQ群快捷工具说明书</span>';
+  document.title='QQ群快捷工具说明书 - 枫铃工具箱';
+  document.getElementById('topBackBtn').setAttribute('onclick','showManual()');
+  document.getElementById('topBackBtn').innerHTML='<span>←</span> 返回说明书';
+  window.scrollTo(0,0);
+}
+function showOtherManual(){
+  document.getElementById('sectionManual').style.display='none';
+  document.getElementById('sectionQr').style.display='none';
+  document.getElementById('sectionQq').style.display='none';
+  document.getElementById('sectionQqGroup').style.display='none';
+  const o=document.getElementById('sectionOther');
+  o.style.display='block';
+  o.classList.remove('section-fade');
+  void o.offsetWidth;
+  o.classList.add('section-fade');
+  document.getElementById('crumbBar').innerHTML='<a onclick="history.back()" style="cursor:pointer;">首页</a><span class="sep">/</span><a onclick="showLog()" style="cursor:pointer;">说明</a><span class="sep">/</span><a onclick="showManual()" style="cursor:pointer;">说明书</a><span class="sep">/</span><span class="current">其他说明书</span>';
+  document.title='其他说明书 - 枫铃工具箱';
+  document.getElementById('topBackBtn').setAttribute('onclick','showManual()');
+  document.getElementById('topBackBtn').innerHTML='<span>←</span> 返回说明书';
+  window.scrollTo(0,0);
+}
+(function(){
+  const dark = localStorage.getItem('qqtool_dark');
+  if(dark === '1') document.body.classList.add('dark');
+
+  // 页面动画
+  const pageAnimMap={
+    default:{name:'pageAnimDefault',duration:'0.28s',ease:'ease'},
+    slide:{name:'pageAnimSlide',duration:'0.3s',ease:'ease-out'},
+    zoom:{name:'pageAnimZoom',duration:'0.35s',ease:'cubic-bezier(0.34,1.56,0.64,1)'},
+    rotate:{name:'pageAnimRotate',duration:'0.35s',ease:'cubic-bezier(0.34,1.56,0.64,1)'},
+    blur:{name:'pageAnimBlur',duration:'0.35s',ease:'ease-out'}
+  };
+  let pageAnim='default';
+  try{ pageAnim=JSON.parse(localStorage.getItem('page_anim')||'"default"'); }catch(e){}
+  const cfg=pageAnimMap[pageAnim]||pageAnimMap.default;
+  document.body.style.setProperty('--page-anim-name',cfg.name);
+  document.body.style.setProperty('--page-anim-duration',cfg.duration);
+  document.body.style.setProperty('--page-anim-ease',cfg.ease);
+
+  const savedTheme = localStorage.getItem('qqtool_theme');
+  if(savedTheme){
+    try{
+      const t = JSON.parse(savedTheme);
+      if(t.p1 && t.p2){
+        document.documentElement.style.setProperty('--primary', t.p1);
+        document.documentElement.style.setProperty('--primary-light', t.p2);
+        document.documentElement.style.setProperty('--primary-bg', hexToRgba(t.p1, 0.12));
+        // 跟随主题的背景渐变
+        if(dark === '1'){
+          document.body.style.background =
+            'radial-gradient(circle at 15% 15%,' + hexToRgba(t.p1, 0.18) + ',transparent 32%),' +
+            'radial-gradient(circle at 85% 85%,' + hexToRgba(t.p2, 0.12) + ',transparent 32%),' +
+            'linear-gradient(135deg,#0f172a,#1e293b)';
+        }else{
+          document.body.style.background =
+            'radial-gradient(circle at 15% 15%,' + hexToRgba(t.p1, 0.16) + ',transparent 32%),' +
+            'radial-gradient(circle at 85% 85%,' + hexToRgba(t.p2, 0.14) + ',transparent 32%),' +
+            'radial-gradient(circle at 50% 100%,' + hexToRgba(t.p1, 0.08) + ',transparent 45%),' +
+            'linear-gradient(160deg,#f8faff 0%,#eef1ff 50%,#eaf6ff 100%)';
+        }
+        document.body.style.backgroundAttachment = 'fixed';
+      }
+    }catch(e){}
+  }
+})();
+
+// ==================== 节日粒子效果 ====================
+(function(){
+  let festivalCanvas=null, festivalCtx=null, festivalParticles=[], festivalAnimId=null;
+  let currentFestival = 'none';
+  try{
+    const raw = localStorage.getItem('festival_theme');
+    if(raw){
+      currentFestival = JSON.parse(raw);
+      if(typeof currentFestival !== 'string') currentFestival = 'none';
+    }
+  }catch(e){
+    currentFestival = localStorage.getItem('festival_theme') || 'none';
+  }
+
+  function initFestivalCanvas(){
+    if(festivalCanvas)return;
+    festivalCanvas=document.createElement('canvas');
+    festivalCanvas.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;';
+    document.body.appendChild(festivalCanvas);
+    festivalCtx=festivalCanvas.getContext('2d');
+    resizeFestivalCanvas();
+    window.addEventListener('resize',resizeFestivalCanvas);
+  }
+  function resizeFestivalCanvas(){
+    if(!festivalCanvas)return;
+    festivalCanvas.width=window.innerWidth;
+    festivalCanvas.height=window.innerHeight;
+  }
+  function createFestivalParticle(type){
+    const w=festivalCanvas.width;
+    if(type==='snow'){
+      return{x:Math.random()*w,y:-10,r:Math.random()*2+1.5,speed:Math.random()*0.8+0.4,drift:Math.random()*0.3-0.15,opacity:Math.random()*0.3+0.3};
+    }else if(type==='sakura'){
+      return{x:Math.random()*w,y:-10,r:Math.random()*3+3,speed:Math.random()*1+0.6,drift:Math.random()*0.6-0.3,rotation:Math.random()*Math.PI*2,rotSpeed:Math.random()*0.03-0.015,opacity:Math.random()*0.3+0.4};
+    }else if(type==='coin'){
+      return{x:Math.random()*w,y:-10,r:Math.random()*4+4,speed:Math.random()*1.2+0.7,drift:Math.random()*0.5-0.25,rotation:0,rotSpeed:Math.random()*0.06-0.03,opacity:Math.random()*0.3+0.3};
+    }else if(type==='love'){
+      return{x:Math.random()*w,y:-20,emoji:'❤️',size:Math.random()*8+12,speed:Math.random()*0.8+0.4,drift:Math.random()*0.6-0.3,rotation:Math.random()*Math.PI*2,rotSpeed:Math.random()*0.03-0.015,opacity:Math.random()*0.3+0.6,sway:Math.random()*Math.PI*2,swaySpeed:Math.random()*0.025+0.01};
+    }else if(type==='party'){
+      const emojis=['✨','🎆','🎇','🌟','💫','⭐'];
+      return{x:Math.random()*w,y:-20,emoji:emojis[Math.floor(Math.random()*emojis.length)],size:Math.random()*14+16,speed:Math.random()*2+1.2,drift:Math.random()*1.5-0.75,rotation:Math.random()*Math.PI*2,rotSpeed:Math.random()*0.1-0.05,opacity:Math.random()*0.4+0.6,sway:Math.random()*Math.PI*2,swaySpeed:Math.random()*0.06+0.03,twinkle:Math.random()*Math.PI*2,twinkleSpeed:Math.random()*0.15+0.1};
+    }
+  }
+  function drawFestivalParticle(p,type){
+    festivalCtx.save();
+    festivalCtx.globalAlpha=p.opacity;
+    festivalCtx.translate(p.x,p.y);
+    if(type==='snow'){
+      festivalCtx.fillStyle='#fff';
+      festivalCtx.beginPath();
+      festivalCtx.arc(0,0,p.r,0,Math.PI*2);
+      festivalCtx.fill();
+    }else if(type==='sakura'){
+      festivalCtx.rotate(p.rotation);
+      festivalCtx.fillStyle='#ffb7c5';
+      for(let i=0;i<5;i++){
+        festivalCtx.rotate(Math.PI*2/5);
+        festivalCtx.beginPath();
+        festivalCtx.ellipse(0,-p.r*0.6,p.r*0.4,p.r*0.7,0,0,Math.PI*2);
+        festivalCtx.fill();
+      }
+    }else if(type==='coin'){
+      festivalCtx.rotate(p.rotation);
+      const grad=festivalCtx.createLinearGradient(-p.r,0,p.r,0);
+      grad.addColorStop(0,'#f59e0b');
+      grad.addColorStop(0.5,'#fbbf24');
+      grad.addColorStop(1,'#d97706');
+      festivalCtx.fillStyle=grad;
+      festivalCtx.beginPath();
+      festivalCtx.arc(0,0,p.r,0,Math.PI*2);
+      festivalCtx.fill();
+      festivalCtx.fillStyle='#92400e';
+      festivalCtx.font='bold '+(p.r*1.2)+'px serif';
+      festivalCtx.textAlign='center';
+      festivalCtx.textBaseline='middle';
+      festivalCtx.fillText('$',0,1);
+    }else if(type==='love'||type==='party'){
+      festivalCtx.rotate(p.rotation);
+      festivalCtx.font=p.size+'px serif';
+      festivalCtx.textAlign='center';
+      festivalCtx.textBaseline='middle';
+      if(p.currentOpacity!==undefined){
+        festivalCtx.globalAlpha=p.currentOpacity;
+      }
+      festivalCtx.fillText(p.emoji,0,0);
+    }
+    festivalCtx.restore();
+  }
+  function festivalLoop(){
+    if(!festivalCtx||currentFestival==='none')return;
+    festivalCtx.clearRect(0,0,festivalCanvas.width,festivalCanvas.height);
+    const spawnRate = currentFestival==='party' ? 0.18 : 0.06;
+    const maxParticles = currentFestival==='party' ? 60 : 35;
+    if(Math.random()<spawnRate&&festivalParticles.length<maxParticles){
+      festivalParticles.push(createFestivalParticle(currentFestival));
+    }
+    for(let i=festivalParticles.length-1;i>=0;i--){
+      const p=festivalParticles[i];
+      p.y+=p.speed;
+      if(p.sway!==undefined){
+        p.sway+=p.swaySpeed;
+        p.x+=p.drift+Math.sin(p.sway)*0.5;
+      }else{
+        p.x+=p.drift;
+      }
+      if(p.rotation!==undefined)p.rotation+=p.rotSpeed;
+      if(p.twinkle!==undefined){
+        p.twinkle+=p.twinkleSpeed;
+        p.currentOpacity = p.opacity * (0.4 + Math.abs(Math.sin(p.twinkle))*0.6);
+      }
+      if(p.y>festivalCanvas.height+20||p.x<-20||p.x>festivalCanvas.width+20){
+        festivalParticles.splice(i,1);
+        continue;
+      }
+      drawFestivalParticle(p,currentFestival);
+    }
+    festivalAnimId=requestAnimationFrame(festivalLoop);
+  }
+  if(currentFestival!=='none'){
+    initFestivalCanvas();
+    festivalParticles=[];
+    festivalLoop();
+  }
+})();
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
