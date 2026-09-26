@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>枫铃工具箱 - 管理员后台</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --primary:#6366f1;
+  --primary-light:#818cf8;
+  --primary-bg:rgba(99,102,241,0.1);
+  --text-main:#1e293b;
+  --text-secondary:#64748b;
+  --text-placeholder:#94a3b8;
+  --bg-body:#f1f5f9;
+  --bg-card:#ffffff;
+  --bg-input:#f8fafc;
+  --border:#e2e8f0;
+  --danger:#ef4444;
+  --danger-bg:#fef2f2;
+  --success:#10b981;
+  --success-bg:#ecfdf5;
+  --warning:#f59e0b;
+  --warning-bg:#fffbeb;
+  --radius:12px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.04);
+}
+html{font-size:14px;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg-body);
+  min-height:100vh;
+  color:var(--text-main);
+  padding-bottom:60px;
+}
+
+/* ===== 登录页 ===== */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+}
+.login-card{
+  width:100%;max-width:380px;background:#fff;border-radius:20px;
+  padding:36px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.2);
+}
+.login-card .logo{
+  width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#667eea,#764ba2);
+  display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;
+}
+.login-card h1{font-size:20px;text-align:center;margin-bottom:6px;}
+.login-card .sub{font-size:13px;color:var(--text-secondary);text-align:center;margin-bottom:28px;}
+.field{
+  width:100%;height:46px;padding:0 14px;border:1.5px solid var(--border);
+  border-radius:12px;background:var(--bg-input);font-size:14px;margin-bottom:12px;outline:none;
+  transition:border-color .2s;
+}
+.field:focus{border-color:var(--primary);background:#fff;}
+.btn-primary{
+  width:100%;height:46px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s;
+}
+.btn-primary:hover{opacity:.9;}
+
+/* ===== 主布局 ===== */
+.topbar{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 20px;height:56px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:100;
+}
+.topbar .brand{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.topbar .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--success);}
+.logout-link{
+  padding:8px 16px;border:none;border-radius:8px;background:var(--danger-bg);
+  color:var(--danger);font-size:13px;cursor:pointer;
+}
+.container{max-width:1200px;margin:0 auto;padding:20px;}
+
+/* ===== 统计卡片 ===== */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;
+}
+.stat{
+  background:#fff;border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);
+}
+.stat .label{font-size:12px;color:var(--text-secondary);margin-bottom:6px;}
+.stat .num{font-size:28px;font-weight:700;color:var(--primary);}
+
+/* ===== 标签页 ===== */
+.tabs{
+  display:flex;gap:4px;background:#fff;border-radius:var(--radius);
+  padding:4px;margin-bottom:16px;box-shadow:var(--shadow);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+.tab{
+  flex:1;min-width:fit-content;height:38px;padding:0 18px;
+  border:none;border-radius:8px;background:transparent;
+  font-size:14px;cursor:pointer;color:var(--text-secondary);
+  transition:all .2s;white-space:nowrap;
+}
+.tab.active{background:var(--primary);color:#fff;}
+
+/* ===== 工具栏 ===== */
+.toolbar{
+  display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;
+}
+.toolbar input,.toolbar select{
+  height:38px;padding:0 12px;border:1.5px solid var(--border);
+  border-radius:10px;background:#fff;font-size:13px;outline:none;
+  transition:border-color .2s;
+}
+.toolbar input{flex:1;min-width:180px;}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--primary);}
+.toolbar .btn-mini{
+  height:38px;padding:0 14px;border:none;border-radius:10px;
+  background:var(--primary);color:#fff;font-size:13px;cursor:pointer;
+}
+.toolbar .btn-danger{background:var(--danger-bg);color:var(--danger);}
+
+/* ===== 表格 ===== */
+.panel{
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;min-width:600px;}
+th{
+  padding:12px 16px;text-align:left;font-size:12px;font-weight:600;
+  color:var(--text-secondary);background:var(--bg-input);
+  border-bottom:1px solid var(--border);
+}
+td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafbff;}
+.badge{
+  display:inline-block;padding:3px 8px;border-radius:6px;
+  font-size:11px;font-weight:500;
+}
+.badge-success{background:var(--success-bg);color:var(--success);}
+.badge-warning{background:var(--warning-bg);color:var(--warning);}
+.badge-danger{background:var(--danger-bg);color:var(--danger);}
+.badge-primary{background:var(--primary-bg);color:var(--primary);}
+
+/* ===== 操作按钮 ===== */
+.ops{display:flex;gap:6px;flex-wrap:wrap;}
+.op-btn{
+  padding:5px 10px;border:none;border-radius:7px;
+  font-size:12px;cursor:pointer;transition:opacity .2s;
+}
+.op-btn:hover{opacity:.8;}
+.op-view{background:var(--primary-bg);color:var(--primary);}
+.op-edit{background:#dbeafe;color:#2563eb;}
+.op-reset{background:var(--warning-bg);color:var(--warning);}
+.op-admin{background:#ede9fe;color:#7c3aed;}
+.op-ban{background:var(--warning-bg);color:#d97706;}
+.op-del{background:var(--danger-bg);color:var(--danger);}
+
+/* ===== 弹窗 ===== */
+.mask{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;
+  display:none;align-items:center;justify-content:center;padding:16px;
+}
+.mask.show{display:flex;}
+.modal{
+  background:#fff;border-radius:16px;padding:24px;
+  width:100%;max-width:480px;max-height:85vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.modal h3{font-size:17px;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.modal .close-x{
+  float:right;border:none;background:var(--bg-input);width:30px;height:30px;
+  border-radius:50%;cursor:pointer;font-size:14px;line-height:1;
+}
+.modal .tip{font-size:13px;color:var(--text-secondary);margin-bottom:14px;}
+.form-label{font-size:12px;color:var(--text-secondary);margin-bottom:4px;display:block;}
+.form-input{
+  width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);
+  border-radius:10px;background:var(--bg-input);font-size:14px;
+  margin-bottom:12px;outline:none;
+}
+.form-input:focus{border-color:var(--primary);background:#fff;}
+.form-row{display:flex;gap:10px;margin-bottom:12px;}
+.form-row>*{flex:1;}
+.btn-block{
+  width:100%;height:44px;border:none;border-radius:12px;
+  background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;
+}
+.btn-block:hover{opacity:.9;}
+.preview-box{
+  background:var(--bg-input);border-radius:10px;padding:12px;
+  font-size:12px;font-family:monospace;white-space:pre-wrap;
+  max-height:350px;overflow-y:auto;
+}
+.checkbox-row{
+  display:flex;align-items:center;gap:8px;padding:10px 12px;
+  background:var(--bg-input);border-radius:10px;margin-bottom:14px;
+  font-size:13px;cursor:pointer;
+}
+.checkbox-row input{width:16px;height:16px;cursor:pointer;}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  background:#1e293b;color:#fff;padding:10px 20px;border-radius:10px;
+  font-size:14px;z-index:10000;animation:toastIn .3s ease;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,-10px);}to{opacity:1;transform:translate(-50%,0);}}
+
+/* ===== 空状态 ===== */
+.empty{
+  padding:40px;text-align:center;color:var(--text-placeholder);font-size:14px;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width:768px){
+  .stats{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .stat{padding:14px;}
+  .stat .num{font-size:22px;}
+  .container{padding:12px;}
+  .topbar{padding:0 12px;}
+  .topbar .brand{font-size:14px;}
+  .tab{padding:0 12px;font-size:13px;}
+  .toolbar{flex-direction:column;}
+  .toolbar input{min-width:0;width:100%;}
+  .toolbar select{width:100%;}
+  .toolbar .btn-mini{width:100%;}
+  .ops{flex-direction:column;}
+  .op-btn{width:100%;text-align:center;}
+  .modal{padding:18px;}
+  .form-row{flex-direction:column;gap:0;}
+}
+</style>
+</head>
+<body>
+
+<!-- 登录页 -->
+<div class="login-wrap" id="loginPage">
+  <div class="login-card">
+    <div class="logo">⚙️</div>
+    <h1>管理员后台</h1>
+    <div class="sub">枫铃工具箱管理系统</div>
+    <input class="field" type="text" id="adminUser" placeholder="管理员用户名">
+    <input class="field" type="password" id="adminPwd" placeholder="密码">
+    <button class="btn-primary" onclick="adminLogin()">登 录</button>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="mainPage" style="display:none;">
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span>枫铃工具箱 · 管理后台</div>
+    <button class="logout-link" onclick="adminLogout()">退出登录</button>
+  </div>
+
+  <div class="container">
+    <!-- 统计 -->
+    <div class="stats">
+      <div class="stat"><div class="label">总用户数</div><div class="num" id="statUsers">-</div></div>
+      <div class="stat"><div class="label">有存档用户</div><div class="num" id="statSaves">-</div></div>
+      <div class="stat"><div class="label">今日新增</div><div class="num" id="statToday">-</div></div>
+      <div class="stat"><div class="label">7天活跃</div><div class="num" id="statActive">-</div></div>
+    </div>
+
+    <!-- 标签 -->
+    <div class="tabs">
+      <button class="tab active" data-tab="users" onclick="switchTab('users',this)">👥 用户管理</button>
+      <button class="tab" data-tab="codes" onclick="switchTab('codes',this)">🔗 存档码</button>
+      <button class="tab" data-tab="logs" onclick="switchTab('logs',this)">📋 注册记录</button>
+    </div>
+
+    <!-- 用户管理 -->
+    <div id="tab-users" class="tab-panel">
+      <div class="toolbar">
+        <input type="text" id="searchInput" placeholder="搜索用户名 / 昵称 / 省份..." oninput="renderUserList()">
+        <select id="filterStatus" onchange="renderUserList()">
+          <option value="">全部状态</option>
+          <option value="normal">正常</option>
+          <option value="admin">管理员</option>
+          <option value="banned">已封禁</option>
+        </select>
+        <select id="filterGender" onchange="renderUserList()">
+          <option value="">全部性别</option>
+          <option value="male">♂ 男</option>
+          <option value="female">♀ 女</option>
+          <option value="secret">🔒 保密</option>
+        </select>
+        <button class="btn-mini" onclick="loadUsers()">🔄 刷新</button>
+      </div>
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>头像</th><th>用户名</th><th>昵称</th><th>注册时间</th><th>最后登录</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody id="userListBody"><tr><td colspan="8" class="empty">加载中...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 存档码 -->
+    <div id="tab-codes" class="tab-panel" style="display:none;">
+      <div class="toolbar">
+        <input type="text" id="codeSearchInput" placeholder="搜索存档码..." oninput="renderCodeList()">
+        <button class="btn-mini" onclick="loadCodeList()">🔄 刷新</button>
+      </div>
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>存档码</th><th>数据大小</th><th>过期时间</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody id="codeListBody"><tr><td colspan="5" class="empty">加载中...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 注册记录 -->
+    <div id="tab-logs" class="tab-panel" style="display:none;">
+      <div class="toolbar">
+        <input type="text" id="ipSearchInput" placeholder="搜索IP..." oninput="renderIpList()">
+        <button class="btn-mini btn-danger" onclick="clearAllIpRecords()">🗑️ 清空所有</button>
+      </div>
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>IP</th><th>日期</th><th>注册时间</th><th>操作</th></tr></thead>
+            <tbody id="ipListBody"><tr><td colspan="5" class="empty">加载中...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 查看存档弹窗 -->
+<div class="mask" id="saveModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('saveModal')">✕</button>
+    <h3>📦 用户存档</h3>
+    <div class="preview-box" id="savePreview">加载中...</div>
+  </div>
+</div>
+
+<!-- 重置密码弹窗 -->
+<div class="mask" id="resetPwdModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('resetPwdModal')">✕</button>
+    <h3>🔑 重置密码</h3>
+    <p class="tip" id="resetPwdTip"></p>
+    <input class="form-input" type="password" id="newPwdInput" placeholder="新密码（6-24位）">
+    <input class="form-input" type="password" id="newPwdInput2" placeholder="确认新密码">
+    <button class="btn-block" onclick="confirmResetPwd()">✅ 确认重置</button>
+  </div>
+</div>
+
+<!-- 延长存档码弹窗 -->
+<div class="mask" id="extendCodeModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('extendCodeModal')">✕</button>
+    <h3>⏱️ 延长存档码</h3>
+    <p class="tip" id="extendCodeTip"></p>
+    <div class="form-row">
+      <button class="op-btn" onclick="setExtendMinutes(30)" style="padding:10px;">+30分钟</button>
+      <button class="op-btn" onclick="setExtendMinutes(60)" style="padding:10px;">+1小时</button>
+      <button class="op-btn" onclick="setExtendMinutes(120)" style="padding:10px;">+2小时</button>
+      <button class="op-btn" onclick="setExtendMinutes(1440)" style="padding:10px;">+24小时</button>
+    </div>
+    <button class="btn-block" onclick="confirmExtendCode()">✅ 确认延长</button>
+  </div>
+</div>
+
+<!-- 编辑用户弹窗 -->
+<div class="mask" id="editUserModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('editUserModal')">✕</button>
+    <h3>✏️ 编辑用户资料</h3>
+    <p class="tip" id="editUserTip"></p>
+    <label class="form-label">昵称</label>
+    <input class="form-input" id="editNickname">
+    <label class="form-label">性别</label>
+    <select class="form-input" id="editGender">
+      <option value="male">♂ 男</option>
+      <option value="female">♀ 女</option>
+      <option value="secret">🔒 保密</option>
+    </select>
+    <label class="form-label">出生日期</label>
+    <input class="form-input" type="date" id="editBirthday">
+    <label class="form-label">所在省份</label>
+    <input class="form-input" id="editProvince" placeholder="省份名">
+    <label class="checkbox-row">
+      <input type="checkbox" id="editRainbow">
+      🌈 彩虹昵称
+    </label>
+    <button class="btn-block" onclick="confirmEditUser()">✅ 保存修改</button>
+  </div>
+</div>
+
+<script>
+const API_BASE = 'https://fengling1314ovo.top/api';
+let adminToken = localStorage.getItem('fl_admin_token') || '';
+let allUsers = [], allCodes = [], allIpRecords = [];
+let extendTargetCode = '', extendMinutes = 30, editUserId = null, resetPwdUserId = null;
+
+window.onload = function(){
+  if(adminToken){ showMain(); loadStats(); loadUsers(); }
+};
+
+function showToast(msg){
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2500);
+}
+
+async function adminLogin(){
+  const u = document.getElementById('adminUser').value.trim();
+  const p = document.getElementById('adminPwd').value;
+  if(!u || !p){ showToast('请输入用户名和密码'); return; }
+  try{
+    const res = await fetch(API_BASE + '/admin/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:u, password:p})
+    });
+    const r = await res.json();
+    if(r.ok){
+      adminToken = r.token;
+      localStorage.setItem('fl_admin_token', adminToken);
+      showMain(); loadStats(); loadUsers();
+      showToast('✅ 登录成功');
+    } else { showToast('❌ ' + (r.msg || '登录失败')); }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function adminLogout(){
+  adminToken = '';
+  localStorage.removeItem('fl_admin_token');
+  document.getElementById('mainPage').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+}
+
+function showMain(){
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('mainPage').style.display = 'block';
+}
+
+function switchTab(tab, btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p=>p.style.display='none');
+  document.getElementById('tab-'+tab).style.display = 'block';
+  if(tab==='codes') loadCodeList();
+  if(tab==='logs') loadIpList();
+}
+
+async function loadStats(){
+  try{
+    const res = await fetch(API_BASE + '/admin/stats', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken})
+    });
+    const r = await res.json();
+    if(r.ok){
+      document.getElementById('statUsers').textContent = r.data.totalUsers;
+      document.getElementById('statSaves').textContent = r.data.usersWithSave;
+      document.getElementById('statToday').textContent = r.data.todayNew;
+      document.getElementById('statActive').textContent = r.data.active7d;
+    }
+  }catch(e){}
+}
+
+async function loadUsers(){
+  try{
+    const res = await fetch(API_BASE + '/admin/users', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken})
+    });
+    const r = await res.json();
+    if(r.ok){ allUsers = r.data; renderUserList(); }
+    else { showToast('❌ ' + (r.msg||'加载失败')); if(r.msg&&r.msg.includes('登录')) adminLogout(); }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function renderUserList(){
+  const kw = document.getElementById('searchInput').value.toLowerCase();
+  const sf = document.getElementById('filterStatus').value;
+  const gf = document.getElementById('filterGender').value;
+  const filtered = allUsers.filter(u=>{
+    if(kw && !u.username.toLowerCase().includes(kw) && !(u.nickname||'').toLowerCase().includes(kw) && !(u.province||'').toLowerCase().includes(kw)) return false;
+    if(sf==='admin' && !u.is_admin) return false;
+    if(sf==='banned' && !u.is_banned) return false;
+    if(sf==='normal' && (u.is_admin||u.is_banned)) return false;
+    if(gf && (u.gender||'secret')!==gf) return false;
+    return true;
+  });
+  const tb = document.getElementById('userListBody');
+  if(!filtered.length){ tb.innerHTML = '<tr><td colspan="8" class="empty">无匹配结果</td></tr>'; return; }
+  tb.innerHTML = filtered.map(u=>{
+    const badge = u.is_admin ? '<span class="badge badge-primary">管理员</span>'
+      : u.is_banned ? '<span class="badge badge-danger">已封禁</span>'
+      : '<span class="badge badge-success">正常</span>';
+    return '<tr>' +
+      '<td>' + u.id + '</td>' +
+      '<td style="font-size:20px;">' + (u.avatar||'🙂') + '</td>' +
+      '<td>' + esc(u.username) + '</td>' +
+      '<td>' + esc(u.nickname||'-') + '</td>' +
+      '<td>' + fmt(u.created_at) + '</td>' +
+      '<td>' + fmt(u.last_login) + '</td>' +
+      '<td>' + badge + '</td>' +
+      '<td><div class="ops">' +
+        '<button class="op-btn op-view" onclick="viewUserSave(' + u.id + ')">存档</button>' +
+        '<button class="op-btn op-edit" onclick="openEditUserModal(' + u.id + ')">编辑</button>' +
+        '<button class="op-btn op-reset" onclick="openResetPwdModal(' + u.id + ',\'' + esc(u.username) + '\')">重置密码</button>' +
+        '<button class="op-btn op-admin" onclick="toggleAdmin(' + u.id + ',' + (!u.is_admin) + ')">' + (u.is_admin?'取消管理':'设为管理') + '</button>' +
+        '<button class="op-btn op-ban" onclick="toggleBan(' + u.id + ',' + (!u.is_banned) + ')">' + (u.is_banned?'解封':'封禁') + '</button>' +
+        '<button class="op-btn op-del" onclick="deleteUser(' + u.id + ',\'' + esc(u.username) + '\')">删除</button>' +
+      '</div></td>' +
+    '</tr>';
+  }).join('');
+}
+
+async function loadCodeList(){
+  try{
+    const res = await fetch(API_BASE + '/admin/code-list', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken})
+    });
+    const r = await res.json();
+    if(r.ok){ allCodes = r.data; renderCodeList(); }
+  }catch(e){}
+}
+function renderCodeList(){
+  const kw = document.getElementById('codeSearchInput').value.trim();
+  const filtered = kw ? allCodes.filter(c=>c.code.includes(kw)) : allCodes;
+  const tb = document.getElementById('codeListBody');
+  if(!filtered.length){ tb.innerHTML = '<tr><td colspan="5" class="empty">无匹配结果</td></tr>'; return; }
+  tb.innerHTML = filtered.map(c=>'<tr>' +
+    '<td style="font-family:monospace;font-weight:700;letter-spacing:2px;">' + c.code + '</td>' +
+    '<td>' + (c.data_size/1024).toFixed(1) + ' KB</td>' +
+    '<td>' + fmt(c.expire_at) + '</td>' +
+    '<td>' + (c.expired?'<span class="badge badge-danger">已过期</span>':'<span class="badge badge-success">有效</span>') + '</td>' +
+    '<td><div class="ops">' +
+      '<button class="op-btn op-view" onclick="openExtendCodeModal(\'' + c.code + '\')">延长</button>' +
+      '<button class="op-btn op-del" onclick="deleteCode(\'' + c.code + '\')">删除</button>' +
+    '</div></td>' +
+  '</tr>').join('');
+}
+
+async function loadIpList(){
+  try{
+    const res = await fetch(API_BASE + '/admin/ip-list', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken})
+    });
+    const r = await res.json();
+    if(r.ok){ allIpRecords = r.data; renderIpList(); }
+  }catch(e){}
+}
+function renderIpList(){
+  const kw = document.getElementById('ipSearchInput').value.trim();
+  const filtered = kw ? allIpRecords.filter(r=>r.ip.includes(kw)) : allIpRecords;
+  const tb = document.getElementById('ipListBody');
+  if(!filtered.length){ tb.innerHTML = '<tr><td colspan="5" class="empty">无匹配记录</td></tr>'; return; }
+  tb.innerHTML = filtered.map(r=>'<tr>' +
+    '<td>' + r.id + '</td><td>' + r.ip + '</td><td>' + r.date + '</td><td>' + fmt(r.created_at) + '</td>' +
+    '<td><button class="op-btn op-del" onclick="deleteIpRecord(' + r.id + ')">删除</button></td>' +
+  '</tr>').join('');
+}
+
+async function deleteIpRecord(id){
+  if(!confirm('确定删除这条记录？')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/delete-ip-record', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, recordId:id})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ 已删除'); loadIpList(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+async function clearAllIpRecords(){
+  if(!confirm('确定清空所有注册记录？')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/clear-ip-records', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ 已清空'); loadIpList(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function viewUserSave(uid){
+  document.getElementById('saveModal').classList.add('show');
+  document.getElementById('savePreview').textContent = '加载中...';
+  try{
+    const res = await fetch(API_BASE + '/admin/get-save', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, userId:uid})
+    });
+    const r = await res.json();
+    document.getElementById('savePreview').textContent = r.ok ? (JSON.stringify(r.data,null,2)||'暂无存档') : (r.msg||'加载失败');
+  }catch(e){ document.getElementById('savePreview').textContent = '网络错误'; }
+}
+
+async function deleteUser(uid, uname){
+  if(!confirm('确定删除用户 "' + uname + '"？\n该用户所有存档将被永久删除！')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/delete-user', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, userId:uid})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ 已删除'); loadUsers(); loadStats(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function toggleBan(uid, ban){
+  try{
+    const res = await fetch(API_BASE + '/admin/ban-user', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, userId:uid, ban})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast(ban?'✅ 已封禁':'✅ 已解封'); loadUsers(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function toggleAdmin(uid, isAdmin){
+  if(!confirm(isAdmin?'确定将该用户设为管理员？':'确定取消该用户管理员身份？')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/set-admin', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, userId:uid, isAdmin})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ '+r.msg); loadUsers(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function deleteCode(code){
+  if(!confirm('确定删除存档码 ' + code + '？')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/delete-code', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, code})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ 已删除'); loadCodeList(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function openExtendCodeModal(code){
+  extendTargetCode = code; extendMinutes = 30;
+  document.getElementById('extendCodeTip').textContent = '存档码：' + code;
+  document.getElementById('extendCodeModal').classList.add('show');
+}
+function setExtendMinutes(min){ extendMinutes = min; }
+async function confirmExtendCode(){
+  try{
+    const res = await fetch(API_BASE + '/admin/extend-code', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, code:extendTargetCode, minutes:extendMinutes})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ '+r.msg); closeModal('extendCodeModal'); loadCodeList(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function openResetPwdModal(uid, uname){
+  resetPwdUserId = uid;
+  document.getElementById('resetPwdTip').textContent = '重置 @' + uname + ' 的密码，重置后所有设备将被踢出。';
+  document.getElementById('newPwdInput').value = '';
+  document.getElementById('newPwdInput2').value = '';
+  document.getElementById('resetPwdModal').classList.add('show');
+}
+async function confirmResetPwd(){
+  const p1 = document.getElementById('newPwdInput').value;
+  const p2 = document.getElementById('newPwdInput2').value;
+  if(p1.length<6||p1.length>24){ showToast('⚠️ 密码需6-24位'); return; }
+  if(p1!==p2){ showToast('⚠️ 两次密码不一致'); return; }
+  try{
+    const res = await fetch(API_BASE + '/admin/reset-password', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:adminToken, userId:resetPwdUserId, newPassword:p1})
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ 密码已重置'); closeModal('resetPwdModal'); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function openEditUserModal(uid){
+  const u = allUsers.find(x=>x.id===uid);
+  if(!u) return;
+  editUserId = uid;
+  document.getElementById('editUserTip').textContent = '编辑 @' + u.username;
+  document.getElementById('editNickname').value = u.nickname || '';
+  document.getElementById('editGender').value = u.gender || 'secret';
+  document.getElementById('editBirthday').value = u.birthday || '';
+  document.getElementById('editProvince').value = u.province || '';
+  document.getElementById('editRainbow').checked = !!u.rainbow_name;
+  document.getElementById('editUserModal').classList.add('show');
+}
+async function confirmEditUser(){
+  const data = {
+    token: adminToken, userId: editUserId,
+    nickname: document.getElementById('editNickname').value.trim(),
+    gender: document.getElementById('editGender').value,
+    birthday: document.getElementById('editBirthday').value,
+    province: document.getElementById('editProvince').value.trim(),
+    rainbow_name: document.getElementById('editRainbow').checked
+  };
+  try{
+    const res = await fetch(API_BASE + '/admin/edit-user', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+    const r = await res.json();
+    if(r.ok){ showToast('✅ 已保存'); closeModal('editUserModal'); loadUsers(); }
+    else showToast('❌ '+(r.msg||'失败'));
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function fmt(iso){
+  if(!iso) return '-';
+  const d = new Date(iso);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+
+    String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
