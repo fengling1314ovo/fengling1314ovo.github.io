@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>枫铃工具箱 - 管理员后台</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --primary:#6366f1;
+  --primary-light:#818cf8;
+  --primary-bg:rgba(99,102,241,0.12);
+  --text-main:#1e293b;
+  --text-secondary:#64748b;
+  --text-placeholder:#94a3b8;
+  --bg-card:rgba(255,255,255,0.9);
+  --bg-input:#f8fafc;
+  --border-color:#e2e8f0;
+  --danger:#dc2626;
+  --danger-bg:#fee2e2;
+  --success:#10b981;
+  --success-bg:#d1fae5;
+  --radius:12px;
+}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.16),transparent 32%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 32%),
+  linear-gradient(160deg,#f8faff 0%,#eef1ff 50%,#eaf6ff 100%);
+  min-height:100vh;
+  color:var(--text-main);
+  padding:32px 24px;
+}
+.container{max-width:1200px;margin:0 auto;}
+/* 登录页 */
+.login-box{
+  max-width:380px;margin:80px auto;background:var(--bg-card);
+  border-radius:20px;padding:32px;box-shadow:0 8px 32px rgba(0,0,0,0.08);
+}
+.login-box h1{font-size:20px;margin-bottom:24px;text-align:center;}
+.login-box input{
+  width:100%;height:44px;padding:0 14px;border:1px solid var(--border-color);
+  border-radius:10px;background:var(--bg-input);font-size:14px;margin-bottom:12px;outline:none;
+}
+.login-box input:focus{border-color:var(--primary);}
+.login-btn{
+  width:100%;height:44px;border:none;border-radius:10px;background:var(--primary);
+  color:#fff;font-size:15px;font-weight:600;cursor:pointer;
+}
+.login-btn:hover{opacity:0.9;}
+/* 主界面 */
+.admin-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;padding:16px 20px;background:var(--bg-card);
+  border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,0.06);
+}
+.admin-header h1{font-size:18px;display:flex;align-items:center;gap:8px;}
+.logout-btn{
+  padding:8px 16px;border:none;border-radius:8px;background:var(--danger-bg);
+  color:var(--danger);font-size:13px;cursor:pointer;
+}
+/* 统计卡片 */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;margin-bottom:24px;
+}
+.stat-card{
+  background:var(--bg-card);border-radius:var(--radius);padding:20px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.06);
+}
+.stat-card .label{font-size:12px;color:var(--text-secondary);margin-bottom:6px;}
+.stat-card .value{font-size:28px;font-weight:700;color:var(--primary);}
+/* 标签页 */
+.tabs{
+  display:flex;gap:8px;margin-bottom:20px;background:var(--bg-card);
+  padding:6px;border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,0.06);
+}
+.tab-btn{
+  flex:1;height:38px;border:none;border-radius:8px;background:transparent;
+  font-size:14px;cursor:pointer;color:var(--text-secondary);transition:all 0.2s;
+}
+.tab-btn.active{background:var(--primary);color:#fff;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+/* 用户表格 */
+.user-table{
+  width:100%;background:var(--bg-card);border-radius:var(--radius);
+  overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.06);
+}
+.user-table table{width:100%;border-collapse:collapse;}
+.user-table th{
+  padding:12px 16px;text-align:left;font-size:12px;color:var(--text-secondary);
+  border-bottom:1px solid var(--border-color);background:var(--bg-input);
+}
+.user-table td{
+  padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border-color);
+}
+.user-table tr:hover{background:var(--primary-bg);}
+.badge{
+  display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;
+}
+.badge-admin{background:var(--primary);color:#fff;}
+.badge-normal{background:var(--bg-input);color:var(--text-secondary);}
+.badge-banned{background:var(--danger);color:#fff;}
+.action-btns{display:flex;gap:6px;}
+.action-btns button{
+  padding:4px 10px;border:none;border-radius:6px;font-size:12px;cursor:pointer;
+}
+.btn-view{background:var(--primary-bg);color:var(--primary);}
+.btn-reset{background:#fef3c7;color:#d97706;}
+.btn-delete{background:var(--danger-bg);color:var(--danger);}
+.btn-ban{background:#fef3c7;color:#d97706;}
+/* 弹窗 */
+.modal-mask{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.5);z-index:9999;display:none;
+  align-items:center;justify-content:center;padding:16px;
+}
+.modal-mask.show{display:flex;}
+.modal-box{
+  background:#fff;border-radius:16px;padding:24px;max-width:600px;width:100%;
+  max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.2);
+}
+.modal-box h3{margin-bottom:16px;font-size:16px;}
+.modal-close{
+  float:right;border:none;background:var(--bg-input);width:28px;height:28px;
+  border-radius:50%;cursor:pointer;font-size:14px;
+}
+.save-preview{
+  background:var(--bg-input);border-radius:8px;padding:12px;
+  font-size:12px;font-family:monospace;white-space:pre-wrap;
+  max-height:400px;overflow-y:auto;
+}
+/* Toast */
+.toast{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%);
+  background:rgba(30,41,59,0.92);color:#fff;padding:10px 20px;
+  border-radius:10px;font-size:14px;z-index:10000;
+  animation:toastIn 0.3s ease;
+}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,-10px);}to{opacity:1;transform:translate(-50%,0);}}
+/* 搜索 */
+.search-bar{
+  display:flex;gap:8px;margin-bottom:16px;
+}
+.search-bar input{
+  flex:1;height:38px;padding:0 14px;border:1px solid var(--border-color);
+  border-radius:10px;background:var(--bg-card);font-size:14px;outline:none;
+}
+.search-bar button{
+  height:38px;padding:0 16px;border:none;border-radius:10px;
+  background:var(--primary);color:#fff;font-size:14px;cursor:pointer;
+}
+/* 移动端适配 */
+@media (max-width: 768px){
+  body{ padding:16px 12px; }
+  .container{ max-width:100%; }
+  .stats-grid{ grid-template-columns:repeat(2,1fr); gap:10px; }
+  .stat-card{ padding:14px; }
+  .stat-card .value{ font-size:22px; }
+  .admin-header{ flex-direction:column; gap:10px; align-items:flex-start; padding:14px 16px; }
+  .admin-header h1{ font-size:16px; }
+  .tabs{ overflow-x:auto; flex-wrap:nowrap; }
+  .tab-btn{ white-space:nowrap; min-width:100px; }
+  .search-bar{ flex-wrap:wrap; }
+  .search-bar input, .search-bar select{ flex:1 1 100%; min-width:0; }
+  .search-bar button{ flex:0 0 auto; }
+  .user-table{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .user-table table{ min-width:600px; }
+  .action-btns{ flex-wrap:wrap; }
+  .action-btns button{ padding:4px 8px; font-size:11px; }
+  .modal-box{ padding:18px; margin:0; }
+  .login-box{ margin:40px auto; padding:24px; }
+}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <!-- 登录页 -->
+  <div class="login-box" id="loginPage">
+    <h1>🔐 管理员登录</h1>
+    <input type="text" id="adminUser" placeholder="管理员用户名">
+    <input type="password" id="adminPwd" placeholder="密码">
+    <button class="login-btn" onclick="adminLogin()">登录</button>
+  </div>
+
+  <!-- 主界面 -->
+  <div id="mainPage" style="display:none;">
+    <div class="admin-header">
+      <h1>⚙️ 枫铃工具箱 - 管理员后台</h1>
+      <button class="logout-btn" onclick="adminLogout()">退出登录</button>
+    </div>
+
+    <!-- 统计卡片 -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">总用户数</div>
+        <div class="value" id="statUsers">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">有存档的用户</div>
+        <div class="value" id="statSaves">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">今日新增用户</div>
+        <div class="value" id="statToday">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">活跃用户（7天内）</div>
+        <div class="value" id="statActive">-</div>
+      </div>
+    </div>
+
+    <!-- 标签页 -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('users')">👥 用户管理</button>
+      <button class="tab-btn" onclick="switchTab('logs')">📋 注册记录</button>
+      <button class="tab-btn" onclick="switchTab('codes')">🔗 存档码</button>
+    </div>
+
+    <!-- 用户管理 -->
+    <div class="tab-content active" id="tab-users">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="搜索用户名 / 昵称 / 省份..." oninput="renderUserList()">
+        <select id="filterStatus" onchange="renderUserList()" style="height:38px;padding:0 10px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-card);font-size:13px;outline:none;">
+          <option value="">全部状态</option>
+          <option value="normal">正常</option>
+          <option value="admin">管理员</option>
+          <option value="banned">已封禁</option>
+        </select>
+        <select id="filterGender" onchange="renderUserList()" style="height:38px;padding:0 10px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-card);font-size:13px;outline:none;">
+          <option value="">全部性别</option>
+          <option value="male">♂ 男</option>
+          <option value="female">♀ 女</option>
+          <option value="secret">🔒 保密</option>
+        </select>
+        <button onclick="loadUsers()">🔄 刷新</button>
+      </div>
+      <div class="user-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>头像</th>
+              <th>用户名</th>
+              <th>昵称</th>
+              <th>注册时间</th>
+              <th>最后登录</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="userListBody">
+            <tr><td colspan="8" style="text-align:center;color:var(--text-placeholder);">加载中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 注册记录 -->
+    <div class="tab-content" id="tab-logs">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--text-secondary);">最近100条注册记录</div>
+        <div style="display:flex;gap:8px;flex:1;max-width:400px;">
+          <input type="text" id="ipSearchInput" placeholder="搜索IP..." oninput="renderIpList()" style="flex:1;height:34px;padding:0 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-card);font-size:13px;outline:none;">
+          <button onclick="clearAllIpRecords()" style="padding:6px 12px;border:none;border-radius:8px;background:var(--danger-bg);color:var(--danger);font-size:12px;cursor:pointer;">🗑️ 清空所有</button>
+        </div>
+      </div>
+      <div class="user-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>IP</th>
+              <th>日期</th>
+              <th>注册时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="ipListBody">
+            <tr><td colspan="5" style="text-align:center;color:var(--text-placeholder);">加载中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 存档码管理 -->
+    <div class="tab-content" id="tab-codes">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--text-secondary);" id="codeCountLabel">所有存档码（含已过期）</div>
+        <div style="display:flex;gap:8px;flex:1;max-width:300px;">
+          <input type="text" id="codeSearchInput" placeholder="搜索存档码..." oninput="renderCodeList()" style="flex:1;height:34px;padding:0 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-card);font-size:13px;outline:none;">
+          <button onclick="loadCodeList()" style="padding:0 12px;border:none;border-radius:8px;background:var(--primary);color:#fff;font-size:12px;cursor:pointer;">🔄</button>
+        </div>
+      </div>
+      <div class="user-table">
+        <table>
+          <thead>
+            <tr>
+              <th>存档码</th>
+              <th>数据大小</th>
+              <th>过期时间</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="codeListBody">
+            <tr><td colspan="5" style="text-align:center;color:var(--text-placeholder);">加载中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 查看存档弹窗 -->
+<div class="modal-mask" id="saveModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('saveModal')">✕</button>
+    <h3 id="saveModalTitle">📦 用户存档数据</h3>
+    <div class="save-preview" id="savePreview">加载中...</div>
+  </div>
+</div>
+
+<!-- 重置密码弹窗 -->
+<div class="modal-mask" id="resetPwdModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('resetPwdModal')">✕</button>
+    <h3>🔑 重置用户密码</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;" id="resetPwdTip"></p>
+    <input type="password" id="newPwdInput" placeholder="新密码（6-24位）" style="width:100%;height:42px;padding:0 14px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-input);font-size:14px;margin-bottom:12px;outline:none;">
+    <input type="password" id="newPwdInput2" placeholder="确认新密码" style="width:100%;height:42px;padding:0 14px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-input);font-size:14px;margin-bottom:16px;outline:none;">
+    <button onclick="confirmResetPwd()" style="width:100%;height:42px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;">✅ 确认重置</button>
+  </div>
+</div>
+
+<!-- 延长存档码弹窗 -->
+<div class="modal-mask" id="extendCodeModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('extendCodeModal')">✕</button>
+    <h3>⏱️ 延长存档码时长</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;" id="extendCodeTip"></p>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <button onclick="setExtendMinutes(30)" style="flex:1;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-input);cursor:pointer;font-size:13px;">+30分钟</button>
+      <button onclick="setExtendMinutes(60)" style="flex:1;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-input);cursor:pointer;font-size:13px;">+1小时</button>
+      <button onclick="setExtendMinutes(120)" style="flex:1;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-input);cursor:pointer;font-size:13px;">+2小时</button>
+      <button onclick="setExtendMinutes(1440)" style="flex:1;height:40px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-input);cursor:pointer;font-size:13px;">+24小时</button>
+    </div>
+    <button onclick="confirmExtendCode()" style="width:100%;height:42px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;">✅ 确认延长</button>
+  </div>
+</div>
+
+<!-- 编辑用户资料弹窗 -->
+<div class="modal-mask" id="editUserModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('editUserModal')">✕</button>
+    <h3>✏️ 编辑用户资料</h3>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;" id="editUserTip"></p>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">昵称</div>
+    <input id="editNickname" style="width:100%;height:38px;padding:0 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input);font-size:14px;margin-bottom:12px;outline:none;">
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">性别</div>
+    <select id="editGender" style="width:100%;height:38px;padding:0 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input);font-size:14px;margin-bottom:12px;outline:none;">
+      <option value="male">♂ 男</option>
+      <option value="female">♀ 女</option>
+      <option value="secret">🔒 保密</option>
+    </select>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">出生日期</div>
+    <input id="editBirthday" type="date" style="width:100%;height:38px;padding:0 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input);font-size:14px;margin-bottom:12px;outline:none;">
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">所在省份</div>
+    <input id="editProvince" placeholder="省份名" style="width:100%;height:38px;padding:0 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-input);font-size:14px;margin-bottom:16px;outline:none;">
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:16px;cursor:pointer;">
+      <input type="checkbox" id="editRainbow" style="width:16px;height:16px;cursor:pointer;">
+      🌈 彩虹昵称
+    </label>
+    <button onclick="confirmEditUser()" style="width:100%;height:42px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;">✅ 保存修改</button>
+  </div>
+</div>
+
+<script>
+const API_BASE = 'https://fengling1314ovo.top/api';
+let adminToken = localStorage.getItem('fl_admin_token') || '';
+let allUsers = [];
+
+// 初始化
+window.onload = function(){
+  if(adminToken){
+    showMain();
+    loadStats();
+    loadUsers();
+  }
+};
+
+function showToast(msg){
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2500);
+}
+
+async function adminLogin(){
+  const u = document.getElementById('adminUser').value.trim();
+  const p = document.getElementById('adminPwd').value;
+  if(!u || !p){ showToast('请输入用户名和密码'); return; }
+  try{
+    const res = await fetch(API_BASE + '/admin/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({username: u, password: p})
+    });
+    const result = await res.json();
+    if(result.ok){
+      adminToken = result.token;
+      localStorage.setItem('fl_admin_token', adminToken);
+      showMain();
+      loadStats();
+      loadUsers();
+      showToast('✅ 登录成功');
+    } else {
+      showToast('❌ ' + (result.msg || '登录失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误：' + e.message); }
+}
+
+function adminLogout(){
+  adminToken = '';
+  localStorage.removeItem('fl_admin_token');
+  document.getElementById('mainPage').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'block';
+}
+
+function showMain(){
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('mainPage').style.display = 'block';
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if(tab === 'logs') loadIpList();
+  if(tab === 'codes') loadCodeList();
+}
+
+async function loadStats(){
+  try{
+    const res = await fetch(API_BASE + '/admin/stats', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken})
+    });
+    const result = await res.json();
+    if(result.ok){
+      document.getElementById('statUsers').textContent = result.data.totalUsers;
+      document.getElementById('statSaves').textContent = result.data.usersWithSave;
+      document.getElementById('statToday').textContent = result.data.todayNew;
+      document.getElementById('statActive').textContent = result.data.active7d;
+    }
+  }catch(e){}
+}
+
+async function loadUsers(){
+  try{
+    const res = await fetch(API_BASE + '/admin/users', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken})
+    });
+    const result = await res.json();
+    if(result.ok){
+      allUsers = result.data;
+      renderUserList();
+    } else {
+      showToast('❌ ' + (result.msg || '加载失败'));
+      if(result.msg && result.msg.indexOf('登录')>=0){ adminLogout(); }
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function renderUserList(){
+  const keyword = document.getElementById('searchInput').value.toLowerCase();
+  const statusFilter = document.getElementById('filterStatus').value;
+  const genderFilter = document.getElementById('filterGender').value;
+  let filtered = allUsers.filter(u => {
+    // 关键字搜索：用户名/昵称/省份
+    if(keyword){
+      const hit = u.username.toLowerCase().includes(keyword)
+        || (u.nickname && u.nickname.toLowerCase().includes(keyword))
+        || (u.province && u.province.toLowerCase().includes(keyword));
+      if(!hit) return false;
+    }
+    // 状态筛选
+    if(statusFilter === 'admin' && !u.is_admin) return false;
+    if(statusFilter === 'banned' && !u.is_banned) return false;
+    if(statusFilter === 'normal' && (u.is_admin || u.is_banned)) return false;
+    // 性别筛选
+    if(genderFilter && (u.gender || 'secret') !== genderFilter) return false;
+    return true;
+  });
+  const tbody = document.getElementById('userListBody');
+  if(filtered.length === 0){
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-placeholder);">无匹配结果</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(u => {
+    const statusBadge = u.is_admin ? '<span class="badge badge-admin">管理员</span>' : 
+                       (u.is_banned ? '<span class="badge badge-banned">已封禁</span>' : 
+                       '<span class="badge badge-normal">正常</span>');
+    return `<tr>
+      <td>${u.id}</td>
+      <td style="font-size:20px;">${u.avatar || '🙂'}</td>
+      <td>${u.username}</td>
+      <td>${u.nickname || '-'}</td>
+      <td>${formatDate(u.created_at)}</td>
+      <td>${formatDate(u.last_login)}</td>
+      <td>${statusBadge}</td>
+      <td class="action-btns">
+        <button class="btn-view" onclick="viewUserSave(${u.id})">查看存档</button>
+        <button class="btn-view" onclick="openEditUserModal(${u.id})" style="background:#dbeafe;color:#2563eb;">编辑</button>
+        <button class="btn-reset" onclick="openResetPwdModal(${u.id}, '${u.username}')">重置密码</button>
+        <button class="btn-ban" onclick="toggleAdmin(${u.id}, ${!u.is_admin})" style="background:#ede9fe;color:#7c3aed;">${u.is_admin ? '取消管理' : '设为管理'}</button>
+        <button class="btn-ban" onclick="toggleBan(${u.id}, ${!u.is_banned})">${u.is_banned ? '解封' : '封禁'}</button>
+        <button class="btn-delete" onclick="deleteUser(${u.id}, '${u.username}')">删除</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+let allIpRecords = [];
+async function loadIpList(){
+  try{
+    const res = await fetch(API_BASE + '/admin/ip-list', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken})
+    });
+    const result = await res.json();
+    if(result.ok){
+      allIpRecords = result.data;
+      renderIpList();
+    }
+  }catch(e){}
+}
+function renderIpList(){
+  const keyword = (document.getElementById('ipSearchInput')?.value || '').trim();
+  const filtered = keyword ? allIpRecords.filter(r => r.ip.includes(keyword)) : allIpRecords;
+  const tbody = document.getElementById('ipListBody');
+  if(filtered.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-placeholder);">无匹配记录</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(r => 
+    `<tr>
+      <td>${r.id}</td>
+      <td>${r.ip}</td>
+      <td>${r.date}</td>
+      <td>${formatDate(r.created_at)}</td>
+      <td><button class="btn-delete" onclick="deleteIpRecord(${r.id})">删除</button></td>
+    </tr>`
+  ).join('');
+}
+
+async function deleteIpRecord(recordId){
+  if(!confirm('确定要删除这条注册记录吗？')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/delete-ip-record', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, recordId})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ 已删除');
+      loadIpList();
+    } else {
+      showToast('❌ ' + (result.msg || '删除失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function clearAllIpRecords(){
+  if(!confirm('确定要清空所有注册记录吗？此操作不可恢复！')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/clear-ip-records', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ 已清空所有注册记录');
+      loadIpList();
+    } else {
+      showToast('❌ ' + (result.msg || '清空失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function viewUserSave(userId){
+  document.getElementById('saveModal').classList.add('show');
+  document.getElementById('savePreview').textContent = '加载中...';
+  try{
+    const res = await fetch(API_BASE + '/admin/get-save', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, userId})
+    });
+    const result = await res.json();
+    if(result.ok){
+      document.getElementById('savePreview').textContent = 
+        JSON.stringify(result.data, null, 2) || '暂无存档';
+    } else {
+      document.getElementById('savePreview').textContent = result.msg || '加载失败';
+    }
+  }catch(e){ document.getElementById('savePreview').textContent = '网络错误'; }
+}
+
+async function deleteUser(userId, username){
+  if(!confirm(`确定要删除用户 "${username}" 吗？\n该用户的所有存档将被永久删除！`)) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/delete-user', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, userId})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ 已删除用户');
+      loadUsers();
+      loadStats();
+    } else {
+      showToast('❌ ' + (result.msg || '删除失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function toggleAdmin(userId, isAdmin){
+  if(!confirm(isAdmin ? '确定将该用户设为管理员？' : '确定取消该用户的管理员身份？')) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/set-admin', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, userId, isAdmin})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ ' + result.msg);
+      loadUsers();
+    } else {
+      showToast('❌ ' + (result.msg || '操作失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+async function toggleBan(userId, ban){
+  try{
+    const res = await fetch(API_BASE + '/admin/ban-user', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, userId, ban})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast(ban ? '✅ 已封禁' : '✅ 已解封');
+      loadUsers();
+    } else {
+      showToast('❌ ' + (result.msg || '操作失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+}
+
+let resetPwdUserId = null;
+function openResetPwdModal(userId, username){
+  resetPwdUserId = userId;
+  document.getElementById('resetPwdTip').textContent = '即将重置用户 @' + username + ' 的密码，重置后该用户所有设备将被退出登录。';
+  document.getElementById('newPwdInput').value = '';
+  document.getElementById('newPwdInput2').value = '';
+  document.getElementById('resetPwdModal').classList.add('show');
+}
+async function confirmResetPwd(){
+  const p1 = document.getElementById('newPwdInput').value;
+  const p2 = document.getElementById('newPwdInput2').value;
+  if(p1.length < 6 || p1.length > 24){ showToast('⚠️ 密码需6-24位'); return; }
+  if(p1 !== p2){ showToast('⚠️ 两次输入的密码不一致'); return; }
+  try{
+    const res = await fetch(API_BASE + '/admin/reset-password', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, userId: resetPwdUserId, newPassword: p1})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ 密码已重置');
+      closeModal('resetPwdModal');
+    } else {
+      showToast('❌ ' + (result.msg || '重置失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+// ===== 存档码管理 =====
+let extendTargetCode = '';
+let extendMinutes = 30;
+
+let allCodes = [];
+async function loadCodeList(){
+  try{
+    const res = await fetch(API_BASE + '/admin/code-list', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken})
+    });
+    const result = await res.json();
+    if(result.ok){
+      allCodes = result.data;
+      renderCodeList();
+    } else {
+      showToast('❌ ' + (result.msg || '加载失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+function renderCodeList(){
+  const keyword = (document.getElementById('codeSearchInput')?.value || '').trim();
+  const filtered = keyword ? allCodes.filter(c => c.code.includes(keyword)) : allCodes;
+  document.getElementById('codeCountLabel').textContent = '共 ' + filtered.length + ' 个存档码' + (keyword ? '（搜索：' + keyword + '）' : '');
+  const tbody = document.getElementById('codeListBody');
+  if(filtered.length === 0){
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-placeholder);">无匹配结果</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(c => {
+    const sizeKB = (c.data_size / 1024).toFixed(1);
+    const statusBadge = c.expired
+      ? '<span class="badge badge-banned">已过期</span>'
+      : '<span class="badge" style="background:var(--success-bg);color:var(--success);">有效</span>';
+    return `<tr>
+      <td style="font-family:monospace;font-weight:700;letter-spacing:2px;">${c.code}</td>
+      <td>${sizeKB} KB</td>
+      <td>${formatDate(c.expire_at)}</td>
+      <td>${statusBadge}</td>
+      <td class="action-btns">
+        <button class="btn-view" onclick="openExtendCodeModal('${c.code}')">延长</button>
+        <button class="btn-delete" onclick="deleteCode('${c.code}')">删除</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function deleteCode(code){
+  if(!confirm(`确定要删除存档码 ${code} 吗？他人将无法再用此码导入存档。`)) return;
+  try{
+    const res = await fetch(API_BASE + '/admin/delete-code', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, code})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ 已删除');
+      loadCodeList();
+    } else {
+      showToast('❌ ' + (result.msg || '删除失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function openExtendCodeModal(code){
+  extendTargetCode = code;
+  extendMinutes = 30;
+  document.getElementById('extendCodeTip').textContent = '即将延长存档码 ' + code + ' 的有效期：';
+  document.getElementById('extendCodeModal').classList.add('show');
+}
+function setExtendMinutes(min){
+  extendMinutes = min;
+  document.querySelectorAll('#extendCodeModal button[onclick^="setExtendMinutes"]').forEach(b=>{
+    b.style.borderColor = b.textContent.includes(min+'分钟')||b.textContent.includes((min/60)+'小时')||b.textContent.includes((min/1440)+'天') ? 'var(--primary)' : 'var(--border-color)';
+    b.style.background = b.style.borderColor === 'var(--primary)' ? 'var(--primary-bg)' : 'var(--bg-input)';
+  });
+}
+async function confirmExtendCode(){
+  try{
+    const res = await fetch(API_BASE + '/admin/extend-code', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, code: extendTargetCode, minutes: extendMinutes})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ ' + result.msg);
+      closeModal('extendCodeModal');
+      loadCodeList();
+    } else {
+      showToast('❌ ' + (result.msg || '延长失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+// ===== 编辑用户资料 =====
+let editUserId = null;
+function openEditUserModal(userId){
+  const u = allUsers.find(x => x.id === userId);
+  if(!u) return;
+  editUserId = userId;
+  document.getElementById('editUserTip').textContent = '正在编辑用户 @' + u.username;
+  document.getElementById('editNickname').value = u.nickname || '';
+  document.getElementById('editGender').value = u.gender || 'secret';
+  document.getElementById('editBirthday').value = u.birthday || '';
+  document.getElementById('editProvince').value = u.province || '';
+  document.getElementById('editRainbow').checked = !!u.rainbow_name;
+  document.getElementById('editUserModal').classList.add('show');
+}
+async function confirmEditUser(){
+  const nickname = document.getElementById('editNickname').value.trim();
+  const gender = document.getElementById('editGender').value;
+  const birthday = document.getElementById('editBirthday').value;
+  const province = document.getElementById('editProvince').value.trim();
+  const rainbow_name = document.getElementById('editRainbow').checked;
+  try{
+    const res = await fetch(API_BASE + '/admin/edit-user', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: adminToken, userId: editUserId, nickname, gender, birthday, province, rainbow_name})
+    });
+    const result = await res.json();
+    if(result.ok){
+      showToast('✅ 用户资料已更新');
+      closeModal('editUserModal');
+      loadUsers();
+    } else {
+      showToast('❌ ' + (result.msg || '更新失败'));
+    }
+  }catch(e){ showToast('❌ 网络错误'); }
+}
+
+function formatDate(iso){
+  if(!iso) return '-';
+  const d = new Date(iso);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + 
+         String(d.getDate()).padStart(2,'0') + ' ' + 
+         String(d.getHours()).padStart(2,'0') + ':' + 
+         String(d.getMinutes()).padStart(2,'0');
+}
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
