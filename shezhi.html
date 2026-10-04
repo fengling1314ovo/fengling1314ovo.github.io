@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>高级 - 枫铃工具箱</title>
+<style>
+:root{
+  --primary:#6366f1;--primary-light:#818cf8;--primary-bg:rgba(99,102,241,0.12);
+  --bg:#f5f7ff;--bg-card:#ffffff;--bg-input:#f1f5f9;
+  --text-primary:#1e293b;--text-secondary:#64748b;--text-placeholder:#94a3b8;
+  --border:#e2e8f0;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{
+  background:radial-gradient(circle at 15% 15%,rgba(99,102,241,.16),transparent 32%),
+  radial-gradient(circle at 85% 85%,rgba(56,189,248,.12),transparent 32%),
+  radial-gradient(circle at 50% 100%,rgba(168,85,247,.10),transparent 45%),
+  linear-gradient(160deg,#f8faff 0%,#eef1ff 50%,#eaf6ff 100%);
+  background-attachment:fixed;
+  color:var(--text-primary);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  min-height:100vh;transition:background .3s,color .3s;
+}
+.sticky-nav{
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(180deg,rgba(248,250,255,0.72),rgba(248,250,255,0.52));
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  padding:16px 28px 12px;
+  border-bottom:1px solid rgba(226,232,240,0.6);
+  box-shadow:0 2px 12px rgba(30,41,59,0.04);
+}
+.back-btn{
+  border:none;background:var(--primary-bg);color:var(--primary);
+  padding:7px 14px;border-radius:12px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;gap:6px;min-height:40px;transition:transform .12s;
+}
+.back-btn:active{transform:scale(0.96);}
+.breadcrumb{font-size:13px;color:var(--text-secondary);margin-top:8px;}
+.breadcrumb a{color:var(--primary);text-decoration:none;cursor:pointer;}
+.breadcrumb .sep{margin:0 6px;opacity:0.5;}
+.breadcrumb .current{color:var(--text-primary);font-weight:500;}
+.content{max-width:680px;margin:0 auto;padding:20px 28px 40px;}
+.option-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px;border-radius:14px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.5);
+  box-shadow:0 4px 12px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.6);
+  margin-bottom:12px;
+}
+.option-row>div:first-child{flex:1;min-width:0;margin-right:12px;}
+.option-row .label{font-size:15px;font-weight:500;}
+.option-row .desc{font-size:12px;color:var(--text-secondary);margin-top:3px;line-height:1.5;}
+.option-row .switch{flex-shrink:0;}
+.btn{
+  padding:8px 16px;border:none;border-radius:10px;background:var(--primary);
+  color:#fff;font-size:14px;font-weight:600;cursor:pointer;
+}
+.btn:active{transform:scale(0.96);}
+.btn-sm{padding:6px 14px;font-size:13px;border-radius:8px;}
+.btn-danger{background:#ef4444;}
+.section-title{font-size:16px;font-weight:600;margin:20px 0 12px;}
+.switch{position:relative;display:inline-block;width:46px;height:26px;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:#ccc;border-radius:26px;cursor:pointer;transition:.2s;}
+.slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+.switch input:checked+.slider{background:var(--primary,#6366f1);}
+.switch input:checked+.slider:before{transform:translateX(20px);}
+.switch{position:relative;display:inline-block;width:46px;height:26px;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:#ccc;border-radius:26px;cursor:pointer;transition:.2s;}
+.slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+.switch input:checked+.slider{background:var(--primary,#6366f1);}
+.switch input:checked+.slider:before{transform:translateX(20px);}
+.anim-wrap{
+  animation-name:var(--page-anim-name,pageAnimDefault);
+  animation-duration:var(--page-anim-duration,0.28s);
+  animation-timing-function:var(--page-anim-ease,ease);
+  animation-fill-mode:both;
+}
+@keyframes pageAnimDefault{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pageAnimSlide{from{opacity:0;transform:translateX(36px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pageAnimZoom{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+@keyframes pageAnimRotate{from{opacity:0;transform:scale(0.9) rotate(-1deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes pageAnimBlur{from{opacity:0;transform:translateY(6px);filter:blur(6px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+html,body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+</style>
+</head>
+<body>
+  <div class="sticky-nav">
+    <button class="back-btn" id="topBackBtn" onclick="location.href='https://fengling1314ovo.top'"><span>←</span> 返回</button>
+    <div class="breadcrumb" id="crumbBar">
+      <a onclick="location.href='https://fengling1314ovo.top'">首页</a><span class="sep">/</span>
+      <span class="current">高级</span>
+    </div>
+  </div>
+  <div class="content anim-wrap">
+    <div class="section-title">⚙️ 高级设置</div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">首页时钟</div>
+        <div class="desc">在首页标题下方显示当前时间</div>
+      </div>
+      <label class="switch" title="显示时钟"><input type="checkbox" id="clockShowToggle" onchange="toggleClockShow()"><span class="slider"></span></label>
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">毫秒显示</div>
+        <div class="desc">时间后追加毫秒（需开启时钟）</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="clockMsToggle" onchange="toggleClockMs()"><span class="slider"></span></label>
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">节假日提醒</div>
+        <div class="desc">时钟旁显示距离下一个法定节假日还有几天</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="holidayToggle" onchange="toggleHoliday()"><span class="slider"></span></label>
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">隐藏关于本站按钮</div>
+        <div class="desc">隐藏首页顶栏的 ℹ️ 关于本站按钮。由于部分人系统字体太大，节假日与时钟会挤压显示，特此优化</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="hideAboutBtnToggle" onchange="toggleHideAboutBtn()"><span class="slider"></span></label>
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">允许同时开启毫秒与节假日</div>
+        <div class="desc">开启此选项后即可同时开启毫秒显示和节假日提醒，但顶栏可能会因内容过多而换行显示，确定要开启吗？</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="allowBothToggle" onchange="toggleAllowBoth()"><span class="slider"></span></label>
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">清除所有本地数据</div>
+        <div class="desc">删除个性化、背包、百宝箱等所有本地存储</div>
+      </div>
+      <button class="btn btn-danger" onclick="clearAllData()">清除</button>
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">导出备份</div>
+        <div class="desc">下载本地数据为JSON文件</div>
+      </div>
+      <button class="btn" onclick="exportData()">导出</button>
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">导入备份</div>
+        <div class="desc">从JSON文件恢复数据</div>
+      </div>
+      <button class="btn" onclick="document.getElementById('importFile').click()">选择文件</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+
+    <div class="option-row">
+      <div>
+        <div class="label">调试信息</div>
+        <div class="desc">查看当前存储状态</div>
+      </div>
+      <button class="btn" onclick="showDebug()">查看</button>
+    </div>
+
+    <div id="debugInfo" style="display:none;margin-top:16px;padding:14px;border-radius:12px;background:var(--bg-card);font-size:12px;line-height:1.8;max-height:300px;overflow:auto;"></div>
+
+  </div>
+<script>
+function hexToRgba(hex, alpha){
+  var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return 'rgba('+r+', '+g+', '+b+', '+alpha+')';
+}
+// ==================== 主题/动画/背景流动 ====================
+(function(){
+  const pageAnimMap={
+    default:{name:'pageAnimDefault',duration:'0.28s',ease:'ease'},
+    slide:{name:'pageAnimSlide',duration:'0.3s',ease:'ease-out'},
+    zoom:{name:'pageAnimZoom',duration:'0.35s',ease:'cubic-bezier(0.34,1.56,0.64,1)'},
+    rotate:{name:'pageAnimRotate',duration:'0.35s',ease:'cubic-bezier(0.34,1.56,0.64,1)'},
+    blur:{name:'pageAnimBlur',duration:'0.35s',ease:'ease-out'}
+  };
+  let pageAnim='default';
+  try{ pageAnim=JSON.parse(localStorage.getItem('page_anim')||'"default"'); }catch(e){}
+  const cfg=pageAnimMap[pageAnim]||pageAnimMap.default;
+  document.body.style.setProperty('--page-anim-name',cfg.name);
+  document.body.style.setProperty('--page-anim-duration',cfg.duration);
+  document.body.style.setProperty('--page-anim-ease',cfg.ease);
+
+  // 主题色
+  const savedTheme = localStorage.getItem('qqtool_theme');
+  let themeColors = ['#6366f1', '#818cf8'];
+  if(savedTheme){
+    try{
+      const t = JSON.parse(savedTheme);
+      if(t.p1 && t.p2){
+        themeColors = [t.p1, t.p2];
+        document.documentElement.style.setProperty('--primary', t.p1);
+        document.documentElement.style.setProperty('--primary-light', t.p2);
+        document.documentElement.style.setProperty('--primary-bg', hexToRgba(t.p1, 0.12));
+        document.body.style.background =
+          'radial-gradient(circle at 15% 15%,' + hexToRgba(t.p1, 0.16) + ',transparent 32%),' +
+          'radial-gradient(circle at 85% 85%,' + hexToRgba(t.p2, 0.14) + ',transparent 32%),' +
+          'radial-gradient(circle at 50% 100%,' + hexToRgba(t.p1, 0.08) + ',transparent 45%),' +
+          'linear-gradient(160deg,#f8faff 0%,#eef1ff 50%,#eaf6ff 100%)';
+        document.body.style.backgroundAttachment = 'fixed';
+      }
+    }catch(e){}
+  }
+
+  // 背景流动效果
+  let bgFlowEnabled = false;
+  let bgFlowSpeed = 2;
+  let bgFlowTime = 0;
+  let bgFlowRafId = null;
+  const BG_FLOW_SPEED_MAP = {1:0.0006, 2:0.0012, 3:0.002, 4:0.0035, 5:0.0055};
+  try{
+    bgFlowEnabled = localStorage.getItem('qqtool_bgflow') === '1';
+    const s = parseInt(localStorage.getItem('qqtool_bgflow_speed') || '2');
+    if(s >= 1 && s <= 5) bgFlowSpeed = s;
+  }catch(e){}
+  function applyBgFlowFrame(){
+    const [c1, c2] = themeColors;
+    const t = bgFlowTime;
+    const sp = BG_FLOW_SPEED_MAP[bgFlowSpeed] || 0.002;
+    const x1 = 15 + Math.sin(t * sp) * 32;
+    const y1 = 15 + Math.cos(t * sp * 0.7) * 22;
+    const x2 = 85 + Math.cos(t * sp * 0.8) * 22;
+    const y2 = 85 + Math.sin(t * sp * 0.9) * 30;
+    const x3 = 50 + Math.sin(t * sp * 0.6) * 38;
+    const y3 = 100 + Math.cos(t * sp * 0.5) * 20;
+    const a1 = 0.16 + Math.sin(t * sp * 0.5) * 0.10;
+    const a2 = 0.14 + Math.cos(t * sp * 0.6) * 0.09;
+    const a3 = 0.08 + Math.sin(t * sp * 0.4) * 0.06;
+    const bg = 'radial-gradient(circle at '+x1+'% '+y1+'%,' + hexToRgba(c1, Math.max(0.02, a1)) + ',transparent 35%),' +
+               'radial-gradient(circle at '+x2+'% '+y2+'%,' + hexToRgba(c2, Math.max(0.02, a2)) + ',transparent 35%),' +
+               'radial-gradient(circle at '+x3+'% '+y3+'%,' + hexToRgba(c1, Math.max(0.01, a3)) + ',transparent 50%),' +
+               'linear-gradient(160deg,#f8faff 0%,#eef1ff 50%,#eaf6ff 100%)';
+    document.body.style.background = bg;
+    document.body.style.backgroundAttachment = 'fixed';
+  }
+  function bgFlowLoop(){
+    bgFlowTime += 16;
+    applyBgFlowFrame();
+    bgFlowRafId = requestAnimationFrame(bgFlowLoop);
+  }
+  if(bgFlowEnabled){ bgFlowLoop(); }
+})();
+
+// ==================== 节日粒子效果 ====================
+(function(){
+  let festivalCanvas=null, festivalCtx=null, festivalParticles=[], festivalAnimId=null;
+  let currentFestival = 'none';
+  try{
+    const raw = localStorage.getItem('festival_theme');
+    if(raw){
+      currentFestival = JSON.parse(raw);
+      if(typeof currentFestival !== 'string') currentFestival = 'none';
+    }
+  }catch(e){
+    currentFestival = localStorage.getItem('festival_theme') || 'none';
+  }
+  function initFestivalCanvas(){
+    if(festivalCanvas)return;
+    festivalCanvas=document.createElement('canvas');
+    festivalCanvas.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;';
+    document.body.appendChild(festivalCanvas);
+    festivalCtx=festivalCanvas.getContext('2d');
+    resizeFestivalCanvas();
+    window.addEventListener('resize',resizeFestivalCanvas);
+  }
+  function resizeFestivalCanvas(){
+    if(!festivalCanvas)return;
+    festivalCanvas.width=window.innerWidth;
+    festivalCanvas.height=window.innerHeight;
+  }
+  function createFestivalParticle(type){
+    const w=festivalCanvas.width;
+    if(type==='snow'){
+      return{x:Math.random()*w,y:-10,r:Math.random()*2+1.5,speed:Math.random()*0.8+0.4,drift:Math.random()*0.3-0.15,opacity:Math.random()*0.3+0.3};
+    }else if(type==='sakura'){
+      return{x:Math.random()*w,y:-10,r:Math.random()*3+3,speed:Math.random()*1+0.6,drift:Math.random()*0.6-0.3,rotation:Math.random()*Math.PI*2,rotSpeed:Math.random()*0.03-0.015,opacity:Math.random()*0.3+0.4};
+    }else if(type==='coin'){
+      return{x:Math.random()*w,y:-10,r:Math.random()*4+4,speed:Math.random()*1.2+0.7,drift:Math.random()*0.5-0.25,rotation:0,rotSpeed:Math.random()*0.06-0.03,opacity:Math.random()*0.3+0.3};
+    }else if(type==='love'){
+      return{x:Math.random()*w,y:-20,emoji:'❤️',size:Math.random()*8+12,speed:Math.random()*0.8+0.4,drift:Math.random()*0.6-0.3,rotation:Math.random()*Math.PI*2,rotSpeed:Math.random()*0.03-0.015,opacity:Math.random()*0.3+0.6,sway:Math.random()*Math.PI*2,swaySpeed:Math.random()*0.025+0.01};
+    }else if(type==='party'){
+      const emojis=['✨','🎆','🎇','🌟','💫','⭐'];
+      return{x:Math.random()*w,y:-20,emoji:emojis[Math.floor(Math.random()*emojis.length)],size:Math.random()*14+16,speed:Math.random()*2+1.2,drift:Math.random()*1.5-0.75,rotation:Math.random()*Math.PI*2,rotSpeed:Math.random()*0.1-0.05,opacity:Math.random()*0.4+0.6,sway:Math.random()*Math.PI*2,swaySpeed:Math.random()*0.06+0.03,twinkle:Math.random()*Math.PI*2,twinkleSpeed:Math.random()*0.15+0.1};
+    }
+  }
+  function drawFestivalParticle(p,type){
+    festivalCtx.save();
+    festivalCtx.globalAlpha=p.opacity;
+    festivalCtx.translate(p.x,p.y);
+    if(type==='snow'){
+      festivalCtx.fillStyle='#fff';
+      festivalCtx.beginPath();
+      festivalCtx.arc(0,0,p.r,0,Math.PI*2);
+      festivalCtx.fill();
+    }else if(type==='sakura'){
+      festivalCtx.rotate(p.rotation);
+      festivalCtx.fillStyle='#ffb7c5';
+      for(let i=0;i<5;i++){
+        festivalCtx.rotate(Math.PI*2/5);
+        festivalCtx.beginPath();
+        festivalCtx.ellipse(0,-p.r*0.6,p.r*0.4,p.r*0.7,0,0,Math.PI*2);
+        festivalCtx.fill();
+      }
+    }else if(type==='coin'){
+      festivalCtx.rotate(p.rotation);
+      const grad=festivalCtx.createLinearGradient(-p.r,0,p.r,0);
+      grad.addColorStop(0,'#f59e0b');
+      grad.addColorStop(0.5,'#fbbf24');
+      grad.addColorStop(1,'#d97706');
+      festivalCtx.fillStyle=grad;
+      festivalCtx.beginPath();
+      festivalCtx.arc(0,0,p.r,0,Math.PI*2);
+      festivalCtx.fill();
+      festivalCtx.fillStyle='#92400e';
+      festivalCtx.font='bold '+(p.r*1.2)+'px serif';
+      festivalCtx.textAlign='center';
+      festivalCtx.textBaseline='middle';
+      festivalCtx.fillText('$',0,1);
+    }else if(type==='love'||type==='party'){
+      festivalCtx.rotate(p.rotation);
+      festivalCtx.font=p.size+'px serif';
+      festivalCtx.textAlign='center';
+      festivalCtx.textBaseline='middle';
+      if(p.currentOpacity!==undefined){
+        festivalCtx.globalAlpha=p.currentOpacity;
+      }
+      festivalCtx.fillText(p.emoji,0,0);
+    }
+    festivalCtx.restore();
+  }
+  function festivalLoop(){
+    if(!festivalCtx||currentFestival==='none')return;
+    festivalCtx.clearRect(0,0,festivalCanvas.width,festivalCanvas.height);
+    const spawnRate = currentFestival==='party' ? 0.18 : 0.06;
+    const maxParticles = currentFestival==='party' ? 60 : 35;
+    if(Math.random()<spawnRate&&festivalParticles.length<maxParticles){
+      festivalParticles.push(createFestivalParticle(currentFestival));
+    }
+    for(let i=festivalParticles.length-1;i>=0;i--){
+      const p=festivalParticles[i];
+      p.y+=p.speed;
+      if(p.sway!==undefined){
+        p.sway+=p.swaySpeed;
+        p.x+=p.drift+Math.sin(p.sway)*0.5;
+      }else{
+        p.x+=p.drift;
+      }
+      if(p.rotation!==undefined)p.rotation+=p.rotSpeed;
+      if(p.twinkle!==undefined){
+        p.twinkle+=p.twinkleSpeed;
+        p.currentOpacity = p.opacity * (0.4 + Math.abs(Math.sin(p.twinkle))*0.6);
+      }
+      if(p.y>festivalCanvas.height+20||p.x<-20||p.x>festivalCanvas.width+20){
+        festivalParticles.splice(i,1);
+        continue;
+      }
+      drawFestivalParticle(p,currentFestival);
+    }
+    festivalAnimId=requestAnimationFrame(festivalLoop);
+  }
+  if(currentFestival!=='none'){
+    initFestivalCanvas();
+    festivalParticles=[];
+    festivalLoop();
+  }
+})();
+
+// ==================== 时钟开关 ====================
+document.getElementById('clockShowToggle').checked = localStorage.getItem('clock_show') === '1';
+document.getElementById('clockMsToggle').checked = localStorage.getItem('clock_ms') === '1';
+document.getElementById('holidayToggle').checked = localStorage.getItem('show_holiday') === '1';
+function toggleClockShow(){
+  try{navigator.vibrate(10);}catch(e){}
+  localStorage.setItem('clock_show', document.getElementById('clockShowToggle').checked ? '1' : '0');
+  autoHideAboutBtn();
+}
+function toggleClockMs(){
+  try{navigator.vibrate(10);}catch(e){}
+  const on = document.getElementById('clockMsToggle').checked;
+  localStorage.setItem('clock_ms', on ? '1' : '0');
+  // 互斥：开启毫秒时自动关闭节假日提醒（除非已开启"允许同时开启"）
+  if(on && localStorage.getItem('show_holiday')==='1' && localStorage.getItem('allow_both_clock_holiday')!=='1'){
+    localStorage.setItem('show_holiday','0');
+    document.getElementById('holidayToggle').checked = false;
+  }
+  autoHideAboutBtn();
+}
+function toggleHoliday(){
+  try{navigator.vibrate(10);}catch(e){}
+  const on = document.getElementById('holidayToggle').checked;
+  localStorage.setItem('show_holiday', on ? '1' : '0');
+  // 互斥：开启节假日提醒时自动关闭毫秒显示（除非已开启"允许同时开启"）
+  if(on && localStorage.getItem('clock_ms')==='1' && localStorage.getItem('allow_both_clock_holiday')!=='1'){
+    localStorage.setItem('clock_ms','0');
+    document.getElementById('clockMsToggle').checked = false;
+  }
+  autoHideAboutBtn();
+}
+// 当时钟、毫秒、节假日中任意两个及以上开启时，自动开启隐藏关于本站按钮（用户可手动关闭）
+function autoHideAboutBtn(){
+  let count = 0;
+  if(localStorage.getItem('clock_show')==='1') count++;
+  if(localStorage.getItem('clock_ms')==='1') count++;
+  if(localStorage.getItem('show_holiday')==='1') count++;
+  if(count >= 2){
+    localStorage.setItem('hide_about_btn','1');
+    document.getElementById('hideAboutBtnToggle').checked = true;
+  }
+}
+// 隐藏关于本站按钮
+document.getElementById('hideAboutBtnToggle').checked = localStorage.getItem('hide_about_btn') === '1';
+function toggleHideAboutBtn(){
+  try{navigator.vibrate(10);}catch(e){}
+  localStorage.setItem('hide_about_btn', document.getElementById('hideAboutBtnToggle').checked ? '1' : '0');
+}
+// 允许同时开启毫秒与节假日
+document.getElementById('allowBothToggle').checked = localStorage.getItem('allow_both_clock_holiday') === '1';
+function toggleAllowBoth(){
+  try{navigator.vibrate(10);}catch(e){}
+  const on = document.getElementById('allowBothToggle').checked;
+  if(on){
+    if(!confirm('开启此选项后即可同时开启毫秒显示和节假日提醒，但顶栏可能会因内容过多而换行显示，确定要开启吗？')){
+      document.getElementById('allowBothToggle').checked = false;
+      return;
+    }
+  }
+  localStorage.setItem('allow_both_clock_holiday', on ? '1' : '0');
+}
+
+// ==================== 功能 ====================
+function clearAllData(){
+  if(!confirm('确定要清除所有本地数据吗？此操作不可恢复！')) return;
+  localStorage.clear();
+  alert('已清除所有本地数据');
+  location.reload();
+}
+function exportData(){
+  var data={};
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    data[k]=localStorage.getItem(k);
+  }
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='fenglin_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+function importData(e){
+  var file=e.target.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=JSON.parse(ev.target.result);
+      Object.keys(data).forEach(function(k){
+        localStorage.setItem(k,data[k]);
+      });
+      alert('导入成功，刷新页面生效');
+      location.reload();
+    }catch(err){ alert('导入失败：文件格式错误'); }
+  };
+  reader.readAsText(file);
+}
+function showDebug(){
+  var el=document.getElementById('debugInfo');
+  var html='<b>LocalStorage 共'+localStorage.length+' 项：</b><br>';
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    var v=(localStorage.getItem(k)||'').slice(0,80);
+    html+=k+' = '+v+'<br>';
+  }
+  el.innerHTML=html;
+  el.style.display='block';
+}
+
+// ==================== 禁止复制/放大 ====================
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('touchend',function(e){
+  var now=Date.now();
+  if(now-arguments.callee._last<300) e.preventDefault();
+  arguments.callee._last=now;
+},{passive:false});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('dblclick',e=>e.preventDefault());
+
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
