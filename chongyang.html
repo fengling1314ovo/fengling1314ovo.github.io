@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>九九重阳节 · 敬老爱老 · 农历九月初九</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23C8102E'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='%23E8C547' font-family='serif'>阳</text></svg>">
+<style>
+/* ============ 基础与变量 ============ */
+:root{
+  --red:#B22222;
+  --red-deep:#7B1818;
+  --red-dark:#4A1010;
+  --gold:#C9A227;
+  --gold-light:#E0C040;
+  --gold-pale:#F0E8C0;
+  --cream:#F5F0E6;
+  --ink:#1C1C1C;
+  --ink-soft:#4A4A4A;
+  --ink-line:rgba(28,28,28,.1);
+  --card:#FFFEF9;
+  --shadow:0 4px 20px rgba(0,0,0,.06);
+  --dai:#2C3E50;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+body{
+  font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  font-size:15px;
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.8;
+  overflow-x:hidden;
+  -webkit-user-select:none;user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+}
+/* 宣纸纹理背景 */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(201,162,39,.04) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 70%,rgba(178,34,34,.03) 0%,transparent 50%),
+    repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(178,34,34,.008) 2px,rgba(178,34,34,.008) 3px);
+  pointer-events:none;
+}
+input,textarea{
+  -webkit-user-select:text;user-select:text;
+  -webkit-touch-callout:default;
+}
+h1,h2,h3,h4{font-family:'Noto Serif SC','Songti SC','SimSun',serif;font-weight:700;line-height:1.3}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ============ 顶部导航 ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:101;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 40px;
+  background:linear-gradient(135deg,rgba(201,162,39,.55),rgba(224,192,64,.5));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(123,24,24,.2);
+  box-shadow:0 2px 16px rgba(201,162,39,.2);
+  transition:all .3s;
+}
+.nav-logo{
+  font-family:'Noto Serif SC',serif;font-weight:700;
+  color:#5C0A0A;font-size:22px;letter-spacing:5px;
+  display:flex;align-items:center;gap:12px;
+  text-shadow:0 1px 2px rgba(255,255,255,.3);
+}
+.nav-logo svg{width:28px;height:28px}
+.nav-links{
+  position:fixed;top:0;right:0;bottom:0;width:240px;height:auto;
+  background:linear-gradient(160deg,rgba(224,192,64,.97),rgba(201,162,39,.95));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  flex-direction:column;gap:0;
+  padding:68px 0 20px;transform:translateX(100%);transition:transform .35s;
+  border-left:1px solid rgba(123,24,24,.25);
+  box-shadow:-8px 0 30px rgba(201,162,39,.3);
+  z-index:100;list-style:none;display:flex;
+}
+.nav-links.open{transform:translateX(0)}
+.nav-links li{width:100%}
+.nav-links a{display:block;padding:14px 28px;font-size:15px;color:rgba(123,24,24,.85);font-weight:600;letter-spacing:1px;transition:all .25s;border-left:3px solid transparent;}
+.nav-links a:hover{color:#7B1818;background:rgba(123,24,24,.08);border-left-color:#7B1818;}
+.nav-links a::after{display:none}
+.nav-toggle{display:inline-flex;background:none;border:none;cursor:pointer;padding:4px;min-width:44px;min-height:44px;align-items:center;justify-content:center;flex-direction:column}
+.nav-toggle span{display:block;width:24px;height:2px;background:#7B1818;margin:3px 0;transition:all .35s ease;border-radius:2px}
+.nav-toggle.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+.nav-toggle.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.nav-toggle.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+.nav-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;
+  z-index:99;backdrop-filter:blur(2px);
+}
+.nav-overlay.open{opacity:1;visibility:visible}
+
+/* ============ Hero 区 ============ */
+.hero{
+  position:relative;height:100vh;min-height:640px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;text-align:center;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('https://aka.doubaocdn.com/s/ObWom9VLMT') center/cover no-repeat;
+  transform:scale(1.05);
+  animation:heroZoom 20s ease-in-out infinite alternate;
+}
+@keyframes heroZoom{from{transform:scale(1.05)}to{transform:scale(1.15)}}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(26,14,14,.25) 0%,transparent 25%,transparent 60%,rgba(26,14,14,.45) 100%);
+}
+/* 文字区域柔和光晕 */
+.hero-content::before{
+  content:'';position:absolute;inset:-40px -60px;
+  background:radial-gradient(ellipse at center,rgba(20,10,10,.35) 0%,transparent 70%);
+  z-index:-1;border-radius:50%;
+  filter:blur(20px);
+}
+/* 书法大字背景 */
+.hero-calligraphy{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  z-index:1;pointer-events:none;
+  font-family:'Noto Serif SC',serif;font-weight:900;
+  font-size:clamp(200px,40vw,520px);
+  color:rgba(255,255,255,.04);
+  -webkit-text-stroke:1.5px rgba(224,192,64,.25);
+  letter-spacing:20px;white-space:nowrap;opacity:.9;
+}
+.hero-chrysanthemum{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.hero-content{position:relative;z-index:3;padding:0 24px;max-width:900px}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  color:var(--gold-light);font-size:15px;letter-spacing:6px;
+  font-weight:500;margin-bottom:28px;
+  opacity:0;animation:fadeUp 1s .3s forwards;
+  text-shadow:
+    -1px -1px 0 rgba(20,10,10,.8),
+    1px -1px 0 rgba(20,10,10,.8),
+    -1px 1px 0 rgba(20,10,10,.8),
+    1px 1px 0 rgba(20,10,10,.8),
+    0 2px 10px rgba(0,0,0,.5);
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';width:40px;height:1px;background:var(--gold-light);opacity:.6;
+}
+.hero-title{
+  font-size:clamp(36px,7vw,84px);font-weight:900;
+  color:#fff;letter-spacing:4px;margin-bottom:20px;
+  text-shadow:
+    -1.5px -1.5px 0 rgba(20,10,10,.8),
+    1.5px -1.5px 0 rgba(20,10,10,.8),
+    -1.5px 1.5px 0 rgba(20,10,10,.8),
+    1.5px 1.5px 0 rgba(20,10,10,.8),
+    0 4px 24px rgba(0,0,0,.5);
+  opacity:0;animation:fadeUp 1.2s .5s forwards;
+  font-family:'Noto Serif SC',serif;
+}
+.hero-title .gold{
+  color:var(--gold-light);
+  text-shadow:
+    -1.5px -1.5px 0 rgba(20,10,10,.8),
+    1.5px -1.5px 0 rgba(20,10,10,.8),
+    -1.5px 1.5px 0 rgba(20,10,10,.8),
+    1.5px 1.5px 0 rgba(20,10,10,.8),
+    0 4px 24px rgba(224,192,64,.4),
+    0 4px 24px rgba(0,0,0,.5);
+}
+.hero-sub{
+  font-family:'Noto Serif SC',serif;
+  font-size:clamp(18px,2.5vw,28px);color:rgba(255,255,255,.95);
+  letter-spacing:8px;margin-bottom:40px;font-weight:400;
+  opacity:0;animation:fadeUp 1.2s .8s forwards;
+  text-shadow:
+    -1px -1px 0 rgba(20,10,10,.7),
+    1px -1px 0 rgba(20,10,10,.7),
+    -1px 1px 0 rgba(20,10,10,.7),
+    1px 1px 0 rgba(20,10,10,.7),
+    0 2px 12px rgba(0,0,0,.5);
+}
+.hero-date{
+  display:flex;align-items:center;justify-content:center;gap:24px;
+  font-family:'Noto Serif SC',serif;font-size:clamp(20px,3vw,36px);
+  color:var(--gold-light);font-weight:700;letter-spacing:4px;
+  opacity:0;animation:fadeUp 1.2s 1s forwards;
+  text-shadow:
+    -1px -1px 0 rgba(20,10,10,.8),
+    1px -1px 0 rgba(20,10,10,.8),
+    -1px 1px 0 rgba(20,10,10,.8),
+    1px 1px 0 rgba(20,10,10,.8),
+    0 2px 12px rgba(0,0,0,.5);
+}
+.hero-date .dash{width:60px;height:2px;background:var(--gold-light);opacity:.7}
+.hero-tags{
+  display:flex;justify-content:center;gap:12px;margin-top:36px;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 1.2s 1.2s forwards;
+}
+.hero-tag{
+  padding:8px 22px;border:1px solid rgba(224,192,64,.5);
+  border-radius:20px;font-size:13px;color:rgba(255,255,255,.9);
+  letter-spacing:2px;background:rgba(20,10,10,.4);
+  font-family:'Noto Serif SC',serif;
+  backdrop-filter:blur(4px);
+  text-shadow:0 1px 6px rgba(0,0,0,.6);
+}
+/* 四角装饰 */
+.hero-corner{
+  position:absolute;width:60px;height:60px;z-index:3;pointer-events:none;
+  border:2px solid rgba(224,192,64,.3);
+}
+.hero-corner-tl{top:80px;left:24px;border-right:none;border-bottom:none}
+.hero-corner-tr{top:80px;right:24px;border-left:none;border-bottom:none}
+.hero-corner-bl{bottom:80px;left:24px;border-right:none;border-top:none}
+.hero-corner-br{bottom:80px;right:24px;border-left:none;border-top:none}
+.hero-scroll{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  z-index:3;color:rgba(255,255,255,.7);font-size:12px;letter-spacing:3px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  animation:bounce 2s infinite;
+}
+.hero-scroll svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ============ 通用区块 ============ */
+.section{padding:100px 40px;position:relative}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-head{text-align:center;margin-bottom:64px;position:relative}
+.section-tag{
+  display:inline-block;color:var(--red);font-size:12px;letter-spacing:6px;
+  font-weight:500;margin-bottom:16px;text-transform:uppercase;
+  padding:6px 20px;border:1px solid rgba(200,16,46,.2);border-radius:20px;
+  background:rgba(200,16,46,.04);
+}
+.section-title{
+  font-size:clamp(28px,4vw,44px);color:var(--ink);font-weight:900;
+  letter-spacing:4px;margin-bottom:16px;
+  display:inline-flex;align-items:center;gap:20px;
+}
+.section-title::before,.section-title::after{
+  content:'';display:inline-block;width:50px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold));
+  position:relative;
+}
+.section-title::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.section-title-dot{
+  display:inline-block;width:8px;height:8px;background:var(--red);
+  transform:rotate(45deg);flex-shrink:0;
+}
+.section-desc{color:var(--ink-soft);font-size:16px;max-width:640px;margin:16px auto 0;line-height:1.9}
+
+/* 滚动揭示 */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ============ 重阳由来 ============ */
+.origin-grid{
+  display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center;
+}
+.origin-text h3{
+  font-size:26px;color:var(--red-deep);margin-bottom:20px;letter-spacing:2px;
+  position:relative;padding-left:18px;
+}
+.origin-text h3::before{
+  content:'';position:absolute;left:0;top:6px;bottom:6px;width:4px;
+  background:linear-gradient(180deg,var(--red),var(--gold));border-radius:2px;
+}
+.origin-text p{color:var(--ink-soft);font-size:15.5px;margin-bottom:16px;line-height:1.95}
+.origin-stats{display:flex;gap:32px;margin-top:32px;padding-top:28px;border-top:1px solid rgba(200,16,46,.15)}
+.stat{text-align:center}
+.stat-num{
+  display:block;font-family:'Noto Serif SC',serif;font-size:32px;font-weight:900;
+  color:var(--red);letter-spacing:1px;
+}
+.stat-label{font-size:13px;color:var(--ink-soft);letter-spacing:1px;margin-top:4px;display:block}
+.origin-image{
+  position:relative;border-radius:4px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25);
+  height:380px;
+  background:#2a1a0e;
+}
+.origin-image::before{
+  content:'';position:absolute;inset:12px;
+  border:1px solid rgba(232,197,71,.4);border-radius:2px;
+  pointer-events:none;z-index:2;
+}
+.origin-img{width:100%;height:100%;object-fit:cover;display:block}
+.origin-image-caption{
+  position:absolute;bottom:0;left:0;right:0;padding:20px 20px 18px;
+  background:linear-gradient(transparent,rgba(20,10,5,.85));
+  color:var(--gold-light);font-size:14px;letter-spacing:4px;text-align:center;
+  font-family:'Noto Serif SC',serif;z-index:3;
+}
+.origin-image-caption::before{
+  content:'';display:inline-block;width:20px;height:1px;
+  background:var(--gold-light);vertical-align:middle;margin-right:12px;opacity:.6;
+}
+.origin-image-caption::after{
+  content:'';display:inline-block;width:20px;height:1px;
+  background:var(--gold-light);vertical-align:middle;margin-left:12px;opacity:.6;
+}
+
+/* ============ 深色区块（墨色基调） ============ */
+.section-dark{
+  background:linear-gradient(180deg,#1a1612 0%,#252018 50%,#1a1612 100%);
+  color:#fff;position:relative;overflow:hidden;
+}
+.section-dark::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.section-dark::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(201,162,39,.06) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 70%,rgba(178,34,34,.05) 0%,transparent 50%);
+  pointer-events:none;
+}
+
+/* ============ 时间轴（卷轴样式） ============ */
+.timeline{position:relative;max-width:780px;margin:0 auto;padding-left:80px}
+.timeline::before{
+  content:'';position:absolute;left:36px;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,transparent,rgba(201,162,39,.5) 8%,rgba(201,162,39,.5) 92%,transparent);
+  border-radius:2px;
+}
+.tl-item{
+  position:relative;margin-bottom:28px;
+  display:flex;align-items:stretch;gap:0;
+}
+/* 左侧年份标签 */
+.tl-year-tag{
+  position:absolute;left:-84px;top:50%;transform:translateY(-50%);
+  width:40px;text-align:center;
+  font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700;
+  color:var(--gold-light);letter-spacing:1px;
+  writing-mode:vertical-rl;
+  padding:10px 0;
+  border:1px solid rgba(201,162,39,.3);
+  border-radius:4px;
+  background:rgba(201,162,39,.06);
+}
+/* 节点圆点 */
+.tl-dot{
+  position:absolute;left:-45px;top:50%;transform:translateY(-50%);
+  z-index:2;
+}
+.tl-dot-inner{
+  width:18px;height:18px;border-radius:50%;
+  background:var(--gold-light);
+  border:3px solid #1a1612;
+  box-shadow:0 0 0 3px rgba(224,192,64,.25),0 0 14px rgba(224,192,64,.4);
+}
+/* 内容卡片（书页样式） */
+.tl-content{
+  flex:1;
+  background:linear-gradient(135deg,rgba(255,254,249,.06) 0%,rgba(201,162,39,.04) 100%);
+  border:1px solid rgba(201,162,39,.2);
+  border-radius:6px;
+  padding:20px 24px;
+  position:relative;
+  transition:transform .3s,border-color .3s,background .3s;
+}
+.tl-content::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;
+  background:linear-gradient(180deg,var(--gold-light),var(--red));
+  border-radius:0 2px 2px 0;
+}
+.tl-item:hover .tl-content{
+  transform:translateX(6px);
+  border-color:rgba(224,192,64,.4);
+  background:linear-gradient(135deg,rgba(255,254,249,.1) 0%,rgba(201,162,39,.08) 100%);
+}
+.tl-year{
+  font-family:'Noto Serif SC',serif;font-size:20px;font-weight:900;
+  color:var(--gold-light);letter-spacing:2px;margin-bottom:4px;
+  display:none;
+}
+.tl-event{font-size:17px;font-weight:700;color:#fff;margin-bottom:8px;letter-spacing:2px;font-family:'Noto Serif SC',serif}
+.tl-desc{font-size:13.5px;color:rgba(255,255,255,.6);line-height:1.8}
+
+/* ============ 传统习俗 ============ */
+.activity-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.activity-card{
+  background:#fff;border-radius:8px;padding:36px 28px 32px;text-align:center;
+  border:1px solid rgba(200,16,46,.1);
+  transition:transform .35s,box-shadow .35s,border-color .35s;
+  position:relative;overflow:hidden;
+}
+.activity-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red),var(--gold),var(--red));
+  transform:scaleX(0);transform-origin:center;transition:transform .4s;
+}
+/* 卡片四角装饰 */
+.activity-card::after{
+  content:'';position:absolute;inset:8px;
+  border:1px solid transparent;
+  border-radius:4px;
+  transition:border-color .35s;
+  pointer-events:none;
+}
+.activity-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 20px 50px rgba(139,0,0,.15);
+  border-color:rgba(200,16,46,.25);
+}
+.activity-card:hover::before{transform:scaleX(1)}
+.activity-card:hover::after{border-color:rgba(212,175,55,.25)}
+.activity-icon{
+  width:68px;height:68px;margin:0 auto 22px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(200,16,46,.1),rgba(212,175,55,.15));
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;position:relative;
+  border:2px solid rgba(212,175,55,.3);
+  transition:transform .35s,border-color .35s;
+}
+.activity-card:hover .activity-icon{
+  transform:scale(1.1) rotate(5deg);
+  border-color:rgba(200,16,46,.4);
+}
+.activity-card h3{
+  font-size:19px;color:var(--ink);margin-bottom:12px;letter-spacing:2px;
+  position:relative;display:inline-block;
+}
+.activity-card h3::after{
+  content:'';display:block;width:24px;height:2px;
+  background:linear-gradient(90deg,var(--red),var(--gold));
+  margin:8px auto 0;border-radius:1px;
+  transition:width .35s;
+}
+.activity-card:hover h3::after{width:40px}
+.activity-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.85}
+
+/* ============ 祈福签区 ============ */
+.section-red{
+  background:linear-gradient(160deg,#3d1a1a 0%,#5C2020 40%,#4A1818 70%,#2d1414 100%);
+  color:#fff;position:relative;overflow:hidden;
+}
+.section-red::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 25% 20%,rgba(201,162,39,.1) 0%,transparent 45%),
+    radial-gradient(circle at 75% 80%,rgba(178,34,34,.08) 0%,transparent 45%);
+  pointer-events:none;
+}
+/* 签筒 */
+.temple-box{
+  max-width:520px;margin:0 auto 48px;position:relative;z-index:2;
+  text-align:center;
+}
+.temple-cylinder{
+  width:120px;height:150px;margin:0 auto 24px;position:relative;
+  cursor:pointer;transition:transform .3s;
+}
+.temple-cylinder:hover{transform:scale(1.05)}
+.temple-cylinder.shaking{animation:shake .5s ease-in-out 3}
+@keyframes shake{
+  0%,100%{transform:rotate(0)}
+  20%{transform:rotate(-8deg) translateY(-4px)}
+  40%{transform:rotate(8deg)}
+  60%{transform:rotate(-6deg)}
+  80%{transform:rotate(6deg)}
+}
+.temple-cylinder svg{width:100%;height:100%;filter:drop-shadow(0 8px 24px rgba(0,0,0,.4))}
+.temple-sticks{
+  position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  display:flex;gap:3px;
+}
+.temple-stick{
+  width:6px;height:40px;background:linear-gradient(180deg,#E0C040,#C9A227);
+  border-radius:3px 3px 0 0;
+}
+.temple-stick:nth-child(2){height:48px;margin-top:-8px}
+.temple-stick:nth-child(3){height:42px;margin-top:-2px}
+.temple-stick:nth-child(4){height:46px;margin-top:-6px}
+.temple-stick:nth-child(5){height:38px}
+.draw-btn{
+  padding:14px 56px;background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:var(--red-dark);border:none;border-radius:6px;font-size:16px;font-weight:700;
+  letter-spacing:6px;cursor:pointer;font-family:'Noto Serif SC',serif;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 16px rgba(201,162,39,.3);
+}
+.draw-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,162,39,.5)}
+.draw-btn:active{transform:translateY(0)}
+.draw-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+/* 签文展示 */
+.fortune-result{
+  max-width:480px;margin:0 auto 40px;position:relative;z-index:2;
+  display:none;
+}
+.fortune-result.show{display:block;animation:fadeUp .6s forwards}
+.fortune-card{
+  background:linear-gradient(180deg,#FFFEF9 0%,#F5F0E6 100%);
+  border-radius:8px;padding:36px 32px;position:relative;
+  box-shadow:0 16px 48px rgba(0,0,0,.3);
+  color:var(--ink);
+}
+.fortune-card::before{
+  content:'';position:absolute;inset:8px;
+  border:1px solid rgba(178,34,34,.2);border-radius:4px;
+  pointer-events:none;
+}
+.fortune-level{
+  display:inline-block;padding:6px 20px;border-radius:20px;
+  font-family:'Noto Serif SC',serif;font-size:16px;font-weight:700;
+  letter-spacing:4px;margin-bottom:20px;
+}
+.fortune-level.lucky{background:rgba(178,34,34,.1);color:#B22222}
+.fortune-level.mid{background:rgba(201,162,39,.15);color:#8B6914}
+.fortune-title{
+  font-family:'Noto Serif SC',serif;font-size:24px;font-weight:900;
+  color:var(--ink);letter-spacing:4px;margin-bottom:16px;
+}
+.fortune-poem{
+  font-family:'Noto Serif SC',serif;font-size:15px;color:var(--ink-soft);
+  line-height:2.2;letter-spacing:2px;margin-bottom:20px;
+  padding:16px 0;border-top:1px solid rgba(28,28,28,.1);border-bottom:1px solid rgba(28,28,28,.1);
+}
+.fortune-meaning{
+  font-size:14px;color:var(--ink-soft);line-height:1.9;
+}
+.fortune-seal{
+  position:absolute;bottom:24px;right:24px;
+  width:44px;height:44px;border-radius:4px;
+  background:linear-gradient(135deg,#B22222,#7B1818);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif SC',serif;font-weight:900;font-size:18px;
+  color:#E0C040;transform:rotate(5deg);
+}
+/* 祈福墙 */
+.blessing-wall{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;
+  position:relative;z-index:2;max-height:400px;overflow-y:auto;padding-right:4px;
+}
+.blessing-wall::-webkit-scrollbar{width:4px}
+.blessing-wall::-webkit-scrollbar-thumb{background:rgba(201,162,39,.4);border-radius:2px}
+.blessing-item{
+  background:rgba(255,254,249,.08);border:1px solid rgba(201,162,39,.2);
+  border-radius:6px;padding:16px 18px;transition:background .25s,transform .25s;
+  position:relative;
+}
+.blessing-item:hover{background:rgba(255,254,249,.13);transform:translateY(-2px)}
+.blessing-item-level{
+  font-family:'Noto Serif SC',serif;font-size:12px;font-weight:700;
+  color:var(--gold-light);margin-bottom:6px;letter-spacing:2px;
+}
+.blessing-item-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.7}
+.blessing-empty{
+  grid-column:1/-1;text-align:center;color:rgba(255,255,255,.5);
+  padding:32px 0;font-size:14px;letter-spacing:2px;
+}
+
+/* ============ 诗词赏析 ============ */
+.poem-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;
+}
+.poem-card{
+  background:
+    linear-gradient(135deg,rgba(245,230,184,.04) 0%,rgba(212,175,55,.06) 100%);
+  border:1px solid rgba(212,175,55,.25);
+  border-radius:4px;padding:28px 24px;position:relative;overflow:hidden;
+  transition:transform .35s,box-shadow .35s,border-color .35s;
+  min-height:280px;
+}
+/* 宣纸纹理 */
+.poem-card::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 20% 30%,rgba(212,175,55,.05) 0%,transparent 40%),
+    radial-gradient(circle at 80% 70%,rgba(200,16,46,.04) 0%,transparent 40%);
+  pointer-events:none;
+}
+/* 四角装饰 */
+.poem-card::after{
+  content:'';position:absolute;inset:6px;
+  border:1px solid rgba(212,175,55,.15);
+  border-radius:2px;pointer-events:none;
+}
+.poem-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 40px rgba(0,0,0,.3);
+  border-color:rgba(232,197,71,.4);
+}
+.poem-header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:20px;padding-bottom:14px;
+  border-bottom:1px solid rgba(212,175,55,.2);
+  position:relative;z-index:1;
+}
+.poem-title{
+  font-family:'Noto Serif SC',serif;font-size:19px;font-weight:700;
+  color:var(--gold-light);letter-spacing:3px;line-height:1.4;
+}
+.poem-seal{
+  width:36px;height:36px;border-radius:4px;
+  background:linear-gradient(135deg,#C8102E,#8B0000);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif SC',serif;font-weight:900;font-size:14px;
+  color:#E8C547;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(200,16,46,.3);
+  transform:rotate(3deg);
+}
+.poem-author{
+  font-size:12px;color:rgba(255,255,255,.45);letter-spacing:2px;
+  margin-bottom:0;margin-top:4px;
+}
+.poem-body{
+  font-family:'Noto Serif SC',serif;font-size:15.5px;
+  color:rgba(255,255,255,.88);line-height:2.3;letter-spacing:3px;
+  position:relative;z-index:1;
+  padding-left:4px;
+}
+.poem-body .line{
+  display:block;padding:2px 0;
+  border-left:2px solid transparent;
+  transition:border-color .3s,padding-left .3s;
+}
+.poem-card:hover .poem-body .line{border-left-color:rgba(232,197,71,.3);padding-left:10px;}
+
+/* ============ 养生卡片 ============ */
+.wellness-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;
+}
+.wellness-card{
+  background:var(--card);border-radius:10px;padding:30px 26px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+  transition:transform .35s,box-shadow .35s;
+  border-top:4px solid var(--red);
+}
+.wellness-card::before{
+  content:'';position:absolute;top:0;right:0;width:60px;height:60px;
+  background:radial-gradient(circle at top right,rgba(212,175,55,.1),transparent 70%);
+  pointer-events:none;
+}
+.wellness-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 40px rgba(139,0,0,.12);
+}
+.wellness-icon{
+  width:52px;height:52px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;margin-bottom:14px;
+  background:linear-gradient(135deg,rgba(200,16,46,.08),rgba(212,175,55,.12));
+  border:1px solid rgba(212,175,55,.2);
+}
+.wellness-card h3{
+  font-size:18px;color:var(--ink);margin-bottom:10px;letter-spacing:2px;
+  font-family:'Noto Serif SC',serif;font-weight:700;
+}
+.wellness-card p{font-size:14px;color:var(--ink-soft);line-height:1.85}
+
+/* ============ 页脚 ============ */
+.footer{
+  background:#2A0006;padding:64px 40px 40px;text-align:center;
+  border-top:2px solid rgba(212,175,55,.3);
+  position:relative;
+}
+.footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:6px;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0,transparent 8px,
+      rgba(212,175,55,.3) 8px,rgba(212,175,55,.3) 10px,
+      transparent 10px,transparent 18px,
+      rgba(200,16,46,.4) 18px,rgba(200,16,46,.4) 20px
+    );
+}
+.footer-inner{max-width:600px;margin:0 auto;position:relative;z-index:1}
+.footer-title{
+  font-family:'Noto Serif SC',serif;font-size:30px;font-weight:900;
+  color:var(--gold-light);letter-spacing:8px;margin-bottom:12px;
+  text-shadow:0 2px 12px rgba(212,175,55,.3);
+}
+.footer-sub{font-size:15px;color:rgba(255,255,255,.7);letter-spacing:4px;margin-bottom:20px}
+.footer-date{
+  font-family:'Noto Serif SC',serif;font-size:18px;color:var(--gold);
+  letter-spacing:6px;margin-bottom:28px;
+  display:inline-flex;align-items:center;gap:16px;
+}
+.footer-date::before,.footer-date::after{
+  content:'';width:30px;height:1px;background:var(--gold);opacity:.5;
+}
+.footer-line{
+  width:120px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 24px;position:relative;
+}
+.footer-line::before{
+  content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:7px;height:7px;background:var(--gold);
+}
+.footer-copy{font-size:13px;color:rgba(255,255,255,.45);letter-spacing:3px;line-height:2}
+
+/* ============ 音乐按钮 ============ */
+.music-btn{
+  position:fixed;right:20px;bottom:24px;z-index:90;
+  width:56px;height:56px;border-radius:50%;border:2px solid var(--gold-light);
+  background:linear-gradient(135deg,var(--red-deep),var(--red));
+  color:var(--gold-light);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(200,16,46,.45);
+  transition:transform .25s,box-shadow .25s;
+  -webkit-user-select:none;user-select:none;
+}
+.music-btn:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(200,16,46,.6);}
+.music-btn:active{transform:scale(0.95);}
+.music-btn svg{width:24px;height:24px;flex-shrink:0;}
+.music-btn .icon-pause{display:none;}
+.music-btn.playing .icon-play{display:none;}
+.music-btn.playing .icon-pause{display:block;}
+.music-btn.playing .music-ring{
+  position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid var(--gold-light);
+  animation:ringPulse 1.5s ease-out infinite;
+}
+@keyframes ringPulse{
+  0%{transform:scale(1);opacity:.7;}
+  100%{transform:scale(1.45);opacity:0;}
+}
+
+/* ============ 知识问答 ============ */
+.quiz-card{
+  max-width:620px;margin:0 auto;
+  background:linear-gradient(145deg,#FFFEF9,#F5F0E6);
+  border-radius:20px;padding:0;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 0 1px rgba(201,162,39,.3);
+  position:relative;
+}
+.quiz-card::before{
+  content:'';position:absolute;inset:6px;
+  border:1px solid rgba(201,162,39,.2);border-radius:16px;
+  pointer-events:none;
+}
+.quiz-progress-bar{
+  height:4px;background:rgba(201,162,39,.15);
+  position:relative;overflow:hidden;
+}
+.quiz-progress-fill{
+  height:100%;width:20%;
+  background:linear-gradient(90deg,#C9A227,#E0C040);
+  border-radius:0 2px 2px 0;
+  transition:width .5s ease;
+  box-shadow:0 0 8px rgba(224,192,64,.5);
+}
+#quizContainer{padding:32px 36px 36px;}
+.quiz-meta{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;
+}
+.quiz-qnum{display:flex;align-items:baseline;gap:6px;}
+.quiz-qnum-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#B22222,#7B1818);
+  color:#E0C040;font-family:'Noto Serif SC',serif;
+  font-size:18px;font-weight:700;
+  box-shadow:0 4px 12px rgba(178,34,34,.35);
+}
+.quiz-qnum-total{color:#999;font-size:14px;font-weight:500;}
+.quiz-score{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(201,162,39,.1);
+  padding:6px 16px;border-radius:20px;
+  border:1px solid rgba(201,162,39,.25);
+}
+.quiz-score-icon{font-size:16px;}
+.quiz-score span:nth-child(2){
+  font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700;color:#B22222;
+}
+.quiz-score-label{color:#999;font-size:13px;}
+.quiz-question{
+  font-family:'Noto Serif SC',serif;
+  font-size:20px;font-weight:700;color:#2C1810;
+  line-height:1.7;margin-bottom:24px;
+}
+.quiz-options{display:flex;flex-direction:column;gap:12px;}
+.quiz-option{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:#fff;
+  border:1.5px solid rgba(201,162,39,.2);
+  border-radius:12px;
+  cursor:pointer;transition:all .25s ease;
+  position:relative;overflow:hidden;
+}
+.quiz-option::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:transparent;transition:background .25s;
+}
+.quiz-option:hover{
+  border-color:rgba(201,162,39,.5);
+  background:#FFFBF0;
+  transform:translateX(4px);
+  box-shadow:0 4px 16px rgba(201,162,39,.15);
+}
+.quiz-option:hover::before{background:#C9A227;}
+.quiz-option-letter{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:rgba(201,162,39,.12);color:#8B6914;
+  font-family:'Noto Serif SC',serif;font-size:14px;font-weight:700;
+  transition:all .25s;
+}
+.quiz-option:hover .quiz-option-letter{
+  background:#C9A227;color:#fff;
+}
+.quiz-option-text{
+  font-size:15px;color:#3D2817;line-height:1.5;
+  font-family:'Noto Serif SC',serif;
+}
+.quiz-option.correct{
+  background:linear-gradient(90deg,rgba(16,185,129,.12),rgba(16,185,129,.05));
+  border-color:#10b981;
+}
+.quiz-option.correct::before{background:#10b981;}
+.quiz-option.correct .quiz-option-letter{background:#10b981;color:#fff;}
+.quiz-option.correct .quiz-option-text{color:#065f46;font-weight:600;}
+.quiz-option.wrong{
+  background:linear-gradient(90deg,rgba(239,68,68,.12),rgba(239,68,68,.05));
+  border-color:#ef4444;
+}
+.quiz-option.wrong::before{background:#ef4444;}
+.quiz-option.wrong .quiz-option-letter{background:#ef4444;color:#fff;}
+.quiz-option.wrong .quiz-option-text{color:#991b1b;}
+.quiz-option.disabled{cursor:default;pointer-events:none;}
+.quiz-option.disabled:hover{transform:none;box-shadow:none;}
+
+/* 结果页 */
+.quiz-result{
+  display:none;text-align:center;padding:40px 36px 44px;
+}
+.quiz-result-ring{
+  position:relative;width:120px;height:120px;margin:0 auto 20px;
+}
+.quiz-result-ring svg{width:100%;height:100%;}
+.quiz-result-ring circle:nth-child(2){transition:stroke-dashoffset 1s ease;}
+.quiz-result-score{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+}
+.quiz-result-score span{
+  font-family:'Noto Serif SC',serif;font-size:36px;font-weight:900;color:#B22222;
+  line-height:1;
+}
+.quiz-result-score small{font-size:14px;color:#999;margin-top:2px;}
+.quiz-result-emoji{font-size:48px;margin-bottom:12px;}
+.quiz-result-title{
+  font-family:'Noto Serif SC',serif;font-size:24px;font-weight:700;
+  color:#2C1810;margin-bottom:8px;
+}
+.quiz-result-text{
+  color:#6B5544;font-size:15px;line-height:1.7;margin-bottom:28px;
+}
+.quiz-restart-btn{
+  padding:12px 40px;border:none;border-radius:24px;
+  background:linear-gradient(135deg,#B22222,#7B1818);
+  color:#E0C040;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:'Noto Serif SC',serif;letter-spacing:2px;
+  box-shadow:0 6px 20px rgba(178,34,34,.35);
+  transition:all .25s;
+}
+.quiz-restart-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(178,34,34,.45);
+}
+
+/* ============ 互动游戏 ============ */
+.game-hud{
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(180deg,#3d2817,#2a1a0e);
+  border:1px solid rgba(212,175,55,.4);
+  border-radius:12px 12px 0 0;padding:14px 24px;
+  position:relative;z-index:2;
+}
+.game-hud::after{
+  content:'';position:absolute;bottom:0;left:20px;right:20px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.5),transparent);
+}
+.game-hud-item{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;flex:1}
+.game-hud-item:nth-child(-n+2)::after{
+  content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);
+  width:1px;height:28px;background:rgba(212,175,55,.25);
+}
+.game-hud-label{font-size:11px;color:rgba(224,192,64,.7);letter-spacing:3px;font-weight:600}
+.game-hud-value{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;color:#E0C040;min-width:70px;text-align:center;text-shadow:0 0 12px rgba(224,192,64,.4)}
+.game-pause-btn{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(212,175,55,.6);
+  background:rgba(212,175,55,.2);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .25s;padding:0;margin-left:16px;
+}
+.game-pause-btn:hover{
+  background:rgba(212,175,55,.35);
+  border-color:rgba(212,175,55,.8);
+  transform:scale(1.08);
+}
+.pause-icon{display:flex;gap:4px;align-items:center;}
+.pause-icon i{
+  display:block;width:4px;height:14px;border-radius:2px;
+  background:var(--gold-light);transition:all .3s;
+}
+.game-pause-btn.playing .pause-icon i:nth-child(1){
+  transform:rotate(45deg) translate(3px,1px);
+  height:16px;
+}
+.game-pause-btn.playing .pause-icon i:nth-child(2){
+  transform:rotate(-45deg) translate(-3px,1px);
+  height:16px;
+}
+.game-pause-overlay{opacity:0;pointer-events:none;z-index:6;}
+.game-pause-overlay.show{opacity:1;pointer-events:auto;}
+.game-canvas-wrap{
+  position:relative;border:1px solid rgba(212,175,55,.4);border-top:none;
+  border-radius:0 0 12px 12px;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(255,220,150,.25) 0%,transparent 60%),
+    linear-gradient(180deg,#4a2c17 0%,#5c3a1e 40%,#6b4423 70%,#5c3a1e 100%);
+  box-shadow:inset 0 0 60px rgba(0,0,0,.25);
+}
+.game-canvas-wrap::before{
+  content:'';position:absolute;inset:8px;
+  border:1px solid rgba(212,175,55,.12);border-radius:6px;
+  pointer-events:none;z-index:4;
+}
+#gameCanvas{display:block;width:100%;height:auto;cursor:none}
+.game-overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(50,28,12,.92);backdrop-filter:blur(8px);
+  transition:opacity .3s;z-index:5;
+}
+.game-overlay.hidden{opacity:0;pointer-events:none}
+.game-overlay-inner{text-align:center;padding:36px;max-width:380px;position:relative}
+.game-overlay-inner::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.game-overlay-icon{font-size:56px;margin-bottom:16px;filter:drop-shadow(0 4px 12px rgba(212,175,55,.3))}
+.game-overlay-title{
+  font-family:'Noto Serif SC',serif;font-size:30px;font-weight:900;
+  color:var(--gold-light);letter-spacing:6px;margin-bottom:16px;
+  text-shadow:0 2px 16px rgba(212,175,55,.3);
+}
+.game-overlay-text{
+  font-size:14px;color:rgba(255,255,255,.7);line-height:2.2;margin-bottom:28px;
+  letter-spacing:1px;
+}
+.game-btn{
+  padding:14px 52px;background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:var(--red-dark);border:none;border-radius:6px;font-size:16px;font-weight:700;
+  letter-spacing:5px;cursor:pointer;font-family:'Noto Serif SC',serif;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 16px rgba(212,175,55,.3);
+  position:relative;overflow:hidden;
+}
+.game-btn::before{
+  content:'';position:absolute;inset:1px;border-radius:5px;
+  border:1px solid rgba(139,0,0,.2);pointer-events:none;
+}
+.game-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,175,55,.5)}
+.game-btn:active{transform:translateY(0)}
+.game-tips{
+  display:flex;justify-content:center;gap:32px;margin-top:18px;
+  font-size:12px;color:rgba(255,255,255,.4);letter-spacing:2px;
+}
+.game-legend{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px;
+}
+.game-legend-item{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.15);
+  border-radius:20px;padding:7px 16px;font-size:12px;color:rgba(255,255,255,.7);
+  transition:background .2s;
+}
+.game-legend-item:hover{background:rgba(255,255,255,.1)}
+.game-legend-item.bad{border-color:rgba(239,68,68,.25);color:rgba(255,255,255,.5)}
+.game-legend-emoji{font-size:16px}
+
+/* ============ 响应式 ============ */
+@media(max-width:900px){
+  .nav{padding:12px 20px}
+  .nav-links{width:240px;padding-top:64px}
+  .section{padding:72px 20px}
+  .origin-grid{grid-template-columns:1fr;gap:36px}
+  .origin-image{height:280px}
+  .origin-stats{gap:20px}
+  .activity-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-corner{width:40px;height:40px}
+  .hero-corner-tl,.hero-corner-tr{top:70px}
+  .hero-corner-bl,.hero-corner-br{bottom:70px}
+  .timeline{padding-left:60px}
+  .timeline::before{left:24px}
+  .tl-year-tag{left:-74px;width:34px;font-size:12px;padding:8px 0}
+  .tl-dot{left:-38px}
+  .tl-content{padding:16px 18px}
+}
+@media(max-width:560px){
+  .activity-grid{grid-template-columns:1fr}
+  .hero-eyebrow{font-size:12px;letter-spacing:4px}
+  .hero-eyebrow::before,.hero-eyebrow::after{width:24px}
+  .origin-stats{flex-wrap:wrap;justify-content:center}
+  .stat{flex:1 1 40%}
+  .footer-title{font-size:22px;letter-spacing:4px}
+  .poem-grid{grid-template-columns:1fr}
+  .hero-title{letter-spacing:4px}
+  .hero-sub{letter-spacing:4px}
+  .hero-tags{gap:8px}
+  .hero-tag{padding:6px 14px;font-size:12px}
+  .timeline{padding-left:50px}
+  .timeline::before{left:30px}
+  .tl-year-tag{left:-50px;width:28px;font-size:11px}
+  .tl-dot{left:-24px}
+  .tl-dot-inner{width:14px;height:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .hero-bg{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 导航 ============ -->
+<nav class="nav">
+  <div class="nav-logo">
+    <svg viewBox="0 0 32 32" fill="none" width="30" height="30">
+      <circle cx="16" cy="16" r="14" fill="#7B1818"/>
+      <circle cx="16" cy="16" r="12" fill="none" stroke="#E0C040" stroke-width="1.5"/>
+      <circle cx="16" cy="16" r="9.5" fill="none" stroke="#E0C040" stroke-width="0.5" opacity=".6"/>
+      <text x="16" y="21" font-size="13" text-anchor="middle" fill="#E0C040" font-family="'Noto Serif SC',serif" font-weight="bold">阳</text>
+    </svg>
+    九九重阳
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
+</nav>
+<ul class="nav-links" id="navLinks">
+  <li><a href="#origin">重阳由来</a></li>
+  <li><a href="#timeline">历史沿革</a></li>
+  <li><a href="#activities">传统习俗</a></li>
+  <li><a href="#wishes">重阳祈福</a></li>
+  <li><a href="#poems">诗词赏析</a></li>
+  <li><a href="#health">养生之道</a></li>
+  <li><a href="#quiz">重阳知识问答</a></li>
+  <li><a href="#game">互动游戏</a></li>
+  <li style="border-top:1px solid rgba(123,24,24,.2);margin-top:8px;padding-top:8px;"><a href="https://fengling1314ovo.top" target="_blank" style="color:#7B1818;font-weight:700;">🏠 返回工具箱</a></li>
+  <li style="padding:12px 28px 0;font-size:11px;color:rgba(123,24,24,.55);line-height:1.6;">免责声明：本站内容仅供文化传播与节日庆祝之用。</li>
+  <li style="padding:10px 28px 16px;font-size:12px;color:rgba(123,24,24,.7);line-height:2;">
+    <span>站长QQ：3817304344</span><br>
+    <span>站长微信：fengling1314ovo</span>
+  </li>
+</ul>
+<div class="nav-overlay" id="navOverlay"></div>
+
+<!-- ============ Hero ============ -->
+<header class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-calligraphy">重阳</div>
+  <div class="hero-corner hero-corner-tl"></div>
+  <div class="hero-corner hero-corner-tr"></div>
+  <div class="hero-corner hero-corner-bl"></div>
+  <div class="hero-corner hero-corner-br"></div>
+  <canvas class="hero-chrysanthemum" id="chrysanthemum"></canvas>
+  <div class="hero-content">
+    <div class="hero-eyebrow">农历九月初九 · 传统佳节</div>
+    <h1 class="hero-title">九九<span class="gold">重阳</span></h1>
+    <p class="hero-sub">登高望远 · 赏菊饮酒 · 祈福安康</p>
+    <div class="hero-date"><span>重阳</span><span class="dash"></span><span>敬老节</span></div>
+    <div class="hero-tags">
+      <span class="hero-tag">登高</span>
+      <span class="hero-tag">赏菊</span>
+      <span class="hero-tag">佩茱萸</span>
+      <span class="hero-tag">食糕</span>
+      <span class="hero-tag">祭祖</span>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>向下滚动</span>
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</header>
+
+<!-- ============ 重阳由来 ============ -->
+<section class="section" id="origin">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag">Origin</div>
+      <h2 class="section-title">重阳由来</h2>
+      <p class="section-desc">重阳节，农历九月初九，因"九"为阳数之极，两九相重，故称"重阳"，又称"重九"。</p>
+    </div>
+    <div class="origin-grid reveal">
+      <div class="origin-text">
+        <h3>节日起源</h3>
+        <p>重阳节源自天象崇拜，起始于上古，普及于西汉，鼎盛于唐代以后。《易经》中把"六"定为阴数，把"九"定为阳数，九月九日，日月并阳，两九相重，故曰重阳，也叫重九。</p>
+        <p>古人认为九九重阳是吉祥的日子。古时民间在重阳节有登高祈福、秋游赏菊、佩插茱萸、拜神祭祖及饮宴祈寿等习俗，传承至今，又添加了敬老等内涵。</p>
+        <div class="origin-stats">
+          <div class="stat"><span class="stat-num">2000+</span><span class="stat-label">年历史传承</span></div>
+          <div class="stat"><span class="stat-num">九九</span><span class="stat-label">阳数之极</span></div>
+          <div class="stat"><span class="stat-num">1989</span><span class="stat-label">定为敬老节</span></div>
+        </div>
+      </div>
+      <div class="origin-image">
+        <img src="https://aka.doubaocdn.com/s/auwKOYBAn3" alt="重阳秋菊" class="origin-img">
+        <div class="origin-image-caption">秋菊傲霜 · 福寿绵长</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 历史沿革 时间轴 ============ -->
+<section class="section section-dark" id="timeline">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag" style="color:var(--gold-light)">History</div>
+      <h2 class="section-title" style="color:#fff">历史沿革</h2>
+      <p class="section-desc" style="color:rgba(255,255,255,.7)">重阳节历经两千余年传承，从祭祀祈年到敬老爱老，文化内涵不断丰富。</p>
+    </div>
+    <div class="timeline reveal" id="timelineList">
+      <!-- 时间轴节点由 JS 渲染 -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ 传统习俗 ============ -->
+<section class="section" id="activities">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag">Customs</div>
+      <h2 class="section-title">传统习俗</h2>
+      <p class="section-desc">重阳佳节，民间流传着丰富多彩的传统习俗，寄托着人们对健康长寿的美好祈愿。</p>
+    </div>
+    <div class="activity-grid reveal">
+      <div class="activity-card">
+        <div class="activity-icon">⛰️</div>
+        <h3>登高望远</h3>
+        <p>重阳时节，秋高气爽，正是登高远眺的好时候。古人登高以避灾祈福，今人则借此强身健体、舒展胸怀。</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon">🌼</div>
+        <h3>赏菊饮酒</h3>
+        <p>九月正是菊花盛开的季节，古人赏菊、饮菊花酒，以菊花象征高洁与长寿，陶渊明"采菊东篱下"千古流传。</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon">🌿</div>
+        <h3>佩插茱萸</h3>
+        <p>古人认为茱萸能辟邪消灾，重阳之日佩戴茱萸香囊或插于发髻，王维"遍插茱萸少一人"即写此俗。</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon">🍰</div>
+        <h3>吃重阳糕</h3>
+        <p>重阳糕又称"花糕""菊糕"，因"糕"与"高"谐音，寓意步步高升，是重阳节必不可少的传统美食。</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon">👴</div>
+        <h3>敬老爱老</h3>
+        <p>1989年，我国将每年农历九月初九定为"老人节""敬老节"，赋予重阳节关爱老人的新时代内涵。</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon">🙏</div>
+        <h3>祭祖祈福</h3>
+        <p>重阳也是传统的祭祖节日，人们在这一天祭拜祖先、感恩先辈，表达慎终追远、不忘根本的情怀。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 重阳祈福签 ============ -->
+<section class="section section-red" id="wishes">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag" style="color:var(--gold-light)">Fortune</div>
+      <h2 class="section-title" style="color:#fff">重阳祈福</h2>
+      <p class="section-desc" style="color:rgba(255,255,255,.7)">心诚则灵，摇动签筒，为自己和长辈求一支重阳福签。</p>
+    </div>
+    <div class="temple-box reveal">
+      <div class="temple-cylinder" id="templeCylinder">
+        <div class="temple-sticks">
+          <div class="temple-stick"></div>
+          <div class="temple-stick"></div>
+          <div class="temple-stick"></div>
+          <div class="temple-stick"></div>
+          <div class="temple-stick"></div>
+        </div>
+        <svg viewBox="0 0 120 150" fill="none">
+          <!-- 签筒主体 -->
+          <path d="M15,30 L15,135 Q15,145 25,145 L95,145 Q105,145 105,135 L105,30 Z" fill="url(#cylGrad)" stroke="#8B6914" stroke-width="2"/>
+          <!-- 签筒口 -->
+          <ellipse cx="60" cy="30" rx="45" ry="10" fill="#5C4010" stroke="#8B6914" stroke-width="2"/>
+          <ellipse cx="60" cy="30" rx="38" ry="7" fill="#3d2810"/>
+          <!-- 装饰纹 -->
+          <rect x="15" y="55" width="90" height="3" fill="#C9A227" opacity=".6"/>
+          <rect x="15" y="115" width="90" height="3" fill="#C9A227" opacity=".6"/>
+          <!-- 福字 -->
+          <circle cx="60" cy="85" r="22" fill="#B22222" stroke="#E0C040" stroke-width="2"/>
+          <text x="60" y="93" font-size="24" text-anchor="middle" fill="#E0C040" font-family="serif" font-weight="bold">福</text>
+          <defs>
+            <linearGradient id="cylGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#8B6914"/>
+              <stop offset="30%" stop-color="#C9A227"/>
+              <stop offset="50%" stop-color="#E0C040"/>
+              <stop offset="70%" stop-color="#C9A227"/>
+              <stop offset="100%" stop-color="#8B6914"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <button class="draw-btn" id="drawBtn">摇 签</button>
+    </div>
+    <!-- 签文结果 -->
+    <div class="fortune-result" id="fortuneResult">
+      <div class="fortune-card">
+        <span class="fortune-level" id="fortuneLevel">上上签</span>
+        <h3 class="fortune-title" id="fortuneTitle">福寿安康</h3>
+        <div class="fortune-poem" id="fortunePoem">签文内容</div>
+        <p class="fortune-meaning" id="fortuneMeaning">解签内容</p>
+        <div class="fortune-seal">签</div>
+      </div>
+    </div>
+    <!-- 祈福墙 -->
+    <div class="blessing-wall reveal" id="blessingWall">
+      <!-- 祈福记录由 JS 渲染 -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ 诗词赏析 ============ -->
+<section class="section section-dark" id="poems">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag" style="color:var(--gold-light)">Poetry</div>
+      <h2 class="section-title" style="color:#fff">诗词赏析</h2>
+      <p class="section-desc" style="color:rgba(255,255,255,.7)">古往今来，无数文人墨客在重阳留下千古名篇，字里行间尽是秋思与情怀。</p>
+    </div>
+    <div class="poem-grid reveal">
+      <div class="poem-card">
+        <div class="poem-header">
+          <div>
+            <div class="poem-title">九月九日忆山东兄弟</div>
+            <div class="poem-author">唐 · 王维</div>
+          </div>
+          <div class="poem-seal">诗</div>
+        </div>
+        <div class="poem-body">
+          <span class="line">独在异乡为异客，</span>
+          <span class="line">每逢佳节倍思亲。</span>
+          <span class="line">遥知兄弟登高处，</span>
+          <span class="line">遍插茱萸少一人。</span>
+        </div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-header">
+          <div>
+            <div class="poem-title">醉花阴</div>
+            <div class="poem-author">宋 · 李清照</div>
+          </div>
+          <div class="poem-seal">词</div>
+        </div>
+        <div class="poem-body">
+          <span class="line">薄雾浓云愁永昼，瑞脑消金兽。</span>
+          <span class="line">佳节又重阳，玉枕纱厨，半夜凉初透。</span>
+          <span class="line">东篱把酒黄昏后，有暗香盈袖。</span>
+          <span class="line">莫道不销魂，帘卷西风，人比黄花瘦。</span>
+        </div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-header">
+          <div>
+            <div class="poem-title">登高</div>
+            <div class="poem-author">唐 · 杜甫</div>
+          </div>
+          <div class="poem-seal">律</div>
+        </div>
+        <div class="poem-body">
+          <span class="line">风急天高猿啸哀，渚清沙白鸟飞回。</span>
+          <span class="line">无边落木萧萧下，不尽长江滚滚来。</span>
+          <span class="line">万里悲秋常作客，百年多病独登台。</span>
+          <span class="line">艰难苦恨繁霜鬓，潦倒新停浊酒杯。</span>
+        </div>
+      </div>
+      <div class="poem-card">
+        <div class="poem-header">
+          <div>
+            <div class="poem-title">采桑子 · 重阳</div>
+            <div class="poem-author">毛泽东</div>
+          </div>
+          <div class="poem-seal">韵</div>
+        </div>
+        <div class="poem-body">
+          <span class="line">人生易老天难老，岁岁重阳。</span>
+          <span class="line">今又重阳，战地黄花分外香。</span>
+          <span class="line">一年一度秋风劲，不似春光。</span>
+          <span class="line">胜似春光，寥廓江天万里霜。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 养生之道 ============ -->
+<section class="section" id="health">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag">Wellness</div>
+      <h2 class="section-title">重阳养生</h2>
+      <p class="section-desc">重阳时节，天气转凉，正是调养身体的好时机，顺应天时，安度金秋。</p>
+    </div>
+    <div class="wellness-grid">
+      <div class="wellness-card reveal" style="border-top-color:#C8102E;">
+        <div class="wellness-icon">🍵</div>
+        <h3>饮菊花酒</h3>
+        <p>菊花酒被视为重阳必饮的"吉祥酒"，有养肝明目、延年益寿之效，古人称其为"长寿酒"。</p>
+      </div>
+      <div class="wellness-card reveal" style="border-top-color:#D4AF37;">
+        <div class="wellness-icon">🥣</div>
+        <h3>食重阳糕</h3>
+        <p>重阳糕多用米粉、豆粉制成，配以红枣、栗子，营养丰富，寓意"步步高升"，适合老人食用。</p>
+      </div>
+      <div class="wellness-card reveal" style="border-top-color:#8B0000;">
+        <div class="wellness-icon">🚶</div>
+        <h3>登高远足</h3>
+        <p>秋季空气清新，登高远眺可增强体质、开阔心胸，但老年人应量力而行，注意保暖防滑。</p>
+      </div>
+      <div class="wellness-card reveal" style="border-top-color:#ca8a04;">
+        <div class="wellness-icon">🌙</div>
+        <h3>早睡早起</h3>
+        <p>秋季应"早卧早起，与鸡俱兴"，早睡以顺应阴精收藏，早起以舒展肺气，保持情志安宁。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 重阳知识问答 ============ -->
+<section class="section section-dark" id="quiz">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag" style="color:var(--gold-light)">Quiz</div>
+      <h2 class="section-title" style="color:#fff">🎯 重阳知识问答</h2>
+      <p class="section-desc" style="color:rgba(255,255,255,.7)">测一测你对重阳节了解多少，全部答对才算真正的传统文化达人！</p>
+    </div>
+    <div class="quiz-card">
+      <!-- 进度条 -->
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="quizProgressFill"></div>
+      </div>
+      <div id="quizContainer">
+        <div class="quiz-meta">
+          <div class="quiz-qnum">
+            <span class="quiz-qnum-badge" id="quizQNum">1</span>
+            <span class="quiz-qnum-total">/ 5</span>
+          </div>
+          <div class="quiz-score">
+            <span class="quiz-score-icon">🌼</span>
+            <span id="quizScore">0</span>
+            <span class="quiz-score-label">分</span>
+          </div>
+        </div>
+        <h3 class="quiz-question" id="quizQuestion"></h3>
+        <div class="quiz-options" id="quizOptions"></div>
+      </div>
+      <div class="quiz-result" id="quizResult">
+        <div class="quiz-result-ring">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(201,162,39,.15)" stroke-width="8"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#C9A227" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" id="quizRingCircle" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="quiz-result-score">
+            <span id="quizResultScore">0</span>
+            <small>/5</small>
+          </div>
+        </div>
+        <div class="quiz-result-emoji" id="quizEmoji">🎉</div>
+        <h3 class="quiz-result-title" id="quizResultTitle"></h3>
+        <p class="quiz-result-text" id="quizResultText"></p>
+        <button class="quiz-restart-btn" onclick="resetQuiz()">再来一次</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 互动游戏：重阳接福 ============ -->
+<section class="section section-dark" id="game">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-tag" style="color:var(--gold-light)">Game</div>
+      <h2 class="section-title" style="color:#fff">🎮 重阳接福</h2>
+      <p class="section-desc" style="color:rgba(255,255,255,.7)">左右移动福篮，接住从天而降的菊花、茱萸和重阳糕，躲避枯叶与顽石，60秒内看你能接多少福气！</p>
+    </div>
+    <div class="reveal" style="max-width:520px;margin:0 auto;">
+      <!-- 游戏信息栏 -->
+      <div class="game-hud">
+        <div class="game-hud-item">
+          <span class="game-hud-label">得分</span>
+          <span class="game-hud-value" id="gameScore">0</span>
+        </div>
+        <div class="game-hud-item">
+          <span class="game-hud-label">生命</span>
+          <span class="game-hud-value" id="gameLives">❤️❤️❤️</span>
+        </div>
+        <div class="game-hud-item">
+          <span class="game-hud-label">时间</span>
+          <span class="game-hud-value" id="gameTime">60</span>
+        </div>
+        <button class="game-pause-btn" id="gamePauseBtn" aria-label="暂停">
+          <span class="pause-icon"><i></i><i></i></span>
+        </button>
+      </div>
+      <!-- 游戏画布 -->
+      <div class="game-canvas-wrap">
+        <canvas id="gameCanvas" width="480" height="560"></canvas>
+        <!-- 开始遮罩 -->
+        <div class="game-overlay" id="gameOverlay">
+          <div class="game-overlay-inner">
+            <div class="game-overlay-icon" id="gameOverlayIcon">🎯</div>
+            <h3 class="game-overlay-title" id="gameOverlayTitle">重阳接福</h3>
+            <p class="game-overlay-text" id="gameOverlayText">移动福篮接住吉祥物品<br>菊花 +10 · 茱萸 +20 · 重阳糕 +30 · 菊花酒 +50<br>小心枯叶 -5 和石头 -1生命</p>
+            <button class="game-btn" id="gameStartBtn">开始接福</button>
+          </div>
+        </div>
+        <!-- 暂停遮罩 -->
+        <div class="game-overlay game-pause-overlay" id="gamePauseOverlay">
+          <div class="game-overlay-inner">
+            <div class="game-overlay-icon">⏸️</div>
+            <h3 class="game-overlay-title">游戏暂停</h3>
+            <p class="game-overlay-text">休息一下，福气在等你回来～</p>
+            <button class="game-btn" id="gameResumeBtn">继续游戏</button>
+          </div>
+        </div>
+      </div>
+      <!-- 操作提示 -->
+      <div class="game-tips">
+        <span>⌨️ ← → 或 A D 键移动</span>
+        <span>⏸️ 空格键 / ESC 暂停</span>
+        <span>📱 手机触摸左右滑动</span>
+      </div>
+      <!-- 物品图鉴 -->
+      <div class="game-legend">
+        <div class="game-legend-item"><span class="game-legend-emoji">🌼</span><span>菊花 +10</span></div>
+        <div class="game-legend-item"><span class="game-legend-emoji">🌿</span><span>茱萸 +20</span></div>
+        <div class="game-legend-item"><span class="game-legend-emoji">🍰</span><span>重阳糕 +30</span></div>
+        <div class="game-legend-item"><span class="game-legend-emoji">🍵</span><span>菊花酒 +50</span></div>
+        <div class="game-legend-item bad"><span class="game-legend-emoji">🍂</span><span>枯叶 -5</span></div>
+        <div class="game-legend-item bad"><span class="game-legend-emoji">🪨</span><span>石头 -❤️</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-title">九九重阳 · 敬老爱老</div>
+    <div class="footer-sub">愿天下老人健康长寿 · 幸福安康</div>
+    <div class="footer-date">农历九月初九</div>
+    <div class="footer-line"></div>
+    <p class="footer-copy">登高望远思故人 · 把酒赏菊庆重阳</p>
+  </div>
+</footer>
+
+<!-- ============ 音乐按钮 ============ -->
+<button class="music-btn" id="musicBtn" aria-label="播放音乐">
+  <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+  <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+  <span class="music-ring"></span>
+</button>
+
+<!-- ============ 脚本 ============ -->
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- 全局禁止复制 / 右键 / 缩放 ---------- */
+  ['copy','cut'].forEach(function(ev){
+    document.addEventListener(ev,function(e){
+      var t=e.target;
+      if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;
+      e.preventDefault();
+    });
+  });
+  document.addEventListener('contextmenu',function(e){e.preventDefault();});
+  document.addEventListener('gesturestart',function(e){e.preventDefault();});
+  document.addEventListener('gesturechange',function(e){e.preventDefault();});
+  document.addEventListener('gestureend',function(e){e.preventDefault();});
+  document.addEventListener('touchmove',function(e){
+    if(e.touches.length>1){e.preventDefault();}
+  },{passive:false});
+  document.addEventListener('dblclick',function(e){
+    var t=e.target;
+    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;
+    e.preventDefault();
+  });
+
+  /* ---------- 时间轴数据 ---------- */
+  var milestones=[
+    {year:'先秦',event:'祭天祈年',desc:'古人在九月农作物丰收之时祭天帝、祭祖，以谢天帝、祖先恩德，此为重阳雏形。'},
+    {year:'汉代',event:'习俗形成',desc:'重阳节求寿之俗兴起，《西京杂记》记载宫人贾佩兰九月九日佩茱萸、食蓬饵、饮菊花酒。'},
+    {year:'魏晋',event:'赏菊饮酒',desc:'魏晋时期，重阳饮酒、赏菊、赋诗之风盛行，陶渊明"采菊东篱下"成为千古名句。'},
+    {year:'唐代',event:'正式定名',desc:'重阳节被正式定为民间节日，登高、赏菊、佩茱萸等习俗蔚然成风，唐诗中重阳题材极多。'},
+    {year:'宋代',event:'繁盛一时',desc:'宋代重阳更加热闹，宫廷与民间皆重视，赏菊、吃重阳糕、放纸鸢等活动丰富多彩。'},
+    {year:'明清',event:'传承延续',desc:'明清两代重阳习俗沿袭不衰，登高、饮菊花酒、祭祀祖先等传统在民间广泛流传。'},
+    {year:'1989',event:'敬老节',desc:'我国将每年农历九月初九定为老人节（敬老节），传统节日被赋予关爱老人的新内涵。'},
+    {year:'2006',event:'非遗名录',desc:'重阳节被国务院列入首批国家级非物质文化遗产名录，传统文化得到更好的保护与传承。'}
+  ];
+  var tlList=document.getElementById('timelineList');
+  milestones.forEach(function(m,i){
+    var item=document.createElement('div');
+    item.className='tl-item';
+    item.innerHTML=
+      '<div class="tl-year-tag">'+m.year+'</div>'+
+      '<div class="tl-dot"><div class="tl-dot-inner"></div></div>'+
+      '<div class="tl-content">'+
+        '<div class="tl-event">'+m.event+'</div>'+
+        '<div class="tl-desc">'+m.desc+'</div>'+
+      '</div>';
+    tlList.appendChild(item);
+  });
+
+  /* ---------- 滚动揭示 ---------- */
+  var reveals=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+      });
+    },{threshold:0.12});
+    reveals.forEach(function(el){io.observe(el);});
+  }else{
+    reveals.forEach(function(el){el.classList.add('visible');});
+  }
+
+  /* ---------- 移动端导航 ---------- */
+  var toggle=document.getElementById('navToggle');
+  var navLinks=document.getElementById('navLinks');
+  var overlay=document.getElementById('navOverlay');
+  function setMenu(open){
+    navLinks.classList.toggle('open',open);
+    overlay.classList.toggle('open',open);
+    toggle.classList.toggle('open',open);
+    document.body.style.overflow=open?'hidden':'';
+  }
+  toggle.addEventListener('click',function(){setMenu(!navLinks.classList.contains('open'));});
+  overlay.addEventListener('click',function(){setMenu(false);});
+  navLinks.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){setMenu(false);});
+  });
+
+  /* ---------- 重阳祈福签 ---------- */
+  var FORTUNE_KEY='chongyang_fortunes_2026';
+  var fortuneData=[
+    {level:'上上签',levelClass:'lucky',title:'福寿双全',poem:'九九重阳天气爽，登高望远心舒畅。\n菊花酒香飘万里，福寿双全乐无疆。',meaning:'此签大吉。近期家中长辈身体康健，家庭和睦，诸事顺遂。宜登高赏菊，与家人团聚，共享天伦之乐。'},
+    {level:'上上签',levelClass:'lucky',title:'鸿运当头',poem:'秋高气爽菊花黄，鸿运当头福满堂。\n长辈安康儿孙孝，岁岁年年庆重阳。',meaning:'此签上吉。财运与事业皆有起色，贵人相助，万事亨通。对长辈多尽孝心，福报自然而来。'},
+    {level:'上吉签',levelClass:'lucky',title:'平安喜乐',poem:'茱萸插鬓避邪灾，菊花酿酒延年寿。\n平安二字值千金，喜乐常伴无烦忧。',meaning:'此签吉利。家人平安健康，无病无灾。虽无大富大贵，但平淡是福，知足常乐。宜多陪伴老人，聊表孝心。'},
+    {level:'中吉签',levelClass:'mid',title:'渐入佳境',poem:'重阳登高望远方，前路漫漫亦灿灿。\n守得云开见月明，渐入佳境福自来。',meaning:'此签中吉。目前或许有些小波折，但只要坚持努力，情况会逐渐好转。耐心等待，好事在后头。'},
+    {level:'中吉签',levelClass:'mid',title:'稳中求进',poem:'秋风吹过菊花香，脚踏实地不慌忙。\n稳中求进谋发展，日积月累成大器。',meaning:'此签中平。不宜冒进，宜稳扎稳打。工作生活按部就班，终有所成。长辈宜注意保暖，适量运动。'},
+    {level:'小吉签',levelClass:'mid',title:'平安是福',poem:'重阳佳节倍思亲，平平淡淡才是真。\n不求大富与大贵，但愿安康伴终身。',meaning:'此签小吉。生活平淡安稳，无大风大浪。多关心长辈身体，定期体检，预防胜于治疗。'},
+    {level:'上上签',levelClass:'lucky',title:'松鹤延年',poem:'南山松柏青常在，东海仙鹤寿绵长。\n重阳祈福灵验处，松鹤延年福满堂。',meaning:'此签大吉。长辈长寿安康，如松鹤延年。家中有老如有一宝，多尽孝道，福报深厚。'}
+  ];
+  var defaultBlessings=[
+    {level:'上上签',text:'为父母求得福寿双全，愿爸妈健康长寿！'},
+    {level:'上吉签',text:'摇到平安喜乐，愿爷爷奶奶无病无灾！'},
+    {level:'中吉签',text:'渐入佳境，希望家里一切都好起来。'}
+  ];
+  function loadBlessings(){
+    try{var raw=localStorage.getItem(FORTUNE_KEY);if(raw)return JSON.parse(raw);}catch(e){}
+    return defaultBlessings.slice();
+  }
+  function saveBlessings(list){
+    try{localStorage.setItem(FORTUNE_KEY,JSON.stringify(list));}catch(e){}
+  }
+  var blessings=loadBlessings();
+  var blessingWall=document.getElementById('blessingWall');
+  function renderBlessings(){
+    blessingWall.innerHTML='';
+    if(!blessings.length){
+      blessingWall.innerHTML='<div class="blessing-empty">还没有祈福记录，快来摇一支签吧</div>';
+      return;
+    }
+    blessings.forEach(function(b){
+      var div=document.createElement('div');
+      div.className='blessing-item';
+      div.innerHTML='<div class="blessing-item-level">'+b.level+'</div>'+
+                    '<div class="blessing-item-text">'+b.text+'</div>';
+      blessingWall.appendChild(div);
+    });
+  }
+  renderBlessings();
+
+  var cylinder=document.getElementById('templeCylinder');
+  var drawBtn=document.getElementById('drawBtn');
+  var fortuneResult=document.getElementById('fortuneResult');
+  var fortuneLevel=document.getElementById('fortuneLevel');
+  var fortuneTitle=document.getElementById('fortuneTitle');
+  var fortunePoem=document.getElementById('fortunePoem');
+  var fortuneMeaning=document.getElementById('fortuneMeaning');
+  var isDrawing=false;
+
+  drawBtn.addEventListener('click',function(){
+    if(isDrawing)return;
+    isDrawing=true;
+    drawBtn.disabled=true;
+    drawBtn.textContent='摇签中…';
+    cylinder.classList.add('shaking');
+    fortuneResult.classList.remove('show');
+    setTimeout(function(){
+      cylinder.classList.remove('shaking');
+      var f=fortuneData[Math.floor(Math.random()*fortuneData.length)];
+      fortuneLevel.textContent=f.level;
+      fortuneLevel.className='fortune-level '+f.levelClass;
+      fortuneTitle.textContent=f.title;
+      fortunePoem.textContent=f.poem;
+      fortuneMeaning.textContent=f.meaning;
+      fortuneResult.classList.add('show');
+      /* 记录到祈福墙 */
+      blessings.unshift({level:f.level,text:'求得「'+f.title+'」——'+f.meaning.substring(0,30)+'…'});
+      if(blessings.length>30){blessings=blessings.slice(0,30);}
+      saveBlessings(blessings);
+      renderBlessings();
+      isDrawing=false;
+      drawBtn.disabled=false;
+      drawBtn.textContent='再 摇 一 签';
+    },1600);
+  });
+  cylinder.addEventListener('click',function(){drawBtn.click();});
+
+  /* ---------- Hero 菊花绽放动画 ---------- */
+  var canvas=document.getElementById('chrysanthemum');
+  var ctx=canvas.getContext('2d');
+  var particles=[];
+  var petals=[];
+  var W,H;
+  function resize(){
+    var hero=canvas.parentElement;
+    W=canvas.width=hero.offsetWidth||window.innerWidth;
+    H=canvas.height=hero.offsetHeight||window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  window.addEventListener('load',function(){requestAnimationFrame(resize);});
+  function rand(a,b){return a+Math.random()*(b-a);}
+
+  /* 菊花绽放粒子 */
+  function Chrysanthemum(){
+    this.x=rand(W*0.15,W*0.85);
+    this.y=rand(H*0.2,H*0.6);
+    this.maxRadius=rand(40,80);
+    this.radius=0;
+    this.petalCount=Math.floor(rand(12,20));
+    this.color=Math.random()<0.6?'232,197,71':Math.random()<0.5?'212,175,55':'200,16,46';
+    this.life=1;
+    this.decay=rand(0.003,0.006);
+    this.rotation=rand(0,Math.PI*2);
+  }
+  Chrysanthemum.prototype.update=function(){
+    this.radius+=(this.maxRadius-this.radius)*0.04;
+    this.rotation+=0.005;
+    this.life-=this.decay;
+    return this.life>0;
+  };
+  Chrysanthemum.prototype.draw=function(){
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.rotation);
+    ctx.globalAlpha=Math.max(this.life,0)*0.7;
+    for(var i=0;i<this.petalCount;i++){
+      var angle=(Math.PI*2*i)/this.petalCount;
+      var px=Math.cos(angle)*this.radius*0.5;
+      var py=Math.sin(angle)*this.radius*0.5;
+      ctx.beginPath();
+      ctx.ellipse(px,py,this.radius*0.15,this.radius*0.45,angle,0,Math.PI*2);
+      ctx.fillStyle='rgba('+this.color+','+(0.5+this.life*0.3)+')';
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(0,0,this.radius*0.18,0,Math.PI*2);
+    ctx.fillStyle='rgba('+this.color+','+(0.8+this.life*0.2)+')';
+    ctx.fill();
+    ctx.restore();
+  };
+
+  /* 飘落的花瓣/叶子 */
+  function FallingPetal(){
+    this.x=rand(0,W);
+    this.y=-20;
+    this.vx=rand(-0.5,0.5);
+    this.vy=rand(0.5,1.5);
+    this.size=rand(4,10);
+    this.rotation=rand(0,Math.PI*2);
+    this.rotSpeed=rand(-0.03,0.03);
+    this.color=Math.random()<0.5?'232,197,71':'200,16,46';
+    this.life=1;
+    this.sway=rand(0,Math.PI*2);
+  }
+  FallingPetal.prototype.update=function(){
+    this.sway+=0.02;
+    this.x+=this.vx+Math.sin(this.sway)*0.5;
+    this.y+=this.vy;
+    this.rotation+=this.rotSpeed;
+    return this.y<H+20;
+  };
+  FallingPetal.prototype.draw=function(){
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.rotation);
+    ctx.globalAlpha=0.6;
+    ctx.beginPath();
+    ctx.ellipse(0,0,this.size*0.5,this.size,0,0,Math.PI*2);
+    ctx.fillStyle='rgba('+this.color+',0.7)';
+    ctx.fill();
+    ctx.restore();
+  };
+
+  var frame=0;
+  function loop(){
+    frame++;
+    ctx.globalCompositeOperation='destination-out';
+    ctx.fillStyle='rgba(0,0,0,0.12)';
+    ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';
+
+    /* 定期绽放菊花 */
+    if(frame%120===0&&petals.length<4){
+      petals.push(new Chrysanthemum());
+    }
+    for(var i=petals.length-1;i>=0;i--){
+      if(!petals[i].update()){petals.splice(i,1);}
+      else{petals[i].draw();}
+    }
+
+    /* 飘落花瓣 */
+    if(frame%8===0&&particles.length<40){
+      particles.push(new FallingPetal());
+    }
+    for(var j=particles.length-1;j>=0;j--){
+      if(!particles[j].update()){particles.splice(j,1);}
+      else{particles[j].draw();}
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  /* ---------- 音乐播放（Web Audio 合成简单旋律） ---------- */
+  var musicBtn=document.getElementById('musicBtn');
+  var audioCtx=null;
+  var isPlaying=false;
+  var melodyTimer=null;
+
+  /* 简单的五声音阶旋律（古风感） */
+  var melody=[
+    {f:523.25,d:0.4},{f:587.33,d:0.4},{f:659.25,d:0.6},{f:587.33,d:0.4},
+    {f:523.25,d:0.4},{f:440.00,d:0.6},{f:392.00,d:0.8},
+    {f:392.00,d:0.4},{f:440.00,d:0.4},{f:523.25,d:0.6},{f:587.33,d:0.4},
+    {f:659.25,d:0.4},{f:783.99,d:0.4},{f:659.25,d:0.8},
+    {f:523.25,d:0.4},{f:587.33,d:0.4},{f:659.25,d:0.6},{f:783.99,d:0.4},
+    {f:880.00,d:0.6},{f:783.99,d:0.4},{f:659.25,d:0.8}
+  ];
+  var noteIdx=0;
+
+  function playNote(freq,duration){
+    if(!audioCtx)return;
+    var osc=audioCtx.createOscillator();
+    var gain=audioCtx.createGain();
+    osc.type='sine';
+    osc.frequency.value=freq;
+    gain.gain.setValueAtTime(0,audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.15,audioCtx.currentTime+0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime+duration);
+  }
+
+  function playMelody(){
+    if(!isPlaying)return;
+    var note=melody[noteIdx%melody.length];
+    playNote(note.f,note.d);
+    noteIdx++;
+    melodyTimer=setTimeout(playMelody,note.d*1000);
+  }
+
+  musicBtn.addEventListener('click',function(){
+    if(!audioCtx){
+      try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
+      catch(e){return;}
+    }
+    if(audioCtx.state==='suspended'){audioCtx.resume();}
+    if(!isPlaying){
+      isPlaying=true;
+      noteIdx=0;
+      musicBtn.classList.add('playing');
+      playMelody();
+    }else{
+      isPlaying=false;
+      musicBtn.classList.remove('playing');
+      if(melodyTimer){clearTimeout(melodyTimer);melodyTimer=null;}
+    }
+  });
+
+  var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(!reduced){
+    petals.push(new Chrysanthemum());
+    setTimeout(function(){petals.push(new Chrysanthemum());},800);
+    loop();
+  }
+
+  /* ---------- 重阳知识问答 ---------- */
+  var quizData=[
+    {q:'重阳节是农历哪一天？',opts:['八月十五','九月初九','十月初一','七月初七'],ans:1},
+    {q:'重阳节又被称为什么节？',opts:['端午节','中元节','敬老节','寒食节'],ans:2},
+    {q:'以下哪项不是重阳节的传统习俗？',opts:['登高','赏菊','吃粽子','佩茱萸'],ans:2},
+    {q:'"遍插茱萸少一人"出自哪位诗人？',opts:['李白','杜甫','王维','白居易'],ans:2},
+    {q:'重阳节被列入国家级非物质文化遗产是在哪一年？',opts:['2006年','2008年','2010年','2012年'],ans:0}
+  ];
+  var quizIdx=0,quizScore=0,quizAnswered=false;
+  function renderQuiz(){
+    if(quizIdx>=quizData.length){showQuizResult();return;}
+    quizAnswered=false;
+    var item=quizData[quizIdx];
+    /* 进度条 */
+    document.getElementById('quizProgressFill').style.width=((quizIdx)/quizData.length*100)+'%';
+    /* 题号 */
+    document.getElementById('quizQNum').textContent=quizIdx+1;
+    /* 得分 */
+    document.getElementById('quizScore').textContent=quizScore;
+    /* 问题 */
+    document.getElementById('quizQuestion').textContent=item.q;
+    /* 选项 */
+    var optsBox=document.getElementById('quizOptions');
+    optsBox.innerHTML='';
+    item.opts.forEach(function(opt,i){
+      var btn=document.createElement('div');
+      btn.className='quiz-option';
+      btn.innerHTML='<span class="quiz-option-letter">'+String.fromCharCode(65+i)+'</span><span class="quiz-option-text">'+opt+'</span>';
+      btn.onclick=function(){
+        if(quizAnswered)return;
+        quizAnswered=true;
+        /* 禁用所有选项 */
+        var all=optsBox.querySelectorAll('.quiz-option');
+        all.forEach(function(o){o.classList.add('disabled');});
+        if(i===item.ans){
+          quizScore++;
+          this.classList.add('correct');
+        }else{
+          this.classList.add('wrong');
+          all[item.ans].classList.add('correct');
+        }
+        document.getElementById('quizScore').textContent=quizScore;
+        setTimeout(function(){quizIdx++;renderQuiz();},1000);
+      };
+      optsBox.appendChild(btn);
+    });
+  }
+  function showQuizResult(){
+    document.getElementById('quizProgressFill').style.width='100%';
+    document.getElementById('quizContainer').style.display='none';
+    var result=document.getElementById('quizResult');
+    result.style.display='block';
+    document.getElementById('quizResultScore').textContent=quizScore;
+    /* 圆环动画 */
+    var circle=document.getElementById('quizRingCircle');
+    var circumference=2*Math.PI*52;
+    var offset=circumference*(1-quizScore/quizData.length);
+    setTimeout(function(){circle.style.strokeDashoffset=offset;},200);
+    var pct=quizScore/quizData.length;
+    if(pct===1){
+      document.getElementById('quizEmoji').textContent='🏆';
+      document.getElementById('quizResultTitle').textContent='满分！太厉害了';
+      document.getElementById('quizResultText').textContent='你对重阳节了如指掌，堪称传统文化达人！';
+    }else if(pct>=0.6){
+      document.getElementById('quizEmoji').textContent='🎉';
+      document.getElementById('quizResultTitle').textContent='不错哦！';
+      document.getElementById('quizResultText').textContent='答对了 '+quizScore+' 题，继续了解更多重阳文化吧！';
+    }else{
+      document.getElementById('quizEmoji').textContent='📚';
+      document.getElementById('quizResultTitle').textContent='还需加油！';
+      document.getElementById('quizResultText').textContent='只答对了 '+quizScore+' 题，多了解一下重阳传统文化吧～';
+    }
+  }
+  function resetQuiz(){
+    quizIdx=0;quizScore=0;
+    document.getElementById('quizContainer').style.display='block';
+    document.getElementById('quizResult').style.display='none';
+    document.getElementById('quizRingCircle').style.strokeDashoffset='326.7';
+    renderQuiz();
+  }
+  window.resetQuiz=resetQuiz;
+  renderQuiz();
+
+  /* ---------- 互动游戏：重阳接福 ---------- */
+  var gameCanvas=document.getElementById('gameCanvas');
+  var gctx=gameCanvas.getContext('2d');
+  var GW=gameCanvas.width,GH=gameCanvas.height;
+  var gameOverlay=document.getElementById('gameOverlay');
+  var gameOverlayIcon=document.getElementById('gameOverlayIcon');
+  var gameOverlayTitle=document.getElementById('gameOverlayTitle');
+  var gameOverlayText=document.getElementById('gameOverlayText');
+  var gameStartBtn=document.getElementById('gameStartBtn');
+  var gamePauseBtn=document.getElementById('gamePauseBtn');
+  var gamePauseOverlay=document.getElementById('gamePauseOverlay');
+  var gameResumeBtn=document.getElementById('gameResumeBtn');
+  var scoreEl=document.getElementById('gameScore');
+  var livesEl=document.getElementById('gameLives');
+  var timeEl=document.getElementById('gameTime');
+
+  var gameRunning=false;
+  var gamePaused=false;
+  var gameScore=0;
+  var gameLives=3;
+  var gameTime=60;
+  var gameTimer=null;
+  var gameAnimId=null;
+  var gameFrame=0;
+
+  /* 玩家篮子 */
+  var basket={
+    x:GW/2-45,y:GH-55,w:90,h:36,speed:7,
+    targetX:GW/2-45
+  };
+
+  /* 掉落物类型 */
+  var itemTypes=[
+    {emoji:'🌼',score:10,life:0,speed:2.2,weight:35,size:28},
+    {emoji:'🌿',score:20,life:0,speed:2.6,weight:25,size:26},
+    {emoji:'🍰',score:30,life:0,speed:3.0,weight:18,size:30},
+    {emoji:'🍵',score:50,life:0,speed:3.4,weight:8,size:28},
+    {emoji:'🍂',score:-5,life:0,speed:2.8,weight:10,size:26},
+    {emoji:'🪨',score:0,life:-1,speed:3.8,weight:4,size:30}
+  ];
+  var totalWeight=itemTypes.reduce(function(s,t){return s+t.weight;},0);
+
+  var fallingItems=[];
+  var particles=[];
+  var floatTexts=[];
+
+  function pickItemType(){
+    var r=Math.random()*totalWeight;
+    var acc=0;
+    for(var i=0;i<itemTypes.length;i++){
+      acc+=itemTypes[i].weight;
+      if(r<=acc)return itemTypes[i];
+    }
+    return itemTypes[0];
+  }
+
+  function spawnItem(){
+    var t=pickItemType();
+    fallingItems.push({
+      x:rand(30,GW-30),y:-30,
+      vx:rand(-0.5,0.5),vy:t.speed+gameFrame*0.0008,
+      type:t,rotation:rand(0,Math.PI*2),rotSpeed:rand(-0.05,0.05)
+    });
+  }
+
+  function addParticles(x,y,color,count){
+    for(var i=0;i<count;i++){
+      particles.push({
+        x:x,y:y,
+        vx:rand(-3,3),vy:rand(-4,-1),
+        life:1,decay:rand(0.02,0.04),
+        color:color,size:rand(2,5)
+      });
+    }
+  }
+
+  function addFloatText(x,y,text,color){
+    floatTexts.push({x:x,y:y,text:text,color:color,life:1,vy:-1.5});
+  }
+
+  function drawBasket(){
+    var x=basket.x,y=basket.y,w=basket.w,h=basket.h;
+    /* 篮子主体 */
+    gctx.save();
+    gctx.beginPath();
+    gctx.moveTo(x+6,y);
+    gctx.lineTo(x+w-6,y);
+    gctx.lineTo(x+w-2,y+h);
+    gctx.lineTo(x+2,y+h);
+    gctx.closePath();
+    var grad=gctx.createLinearGradient(x,y,x,y+h);
+    grad.addColorStop(0,'#D4AF37');
+    grad.addColorStop(1,'#8B6914');
+    gctx.fillStyle=grad;
+    gctx.fill();
+    gctx.strokeStyle='#E8C547';
+    gctx.lineWidth=2;
+    gctx.stroke();
+    /* 编织纹理 */
+    gctx.strokeStyle='rgba(139,105,20,.5)';
+    gctx.lineWidth=1;
+    for(var i=1;i<4;i++){
+      gctx.beginPath();
+      gctx.moveTo(x+4,y+(h/4)*i);
+      gctx.lineTo(x+w-4,y+(h/4)*i);
+      gctx.stroke();
+    }
+    /* 提手 */
+    gctx.beginPath();
+    gctx.arc(x+w/2,y-2,w*0.32,Math.PI,0);
+    gctx.strokeStyle='#D4AF37';
+    gctx.lineWidth=3;
+    gctx.stroke();
+    /* 福字 */
+    gctx.fillStyle='#C8102E';
+    gctx.font='bold 16px "Noto Serif SC",serif';
+    gctx.textAlign='center';
+    gctx.textBaseline='middle';
+    gctx.fillText('福',x+w/2,y+h/2+2);
+    gctx.restore();
+  }
+
+  function drawItem(item){
+    gctx.save();
+    gctx.translate(item.x,item.y);
+    gctx.rotate(item.rotation);
+    /* 发光光晕 */
+    gctx.shadowColor='rgba(255,230,150,.8)';
+    gctx.shadowBlur=12;
+    gctx.font=item.type.size+'px serif';
+    gctx.textAlign='center';
+    gctx.textBaseline='middle';
+    gctx.fillText(item.type.emoji,0,0);
+    gctx.restore();
+  }
+
+  function drawParticles(){
+    for(var i=particles.length-1;i>=0;i--){
+      var p=particles[i];
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.15;p.life-=p.decay;
+      if(p.life<=0){particles.splice(i,1);continue;}
+      gctx.globalAlpha=Math.max(p.life,0);
+      gctx.fillStyle=p.color;
+      gctx.beginPath();
+      gctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      gctx.fill();
+    }
+    gctx.globalAlpha=1;
+  }
+
+  function drawFloatTexts(){
+    for(var i=floatTexts.length-1;i>=0;i--){
+      var f=floatTexts[i];
+      f.y+=f.vy;f.life-=0.02;
+      if(f.life<=0){floatTexts.splice(i,1);continue;}
+      gctx.globalAlpha=Math.max(f.life,0);
+      gctx.font='bold 18px "Noto Serif SC",serif';
+      gctx.textAlign='center';
+      gctx.fillStyle=f.color;
+      gctx.fillText(f.text,f.x,f.y);
+    }
+    gctx.globalAlpha=1;
+  }
+
+  function checkCollision(item){
+    var bx=basket.x+10,by=basket.y+4,bw=basket.w-20,bh=basket.h-8;
+    return item.x>bx&&item.x<bx+bw&&item.y+item.type.size/2>by&&item.y-item.type.size/2<by+bh;
+  }
+
+  function gameLoop(){
+    if(!gameRunning||gamePaused)return;
+    gameFrame++;
+    gctx.clearRect(0,0,GW,GH);
+
+    /* 背景装饰：远山 */
+    gctx.fillStyle='rgba(139,90,43,.3)';
+    gctx.beginPath();
+    gctx.moveTo(0,GH*0.65);
+    gctx.quadraticCurveTo(GW*0.25,GH*0.45,GW*0.5,GH*0.6);
+    gctx.quadraticCurveTo(GW*0.75,GH*0.75,GW,GH*0.55);
+    gctx.lineTo(GW,GH);gctx.lineTo(0,GH);
+    gctx.fill();
+    gctx.fillStyle='rgba(212,175,55,.18)';
+    gctx.beginPath();
+    gctx.moveTo(0,GH*0.78);
+    gctx.quadraticCurveTo(GW*0.3,GH*0.62,GW*0.6,GH*0.75);
+    gctx.quadraticCurveTo(GW*0.85,GH*0.85,GW,GH*0.72);
+    gctx.lineTo(GW,GH);gctx.lineTo(0,GH);
+    gctx.fill();
+
+    /* 平滑移动篮子 */
+    basket.x+=(basket.targetX-basket.x)*0.2;
+    if(basket.x<5)basket.x=5;
+    if(basket.x>GW-basket.w-5)basket.x=GW-basket.w-5;
+
+    /* 生成掉落物 */
+    var spawnRate=Math.max(28,50-Math.floor(gameFrame/300));
+    if(gameFrame%spawnRate===0){spawnItem();}
+
+    /* 更新掉落物 */
+    for(var i=fallingItems.length-1;i>=0;i--){
+      var item=fallingItems[i];
+      item.x+=item.vx;
+      item.y+=item.vy;
+      item.rotation+=item.rotSpeed;
+
+      if(checkCollision(item)){
+        /* 接到了 */
+        if(item.type.life<0){
+          gameLives--;
+          addParticles(item.x,item.y,'#ef4444',12);
+          addFloatText(item.x,item.y-20,'-❤️','#fca5a5');
+          updateLives();
+          if(gameLives<=0){endGame(false);return;}
+        }else{
+          gameScore+=item.type.score;
+          var color=item.type.score>=30?'#E8C547':item.type.score>0?'#6ee7b7':'#fca5a5';
+          addParticles(item.x,item.y,color,8);
+          var sign=item.type.score>0?'+':'';
+          addFloatText(item.x,item.y-20,sign+item.type.score,color);
+          scoreEl.textContent=gameScore;
+        }
+        fallingItems.splice(i,1);
+        continue;
+      }
+      if(item.y>GH+30){fallingItems.splice(i,1);}
+      else{drawItem(item);}
+    }
+
+    drawBasket();
+    drawParticles();
+    drawFloatTexts();
+
+    gameAnimId=requestAnimationFrame(gameLoop);
+  }
+
+  function updateLives(){
+    var hearts='';
+    for(var i=0;i<3;i++){hearts+=i<gameLives?'❤️':'🖤';}
+    livesEl.textContent=hearts;
+  }
+
+  function startGame(){
+    gameScore=0;gameLives=3;gameTime=60;gameFrame=0;
+    gamePaused=false;
+    fallingItems=[];particles=[];floatTexts=[];
+    basket.x=GW/2-45;basket.targetX=GW/2-45;
+    scoreEl.textContent='0';
+    timeEl.textContent='60';
+    updateLives();
+    gameOverlay.classList.add('hidden');
+    gamePauseOverlay.classList.remove('show');
+    gamePauseBtn.classList.add('playing');
+    gameRunning=true;
+
+    gameTimer=setInterval(function(){
+      if(gamePaused)return;
+      gameTime--;
+      timeEl.textContent=gameTime;
+      if(gameTime<=0){endGame(true);}
+    },1000);
+    gameLoop();
+  }
+
+  function pauseGame(){
+    if(!gameRunning||gamePaused)return;
+    gamePaused=true;
+    clearInterval(gameTimer);
+    cancelAnimationFrame(gameAnimId);
+    gamePauseOverlay.classList.add('show');
+    gamePauseBtn.classList.remove('playing');
+  }
+
+  function resumeGame(){
+    if(!gameRunning||!gamePaused)return;
+    gamePaused=false;
+    gamePauseOverlay.classList.remove('show');
+    gamePauseBtn.classList.add('playing');
+    gameTimer=setInterval(function(){
+      if(gamePaused)return;
+      gameTime--;
+      timeEl.textContent=gameTime;
+      if(gameTime<=0){endGame(true);}
+    },1000);
+    gameLoop();
+  }
+
+  function endGame(timeUp){
+    gameRunning=false;
+    gamePaused=false;
+    clearInterval(gameTimer);
+    cancelAnimationFrame(gameAnimId);
+    gamePauseOverlay.classList.remove('show');
+    gamePauseBtn.classList.remove('playing');
+
+    var title,text,icon;
+    if(timeUp&&gameLives>0){
+      if(gameScore>=500){icon='🏆';title='重阳福星';text='太厉害了！你接住了满满的福气！\n最终得分：'+gameScore+' 分';}
+      else if(gameScore>=300){icon='🎉';title='登高达人';text='步步高升，福气满满！\n最终得分：'+gameScore+' 分';}
+      else if(gameScore>=150){icon='🌼';title='赏菊雅士';text='悠然见南山，也是一种境界。\n最终得分：'+gameScore+' 分';}
+      else{icon='💪';title='继续加油';text='多接几朵菊花，福气自然来！\n最终得分：'+gameScore+' 分';}
+    }else{
+      icon='😢';title='福气溜走了';text='石头砸中了福篮，游戏结束。\n最终得分：'+gameScore+' 分';
+    }
+    gameOverlayIcon.textContent=icon;
+    gameOverlayTitle.textContent=title;
+    gameOverlayText.textContent=text;
+    gameStartBtn.textContent='再来一局';
+    gameOverlay.classList.remove('hidden');
+  }
+
+  gameStartBtn.addEventListener('click',startGame);
+  gamePauseBtn.addEventListener('click',function(){
+    if(gamePaused){resumeGame();}else{pauseGame();}
+  });
+  gameResumeBtn.addEventListener('click',resumeGame);
+
+  /* 键盘控制 */
+  var keys={};
+  document.addEventListener('keydown',function(e){
+    if(!gameRunning)return;
+    if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A'){keys.left=true;}
+    if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){keys.right=true;}
+    if(e.key===' '||e.key==='Escape'){
+      e.preventDefault();
+      if(gamePaused){resumeGame();}else{pauseGame();}
+    }
+  });
+  document.addEventListener('keyup',function(e){
+    if(e.key==='ArrowLeft'||e.key==='a'||e.key==='A'){keys.left=false;}
+    if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){keys.right=false;}
+  });
+  setInterval(function(){
+    if(!gameRunning||gamePaused)return;
+    if(keys.left){basket.targetX-=basket.speed*1.5;}
+    if(keys.right){basket.targetX+=basket.speed*1.5;}
+  },16);
+
+  /* 触摸控制 */
+  var touchActive=false;
+  gameCanvas.addEventListener('touchstart',function(e){
+    if(!gameRunning)return;
+    touchActive=true;
+    var rect=gameCanvas.getBoundingClientRect();
+    var touch=e.touches[0];
+    var scaleX=GW/rect.width;
+    basket.targetX=(touch.clientX-rect.left)*scaleX-basket.w/2;
+    e.preventDefault();
+  },{passive:false});
+  gameCanvas.addEventListener('touchmove',function(e){
+    if(!gameRunning||!touchActive||gamePaused)return;
+    var rect=gameCanvas.getBoundingClientRect();
+    var touch=e.touches[0];
+    var scaleX=GW/rect.width;
+    basket.targetX=(touch.clientX-rect.left)*scaleX-basket.w/2;
+    e.preventDefault();
+  },{passive:false});
+  gameCanvas.addEventListener('touchend',function(){touchActive=false;});
+
+  /* 鼠标控制 */
+  gameCanvas.addEventListener('mousemove',function(e){
+    if(!gameRunning||gamePaused)return;
+    var rect=gameCanvas.getBoundingClientRect();
+    var scaleX=GW/rect.width;
+    basket.targetX=(e.clientX-rect.left)*scaleX-basket.w/2;
+  });
+
+})();
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
