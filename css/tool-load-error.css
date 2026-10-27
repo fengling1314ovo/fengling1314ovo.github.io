@@ -1,0 +1,4 @@
+.fl-tool-load-error{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 16px;border:1px solid var(--border-color);border-radius:16px;background:var(--bg-input);color:var(--text-secondary);text-align:center;}
+.fl-tool-load-error__message{font-size:16px;font-weight:600;line-height:1.6;}
+.fl-tool-load-error__detail{max-width:100%;font-size:12px;line-height:1.5;opacity:.78;overflow-wrap:anywhere;}
+.fl-tool-load-error__retry{margin-top:2px;}

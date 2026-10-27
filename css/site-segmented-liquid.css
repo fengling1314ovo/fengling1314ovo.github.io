@@ -1,0 +1,14 @@
+.fl-liquid-segmented{isolation:isolate;background:transparent!important;border-color:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+.fl-liquid-segmented::before{content:'';position:absolute;inset:-1px;z-index:0;pointer-events:none;border:1px solid rgba(255,255,255,.5);border-radius:999px;background:color-mix(in srgb,var(--bg-card,#fff) 72%,transparent);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:0 8px 28px rgba(30,41,59,.14),inset 0 1px 0 rgba(255,255,255,.6);transform:scale(1);transition:transform .42s cubic-bezier(.3,1.35,.55,1);}
+.fl-liquid-segmented.is-liquid-pressed::before{transform:translateX(var(--liquid-sway-x,0px)) scale(.96,.86);}
+.fl-liquid-segmented .fl-segmented-thumb{z-index:1;background:linear-gradient(160deg,rgba(255,255,255,.48),rgba(255,255,255,.06) 56%,rgba(255,255,255,.2)),color-mix(in srgb,var(--primary) 52%,transparent);border-color:rgba(255,255,255,.72);box-shadow:0 5px 14px rgba(30,41,59,.12),inset 0 1px 0 rgba(255,255,255,.82),inset 0 -2px 5px rgba(30,41,59,.06);transition:translate .65s cubic-bezier(.3,1.35,.55,1),scale .38s cubic-bezier(.22,1,.36,1),background-color .2s ease;}
+.fl-liquid-segmented.is-liquid-pressed .fl-segmented-thumb{background-color:color-mix(in srgb,var(--primary) 32%,transparent);}
+.fl-liquid-segmented.is-dragging:not(.is-moving) .fl-segmented-thumb{transition:translate .65s cubic-bezier(.3,1.35,.55,1),scale .38s cubic-bezier(.22,1,.36,1),background-color .2s ease!important;}
+.fl-liquid-segmented.is-moving .fl-segmented-thumb{transition:translate .06s linear,scale .38s cubic-bezier(.22,1,.36,1),background-color .2s ease!important;}
+.fl-liquid-segmented .fl-segmented-option{z-index:2;}
+.fl-liquid-segmented.is-liquid-pointer .fl-segmented-option:focus-visible{outline:none;}
+.fl-liquid-segmented .fl-liquid-label{display:inline-block;transform:scale(1);transition:transform .34s cubic-bezier(.25,1.3,.5,1);}
+.fl-liquid-segmented.is-liquid-pressed .fl-liquid-label{transform:scale(.86);}
+.fl-liquid-segmented.is-liquid-pressed .fl-segmented-option:is(.is-active,.active) .fl-liquid-label{transform:scale(1);}
+@media(max-width:600px){.fl-liquid-segmented.is-liquid-pressed .fl-liquid-label{transform:scale(.94);}.fl-liquid-segmented.is-liquid-pressed .fl-segmented-option:is(.is-active,.active) .fl-liquid-label{transform:scale(1);}}
+@media(prefers-reduced-motion:reduce){.fl-liquid-segmented::before,.fl-liquid-segmented .fl-liquid-label,.fl-liquid-segmented .fl-segmented-thumb{transition:none!important;}.fl-liquid-segmented.is-liquid-pressed::before{transform:scale(.96,.86);}}
